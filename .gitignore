@@ -5,3 +5,6 @@ upgrade-temp-backup/
 .DS_Store
 *.log
 node_modules/
+wp-rocket-config/
+themes/twenty*/
+
