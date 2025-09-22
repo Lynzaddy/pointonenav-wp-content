@@ -15,7 +15,6 @@ jobs:
     deploy:
         runs-on: ubuntu-latest
 
-        # Resolve target env from branch or manual input
         env:
             TARGET: ${{ github.ref_name == 'main' && 'production' || github.ref_name == 'staging' && 'staging' || inputs.target }}
 
@@ -23,7 +22,6 @@ jobs:
             - name: Check out repo
               uses: actions/checkout@v4
 
-            # Build tracked-files-only artifact into workspace so later steps can see it
             - name: Build artifact (tracked files only)
               run: |
                   NAME="wp-content-${GITHUB_SHA}.tar.gz"
@@ -44,9 +42,9 @@ jobs:
                   key: ${{ secrets.STAGING_SSH_KEY }}
                   script: |
                       set -e
-                      APP_WP_CONTENT="${{ secrets.STAGING_PATH }}"      # $HOME/public_html/wp-content
-                      APP_ROOT="$(dirname "$APP_WP_CONTENT")"           # $HOME/public_html
-                      DEPLOY_BASE="$APP_ROOT/.deploy"                   # $HOME/public_html/.deploy
+                      APP_WP_CONTENT="${{ secrets.STAGING_PATH }}"
+                      APP_ROOT="$(dirname "$APP_WP_CONTENT")"
+                      DEPLOY_BASE="$APP_ROOT/.deploy"
                       mkdir -p "$DEPLOY_BASE/deploy" "$DEPLOY_BASE/releases" "$DEPLOY_BASE/backups"
                       ls -ld "$APP_ROOT" "$DEPLOY_BASE" "$DEPLOY_BASE/deploy"
                       test -w "$DEPLOY_BASE/deploy"
@@ -58,11 +56,8 @@ jobs:
                   STAGING_USER: ${{ secrets.STAGING_USER }}
                   STAGING_SSH_KEY: ${{ secrets.STAGING_SSH_KEY }}
               run: |
-                  # write SSH key to a file the shell can use
                   printf "%s" "$STAGING_SSH_KEY" > "$GITHUB_WORKSPACE/id_staging"
                   chmod 600 "$GITHUB_WORKSPACE/id_staging"
-
-                  # upload artifact to a deterministic name under public_html/.deploy/deploy
                   RSYNC_SSH="ssh -i $GITHUB_WORKSPACE/id_staging -o StrictHostKeyChecking=no"
                   rsync -avz -e "$RSYNC_SSH" "$ARTIFACT_NAME" \
                     "${STAGING_USER}@${STAGING_HOST}:public_html/.deploy/deploy/wp-content-${GITHUB_SHA}.tar.gz"
@@ -79,7 +74,6 @@ jobs:
                       APP_WP_CONTENT="${{ secrets.STAGING_PATH }}"
                       APP_ROOT="$(dirname "$APP_WP_CONTENT")"
                       DEPLOY_BASE="$APP_ROOT/.deploy"
-                      echo ":: info :: Files in deploy dir:"
                       ls -lah "$DEPLOY_BASE/deploy"
 
             - name: Release on STAGING (backup + deploy)
@@ -91,16 +85,16 @@ jobs:
                   key: ${{ secrets.STAGING_SSH_KEY }}
                   script: |
                       set -euo pipefail
-                      APP_WP_CONTENT="${{ secrets.STAGING_PATH }}"     # $HOME/public_html/wp-content
-                      APP_ROOT="$(dirname "$APP_WP_CONTENT")"          # $HOME/public_html
+                      APP_WP_CONTENT="${{ secrets.STAGING_PATH }}"
+                      APP_ROOT="$(dirname "$APP_WP_CONTENT")"
                       DEPLOY_BASE="$APP_ROOT/.deploy"
 
-                      # Find the newest uploaded tarball (don't rely on GITHUB_SHA on the remote)
+                      # Find newest tarball uploaded
                       TARBALL="$(ls -1t "$DEPLOY_BASE/deploy"/wp-content-*.tar.gz | head -n1 || true)"
                       if [ -z "${TARBALL:-}" ] || [ ! -f "$TARBALL" ]; then
                         echo "No tarball found under $DEPLOY_BASE/deploy"; exit 1
                       fi
-                      NAME="$(basename "$TARBALL" .tar.gz)"            # e.g. wp-content-<sha>
+                      NAME="$(basename "$TARBALL" .tar.gz)"
                       RELEASE_DIR="$DEPLOY_BASE/releases/$NAME"
 
                       echo ":: info :: Using tarball: $TARBALL"
@@ -114,23 +108,33 @@ jobs:
                       mkdir -p "$RELEASE_DIR"
                       tar -xzf "$TARBALL" -C "$RELEASE_DIR"
 
-                      # Deploy (preserve uploads)
+                      # Deploy: DO NOT touch uploads or plugins (leave vendor plugins alone)
                       if command -v rsync >/dev/null 2>&1; then
-                        rsync -a --delete --exclude 'uploads' "$RELEASE_DIR"/ "$APP_WP_CONTENT"/
+                        rsync -rltD --delete \
+                          --exclude 'uploads' \
+                          --exclude 'plugins' \
+                          --exclude 'plugins/**' \
+                          --no-perms --no-owner --no-group \
+                          --omit-dir-times --no-times \
+                          --chmod=Du=rwx,Fu=rw \
+                          "$RELEASE_DIR"/ "$APP_WP_CONTENT"/
                       else
                         shopt -s dotglob
-                        find "$APP_WP_CONTENT" -mindepth 1 -maxdepth 1 ! -name 'uploads' -exec rm -rf {} +
+                        # delete everything except uploads and plugins, then copy in new content
+                        find "$APP_WP_CONTENT" -mindepth 1 -maxdepth 1 \
+                          ! -name 'uploads' ! -name 'plugins' -exec rm -rf {} +
                         cp -a "$RELEASE_DIR"/. "$APP_WP_CONTENT"/
                       fi
 
-                      # Optional: WP-CLI cache & Elementor CSS flush
+                      # Safe: run WP-CLI without loading plugins/themes (avoid fatal if a plugin is broken)
                       if command -v wp >/dev/null 2>&1; then
-                        cd "$APP_WP_CONTENT/.."
-                        wp cache flush || true
-                        wp elementor flush_css || true
+                        cd "$APP_ROOT"
+                        wp --skip-plugins --skip-themes cache flush || true
+                        # If Elementor is active and healthy, try to flush CSS (won't crash if plugins are the issue)
+                        wp --skip-themes elementor flush_css || true
                       fi
 
-                      # Safe perms
+                      # Normalize perms
                       find "$APP_WP_CONTENT" -type d -exec chmod 755 {} \;
                       find "$APP_WP_CONTENT" -type f -exec chmod 644 {} \;
 
@@ -193,7 +197,7 @@ jobs:
                       APP_ROOT="$(dirname "$APP_WP_CONTENT")"
                       DEPLOY_BASE="$APP_ROOT/.deploy"
 
-                      TARBALL="$(ls -1t "$DEPLOY_BASE/deploy"/wp-content-*.tar.gz | head -n1 | sed -e 's/[[:space:]]*$//' || true)"
+                      TARBALL="$(ls -1t "$DEPLOY_BASE/deploy"/wp-content-*.tar.gz | head -n1 || true)"
                       if [ -z "${TARBALL:-}" ] || [ ! -f "$TARBALL" ]; then
                         echo "No tarball found under $DEPLOY_BASE/deploy"; exit 1
                       fi
@@ -210,17 +214,25 @@ jobs:
                       tar -xzf "$TARBALL" -C "$RELEASE_DIR"
 
                       if command -v rsync >/dev/null 2>&1; then
-                        rsync -a --delete --exclude 'uploads' "$RELEASE_DIR"/ "$APP_WP_CONTENT"/
+                        rsync -rltD --delete \
+                          --exclude 'uploads' \
+                          --exclude 'plugins' \
+                          --exclude 'plugins/**' \
+                          --no-perms --no-owner --no-group \
+                          --omit-dir-times --no-times \
+                          --chmod=Du=rwx,Fu=rw \
+                          "$RELEASE_DIR"/ "$APP_WP_CONTENT"/
                       else
                         shopt -s dotglob
-                        find "$APP_WP_CONTENT" -mindepth 1 -maxdepth 1 ! -name 'uploads' -exec rm -rf {} +
+                        find "$APP_WP_CONTENT" -mindepth 1 -maxdepth 1 \
+                          ! -name 'uploads' ! -name 'plugins' -exec rm -rf {} +
                         cp -a "$RELEASE_DIR"/. "$APP_WP_CONTENT"/
                       fi
 
                       if command -v wp >/dev/null 2>&1; then
-                        cd "$APP_WP_CONTENT/.."
-                        wp cache flush || true
-                        wp elementor flush_css || true
+                        cd "$APP_ROOT"
+                        wp --skip-plugins --skip-themes cache flush || true
+                        wp --skip-themes elementor flush_css || true
                       fi
 
                       find "$APP_WP_CONTENT" -type d -exec chmod 755 {} \;
