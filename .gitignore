@@ -1,10 +1,10 @@
-uploads/
 breeze-config/
 cache/
+themes/twentytwentyfive/
 upgrade-temp-backup/
+uploads/
+wp-rocket-config/
 .DS_Store
 *.log
-node_modules/
-wp-rocket-config/
-themes/twenty*/
+
 
