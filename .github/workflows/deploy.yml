@@ -1,0 +1,85 @@
+name: Deploy wp-content to Cloudways
+
+on:
+    push:
+        branches: ["staging", "main"]
+    workflow_dispatch:
+        inputs:
+            target:
+                description: "Where to deploy"
+                required: true
+                type: choice
+                options: ["staging", "production"]
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        env:
+            TARGET: ${{ github.ref_name == 'main' && 'production' || github.ref_name == 'staging' && 'staging' || inputs.target }}
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Build artifact
+              run: |
+                  echo -e "uploads/\ncache/\nupgrade/\n.git/\n.DS_Store\nnode_modules/\n" > .deploy-exclude
+                  tar -czf wp-content-${GITHUB_SHA}.tar.gz --exclude-from=.deploy-exclude -C . .
+
+            - name: Set connection variables
+              id: setvars
+              run: |
+                  if [ "$TARGET" = "production" ]; then
+                    echo "host=${{ secrets.PROD_HOST }}" >> $GITHUB_OUTPUT
+                    echo "user=${{ secrets.PROD_USER }}" >> $GITHUB_OUTPUT
+                    echo "path=${{ secrets.PROD_PATH }}" >> $GITHUB_OUTPUT
+                    echo "key=${{ secrets.PROD_SSH_KEY }}" >> $GITHUB_OUTPUT
+                  else
+                    echo "host=${{ secrets.STAGING_HOST }}" >> $GITHUB_OUTPUT
+                    echo "user=${{ secrets.STAGING_USER }}" >> $GITHUB_OUTPUT
+                    echo "path=${{ secrets.STAGING_PATH }}" >> $GITHUB_OUTPUT
+                    echo "key=${{ secrets.STAGING_SSH_KEY }}" >> $GITHUB_OUTPUT
+                  fi
+
+            - name: Upload to server
+              uses: appleboy/scp-action@v0.1.7
+              with:
+                  host: ${{ steps.setvars.outputs.host }}
+                  username: ${{ steps.setvars.outputs.user }}
+                  key: ${{ steps.setvars.outputs.key }}
+                  source: "wp-content-${GITHUB_SHA}.tar.gz"
+                  target: "~/deploy"
+
+            - name: Release on server
+              uses: appleboy/ssh-action@v1.1.0
+              with:
+                  host: ${{ steps.setvars.outputs.host }}
+                  username: ${{ steps.setvars.outputs.user }}
+                  key: ${{ steps.setvars.outputs.key }}
+                  script: |
+                      set -e
+                      APP_WP_CONTENT="${{ steps.setvars.outputs.path }}"
+                      TARBALL="$HOME/deploy/wp-content-${GITHUB_SHA}.tar.gz"
+                      RELEASE_DIR="$HOME/releases/wp-content-${GITHUB_SHA}"
+
+                      mkdir -p "$HOME/deploy" "$HOME/releases" "$HOME/backups"
+                      tar -czf "$HOME/backups/wp-content-$(date +%F-%H%M)-${GITHUB_SHA}.tgz" -C "$APP_WP_CONTENT" --exclude='uploads' .
+
+                      mkdir -p "$RELEASE_DIR"
+                      tar -xzf "$TARBALL" -C "$RELEASE_DIR"
+
+                      if command -v rsync >/dev/null 2>&1; then
+                        rsync -a --delete --exclude 'uploads' "$RELEASE_DIR"/ "$APP_WP_CONTENT"/
+                      else
+                        shopt -s dotglob
+                        find "$APP_WP_CONTENT" -mindepth 1 -maxdepth 1 ! -name 'uploads' -exec rm -rf {} +
+                        cp -a "$RELEASE_DIR"/. "$APP_WP_CONTENT"/
+                      fi
+
+                      if command -v wp >/dev/null 2>&1; then
+                        cd "$APP_WP_CONTENT/.."
+                        wp cache flush || true
+                        wp elementor flush_css || true
+                      fi
+
+                      find "$APP_WP_CONTENT" -type d -exec chmod 755 {} \;
+                      find "$APP_WP_CONTENT" -type f -exec chmod 644 {} \;
