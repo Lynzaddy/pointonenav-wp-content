@@ -7,4 +7,9 @@ wp-rocket-config/
 .DS_Store
 *.log
 
-
+# Ignore all plugins by default
+plugins/*
+# But DO track these custom plugins:
+# !plugins/your-custom-plugin/
+# (add more exceptions below)
+# !plugins/another-custom-plugin/
