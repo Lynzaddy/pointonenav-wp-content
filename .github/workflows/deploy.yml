@@ -14,59 +14,83 @@ on:
 jobs:
     deploy:
         runs-on: ubuntu-latest
+
+        # Figure out target env from branch or manual input
         env:
             TARGET: ${{ github.ref_name == 'main' && 'production' || github.ref_name == 'staging' && 'staging' || inputs.target }}
 
         steps:
-            - uses: actions/checkout@v4
+            - name: Check out repo
+              uses: actions/checkout@v4
 
-            - name: Build artifact
+            # Build tracked-files-only artifact OUTSIDE the workspace to avoid the tar warning
+            - name: Build artifact (tracked files only)
               run: |
-                  echo -e "uploads/\ncache/\nupgrade/\n.git/\n.DS_Store\nnode_modules/\n" > .deploy-exclude
-                  tar -czf wp-content-${GITHUB_SHA}.tar.gz --exclude-from=.deploy-exclude -C . .
+                  ART="$RUNNER_TEMP/wp-content-${GITHUB_SHA}.tar.gz"
+                  git archive --format=tar.gz -o "$ART" HEAD
+                  echo "ARTIFACT=$ART" >> $GITHUB_ENV
 
             - name: Set connection variables
               id: setvars
+              shell: bash
               run: |
                   if [ "$TARGET" = "production" ]; then
                     echo "host=${{ secrets.PROD_HOST }}" >> $GITHUB_OUTPUT
                     echo "user=${{ secrets.PROD_USER }}" >> $GITHUB_OUTPUT
                     echo "path=${{ secrets.PROD_PATH }}" >> $GITHUB_OUTPUT
                     echo "key=${{ secrets.PROD_SSH_KEY }}" >> $GITHUB_OUTPUT
+                    if [ -z "${{ secrets.PROD_SSH_PORT }}" ]; then
+                      echo "port=22" >> $GITHUB_OUTPUT
+                    else
+                      echo "port=${{ secrets.PROD_SSH_PORT }}" >> $GITHUB_OUTPUT
+                    fi
                   else
                     echo "host=${{ secrets.STAGING_HOST }}" >> $GITHUB_OUTPUT
                     echo "user=${{ secrets.STAGING_USER }}" >> $GITHUB_OUTPUT
                     echo "path=${{ secrets.STAGING_PATH }}" >> $GITHUB_OUTPUT
                     echo "key=${{ secrets.STAGING_SSH_KEY }}" >> $GITHUB_OUTPUT
+                    if [ -z "${{ secrets.STAGING_SSH_PORT }}" ]; then
+                      echo "port=22" >> $GITHUB_OUTPUT
+                    else
+                      echo "port=${{ secrets.STAGING_SSH_PORT }}" >> $GITHUB_OUTPUT
+                    fi
                   fi
 
-            - name: Upload to server
+            - name: Upload tarball to server
               uses: appleboy/scp-action@v0.1.7
               with:
                   host: ${{ steps.setvars.outputs.host }}
                   username: ${{ steps.setvars.outputs.user }}
                   key: ${{ steps.setvars.outputs.key }}
-                  source: "wp-content-${GITHUB_SHA}.tar.gz"
+                  port: ${{ steps.setvars.outputs.port }}
+                  source: "${{ env.ARTIFACT }}"
                   target: "~/deploy"
 
-            - name: Release on server
+            - name: Release on server (backup + deploy)
               uses: appleboy/ssh-action@v1.1.0
               with:
                   host: ${{ steps.setvars.outputs.host }}
                   username: ${{ steps.setvars.outputs.user }}
                   key: ${{ steps.setvars.outputs.key }}
+                  port: ${{ steps.setvars.outputs.port }}
                   script: |
                       set -e
                       APP_WP_CONTENT="${{ steps.setvars.outputs.path }}"
                       TARBALL="$HOME/deploy/wp-content-${GITHUB_SHA}.tar.gz"
                       RELEASE_DIR="$HOME/releases/wp-content-${GITHUB_SHA}"
 
+                      # Ensure directories
                       mkdir -p "$HOME/deploy" "$HOME/releases" "$HOME/backups"
-                      tar -czf "$HOME/backups/wp-content-$(date +%F-%H%M)-${GITHUB_SHA}.tgz" -C "$APP_WP_CONTENT" --exclude='uploads' .
 
+                      # Backup current wp-content (excluding uploads)
+                      tar -czf "$HOME/backups/wp-content-$(date +%F-%H%M)-${GITHUB_SHA}.tgz" \
+                        -C "$APP_WP_CONTENT" --exclude='uploads' .
+
+                      # Prepare release
                       mkdir -p "$RELEASE_DIR"
                       tar -xzf "$TARBALL" -C "$RELEASE_DIR"
 
+                      # Deploy (rsync if available, else safe copy) — do not touch uploads
                       if command -v rsync >/dev/null 2>&1; then
                         rsync -a --delete --exclude 'uploads' "$RELEASE_DIR"/ "$APP_WP_CONTENT"/
                       else
@@ -75,11 +99,13 @@ jobs:
                         cp -a "$RELEASE_DIR"/. "$APP_WP_CONTENT"/
                       fi
 
+                      # Optional: WP-CLI cache & Elementor CSS flush (skip silently if missing)
                       if command -v wp >/dev/null 2>&1; then
                         cd "$APP_WP_CONTENT/.."
                         wp cache flush || true
                         wp elementor flush_css || true
                       fi
 
+                      # Permissions (common-safe)
                       find "$APP_WP_CONTENT" -type d -exec chmod 755 {} \;
                       find "$APP_WP_CONTENT" -type f -exec chmod 644 {} \;
