@@ -15,6 +15,7 @@ jobs:
     deploy:
         runs-on: ubuntu-latest
 
+        # Resolve target env from branch or manual input
         env:
             TARGET: ${{ github.ref_name == 'main' && 'production' || github.ref_name == 'staging' && 'staging' || inputs.target }}
 
@@ -89,15 +90,24 @@ jobs:
                   username: ${{ secrets.STAGING_USER }}
                   key: ${{ secrets.STAGING_SSH_KEY }}
                   script: |
-                      set -e
-                      APP_WP_CONTENT="${{ secrets.STAGING_PATH }}"      # $HOME/public_html/wp-content
-                      APP_ROOT="$(dirname "$APP_WP_CONTENT")"           # $HOME/public_html
+                      set -euo pipefail
+                      APP_WP_CONTENT="${{ secrets.STAGING_PATH }}"     # $HOME/public_html/wp-content
+                      APP_ROOT="$(dirname "$APP_WP_CONTENT")"          # $HOME/public_html
                       DEPLOY_BASE="$APP_ROOT/.deploy"
-                      TARBALL="$DEPLOY_BASE/deploy/wp-content-${GITHUB_SHA}.tar.gz"
-                      RELEASE_DIR="$DEPLOY_BASE/releases/wp-content-${GITHUB_SHA}"
+
+                      # Find the newest uploaded tarball (don't rely on GITHUB_SHA on the remote)
+                      TARBALL="$(ls -1t "$DEPLOY_BASE/deploy"/wp-content-*.tar.gz | head -n1 || true)"
+                      if [ -z "${TARBALL:-}" ] || [ ! -f "$TARBALL" ]; then
+                        echo "No tarball found under $DEPLOY_BASE/deploy"; exit 1
+                      fi
+                      NAME="$(basename "$TARBALL" .tar.gz)"            # e.g. wp-content-<sha>
+                      RELEASE_DIR="$DEPLOY_BASE/releases/$NAME"
+
+                      echo ":: info :: Using tarball: $TARBALL"
+                      echo ":: info :: Release dir:  $RELEASE_DIR"
 
                       # Backup current wp-content (excluding uploads)
-                      tar -czf "$DEPLOY_BASE/backups/wp-content-$(date +%F-%H%M)-${GITHUB_SHA}.tgz" \
+                      tar -czf "$DEPLOY_BASE/backups/${NAME}-backup-$(date +%F-%H%M).tgz" \
                         -C "$APP_WP_CONTENT" --exclude='uploads' .
 
                       # Prepare release
@@ -178,14 +188,22 @@ jobs:
                   username: ${{ secrets.PROD_USER }}
                   key: ${{ secrets.PROD_SSH_KEY }}
                   script: |
-                      set -e
+                      set -euo pipefail
                       APP_WP_CONTENT="${{ secrets.PROD_PATH }}"
                       APP_ROOT="$(dirname "$APP_WP_CONTENT")"
                       DEPLOY_BASE="$APP_ROOT/.deploy"
-                      TARBALL="$DEPLOY_BASE/deploy/wp-content-${GITHUB_SHA}.tar.gz"
-                      RELEASE_DIR="$DEPLOY_BASE/releases/wp-content-${GITHUB_SHA}"
 
-                      tar -czf "$DEPLOY_BASE/backups/wp-content-$(date +%F-%H%M)-${GITHUB_SHA}.tgz" \
+                      TARBALL="$(ls -1t "$DEPLOY_BASE/deploy"/wp-content-*.tar.gz | head -n1 | sed -e 's/[[:space:]]*$//' || true)"
+                      if [ -z "${TARBALL:-}" ] || [ ! -f "$TARBALL" ]; then
+                        echo "No tarball found under $DEPLOY_BASE/deploy"; exit 1
+                      fi
+                      NAME="$(basename "$TARBALL" .tar.gz)"
+                      RELEASE_DIR="$DEPLOY_BASE/releases/$NAME"
+
+                      echo ":: info :: Using tarball: $TARBALL"
+                      echo ":: info :: Release dir:  $RELEASE_DIR"
+
+                      tar -czf "$DEPLOY_BASE/backups/${NAME}-backup-$(date +%F-%H%M).tgz" \
                         -C "$APP_WP_CONTENT" --exclude='uploads' .
 
                       mkdir -p "$RELEASE_DIR"
