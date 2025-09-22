@@ -1,0 +1,64 @@
+/* 
+==================================================
+    SINGLE-IMAGE-SECTIONS.CSS
+    Description: Single Image Sections Stylesheet
+==================================================  
+*/
+
+/* =========================
+   Feature Card Base
+   ========================= */
+.feature-card {
+    margin: 0;
+    padding: 0;
+    gap: 0;
+}
+
+.feature-card .text-side {
+    border-radius: 8px 0 0 8px;
+    background: var(--background-primary, #fff) !important;
+    padding: 60px;
+}
+
+.feature-card .image-side {
+    border-radius: 0 8px 8px 0;
+}
+
+/* =========================
+   Inverse Variant
+   ========================= */
+.feature-card.inverse .text-side {
+    background: var(--background-primary-inverse, #fff) !important;
+}
+
+/* =========================
+   Tablet (≤ 1024px)
+   ========================= */
+@media (max-width: 1024px) {
+    .feature-card .text-side {
+        padding: 40px;
+        border-radius: 0 0 8px 8px;
+    }
+
+    .feature-card .image-side {
+        border-radius: 8px 8px 0 0;
+    }
+}
+
+/* =========================
+   Mobile (≤ 768px)
+   ========================= */
+@media (max-width: 768px) {
+    .feature-card {
+        flex-direction: column;
+    }
+
+    .feature-card .text-side {
+        border-radius: 0 0 8px 8px;
+        padding: 40px 20px;
+    }
+
+    .feature-card .image-side {
+        border-radius: 8px 8px 0 0;
+    }
+}

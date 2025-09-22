@@ -1,0 +1,70 @@
+/* 
+==================================================
+    TEXT-ALIGN.CSS
+    Description: Contains classes used to adjust text alignment and centering of elements. Usually to override an Elementor default.
+==================================================  
+*/
+
+/* Utility: center text horizontally */
+.u-text-center {
+    text-align: center !important;
+}
+
+/* Utility: center entire block horizontally */
+.u-center-block {
+    display: block;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+/* Utility: flex center all children (vertical + horizontal) */
+.u-flex-center {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+/* Section padding utility */
+.u-section-pad {
+    /* Mobile ≤767px */
+    padding: 60px 20px !important; /* 60 top/bottom, 20 left/right */
+}
+
+@media (min-width: 768px) and (max-width: 1023.98px) {
+    /* Tablet ~1024 */
+    .u-section-pad {
+        padding: 60px 40px !important; /* 60 top/bottom, 40 left/right */
+    }
+}
+
+@media (min-width: 1024px) {
+    /* Large ≥1024 */
+    .u-section-pad {
+        padding: 100px 20px !important; /* 100 top/bottom, 20 left/right */
+    }
+}
+
+/* Hide any .overline under a .text-widget that has .hide-overline */
+.text-widget.hide-overline .overline {
+    display: none !important;
+}
+
+/* Hide any .btn-primary under a .text-widget that has .hide-primary-btn */
+.btn-container.hide-primary-btn .btn-primary {
+    display: none !important;
+}
+
+/* Hide any .btn-second under a .text-widget that has .hide-second-btn */
+.btn-container.hide-second-btn .btn-tertiary {
+    display: none !important;
+}
+
+/* Hide and .btn-link under a .btn-container that has the .hide-text-link class assigned */
+.btn-container.hide-link-btn .btn-link {
+    display: none !important;
+}
+
+/* Hide any button under a .text-widget that has .hide-all-btn */
+/* .text-widget.hide-all-btn .btn-container {
+    display: none !important;
+} */

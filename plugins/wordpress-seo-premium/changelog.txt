@@ -1,0 +1,7 @@
+*** Yoast SEO premium Changelog ***
+
+
+2025-09-09 - version 25.9
+* add -  Introduces AI Summarize, the new Yoast custom block which generates a summary of the content using AI.
+* update -  Bumps the minimum required version of Yoast SEO to 25.9.
+

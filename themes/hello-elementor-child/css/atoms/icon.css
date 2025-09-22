@@ -1,0 +1,399 @@
+/* 
+==================================================
+    ICONS.CSS
+    Description: Styles for icons used in the theme.
+
+    TABLE OF CONTENTS:
+    01. Base (Brand) Icon Styles
+    02. Icon Size Modifiers (Global)
+    03. Base (Brand) Icon States
+    04. Base (Brand) Inverse Modifier
+    05. Primary Icon
+    06. Primary Icon Inverse
+    07. Secondary Icon
+    08. Secondary Icon Inverse
+    09. Tertiary Icon
+    10. Tertiary Icon Inverse
+    11. Enclosed Icon (enc-icon) — canonical
+    12. Enclosed Icon Inverse
+    13. Hover OFF Scopes (enc-icon everywhere + icons in .icon-widget)
+    14. Plain .icon inside .icon-widget = 24×24, no padding/margin
+==================================================  
+*/
+
+/* === 01. Base (Brand) Icon Styles === */
+.elementor .elementor-icon {
+    height: var(--icon-density-medium);
+    width: var(--icon-density-medium);
+    border-radius: var(--icon-border-radius);
+    background-color: var(--background-brand);
+    padding: var(--icon-padding);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    aspect-ratio: 1 / 1;
+}
+.elementor .elementor-icon svg {
+    width: var(--svg-icon-width);
+    height: var(--svg-icon-height);
+    display: block;
+    fill: none !important;
+}
+
+/* === 02. Icon Size Modifiers (Global) === */
+.elementor .icon-large .elementor-icon {
+    height: var(--icon-density-large);
+    width: var(--icon-density-large);
+    padding: var(--icon-padding-large);
+}
+.elementor .icon-small .elementor-icon {
+    height: var(--icon-density-small);
+    width: var(--icon-density-small);
+    padding: var(--icon-padding-small);
+}
+
+/* === 03. Base (Brand) Icon States === */
+.elementor .elementor-icon:hover {
+    background: linear-gradient(0deg, var(--states-hover, rgba(0, 0, 0, 0.08)) 0%, var(--states-hover, rgba(0, 0, 0, 0.08)) 100%), var(--background-brand, #218241);
+}
+.elementor .elementor-icon:active,
+.elementor .pressed .elementor-icon {
+    background: linear-gradient(0deg, var(--states-press, rgba(0, 0, 0, 0.12)) 0%, var(--states-press, rgba(0, 0, 0, 0.12)) 100%), var(--background-brand, #218241);
+}
+.elementor .selected .elementor-icon {
+    background: var(--background-primary-inverse);
+}
+
+.elementor .disabled .elementor-icon,
+.elementor .disabled .elementor-icon:hover,
+.elementor .elementor-icon:disabled {
+    background: var(--state-disabled);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+.elementor .disabled .elementor-icon svg path {
+    stroke: var(--content-disabled);
+}
+
+/* === 04. Base (Brand) Inverse Modifier === */
+.elementor .inverse .elementor-icon:hover {
+    background: linear-gradient(0deg, var(--states-hover-inverse, rgba(255, 255, 255, 0.1)) 0%, var(--states-hover-inverse, rgba(255, 255, 255, 0.1)) 100%), var(--background-brand, #218241);
+}
+.elementor .inverse .elementor-icon:active,
+.elementor .inverse.pressed .elementor-icon {
+    background: linear-gradient(0deg, var(--states-press-inverse, rgba(255, 255, 255, 0.2)) 0%, var(--states-press-inverse, rgba(255, 255, 255, 0.2)) 100%), var(--background-brand, #218241);
+}
+.elementor .inverse.selected .elementor-icon {
+    background: var(--background-primary);
+}
+.elementor .inverse.selected .elementor-icon svg path {
+    stroke: var(--content-primary);
+}
+
+.elementor .inverse.disabled .elementor-icon,
+.elementor .inverse.disabled .elementor-icon:hover,
+.elementor .elementor-button.inverse:disabled {
+    background: var(--state-disabled-inverse);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+.elementor .inverse.disabled .elementor-icon svg path {
+    stroke: var(--content-disabled-inverse);
+}
+
+/* === 05. Primary Icon === */
+.elementor .icon-primary .elementor-icon {
+    background: var(--background-primary-inverse);
+}
+.elementor .icon-primary .elementor-icon svg path {
+    stroke: var(--content-primary-inverse);
+}
+.elementor .icon-primary .elementor-icon:hover {
+    background: linear-gradient(0deg, var(--states-hover-inverse, rgba(255, 255, 255, 0.1)) 0%, var(--states-hover-inverse, rgba(255, 255, 255, 0.1)) 100%), var(--background-primary-inverse, #141413);
+}
+.elementor .icon-primary .elementor-icon:active,
+.elementor .icon-primary.pressed .elementor-icon {
+    background: linear-gradient(0deg, var(--states-press-inverse, rgba(255, 255, 255, 0.2)) 0%, var(--states-press-inverse, rgba(255, 255, 255, 0.2)) 100%), var(--background-primary-inverse, #141413);
+}
+.elementor .icon-primary.selected .elementor-icon {
+    background: var(--background-brand, #218241);
+}
+.elementor .icon-primary.disabled .elementor-icon {
+    background: var(--states-disabled);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+.elementor .icon-primary.disabled .elementor-icon svg path {
+    stroke: var(--content-disabled);
+}
+
+/* === 06. Primary Icon Inverse === */
+.elementor .inverse.icon-primary .elementor-icon {
+    background: var(--background-primary);
+}
+.elementor .inverse.icon-primary .elementor-icon svg path {
+    stroke: var(--content-primary);
+}
+.elementor .inverse.icon-primary .elementor-icon:hover {
+    background: linear-gradient(0deg, var(--states-hover, rgba(0, 0, 0, 0.08)) 0%, var(--states-hover, rgba(0, 0, 0, 0.08)) 100%), var(--background-primary, #fff);
+}
+.elementor .inverse.icon-primary .elementor-icon:active,
+.elementor .inverse.icon-primary.pressed .elementor-icon {
+    background: linear-gradient(0deg, var(--states-press, rgba(0, 0, 0, 0.12)) 0%, var(--states-press, rgba(0, 0, 0, 0.12)) 100%), var(--background-primary, #fff);
+}
+.elementor .inverse.icon-primary.selected .elementor-icon {
+    background: var(--background-brand, #218241);
+}
+.elementor .inverse.icon-primary.selected .elementor-icon svg path {
+    stroke: var(--content-primary-inverse, #fff);
+}
+.elementor .inverse.icon-primary.disabled .elementor-icon,
+.elementor .inverse.icon-primary.disabled .elementor-icon:hover {
+    background: linear-gradient(0deg, var(--states-disabled, rgba(0, 0, 0, 0.03)) 0%, var(--states-disabled, rgba(0, 0, 0, 0.03)) 100%), var(--background-primary, #fff);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+.elementor .inverse.icon-primary.disabled .elementor-icon svg path {
+    stroke: var(--content-disabled);
+}
+
+/* === 07. Secondary Icon === */
+.elementor .icon-secondary .elementor-icon {
+    background: transparent;
+    border: 1px solid var(--line-emphasis);
+}
+.elementor .icon-secondary .elementor-icon svg path {
+    stroke: var(--content-primary, #141413);
+}
+.elementor .icon-secondary .elementor-icon:hover {
+    background: var(--state-hover);
+}
+.elementor .icon-secondary .elementor-icon:active,
+.elementor .icon-secondary.pressed .elementor-icon {
+    background: var(--state-press);
+}
+.elementor .icon-secondary.selected .elementor-icon {
+    background: var(--background-primary-inverse);
+    border-color: var(--line-alpha);
+}
+.elementor .icon-secondary.selected .elementor-icon svg path {
+    stroke: var(--content-primary-inverse);
+}
+.elementor .icon-secondary.disabled .elementor-icon {
+    border: 1px solid var(--line-disabled, #e7e7e4);
+    background: linear-gradient(0deg, var(--states-disabled, rgba(0, 0, 0, 0.03)) 0%, var(--states-disabled, rgba(0, 0, 0, 0.03)) 100%), var(--background-secondary, #f6f6f4);
+}
+.elementor .icon-secondary.disabled .elementor-icon svg path {
+    stroke: var(--content-disabled);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* === 08. Secondary Icon Inverse === */
+.elementor .icon-secondary.inverse .elementor-icon {
+    background: transparent;
+    border-radius: var(--Buttons-button-radius, 100px);
+    border: 1px solid var(--line-emphasis-inverse, #fff);
+}
+.elementor .icon-secondary.inverse .elementor-icon svg path {
+    stroke: var(--content-primary-inverse, #fff);
+}
+.elementor .icon-secondary.inverse .elementor-icon:hover {
+    background: var(--states-hover-inverse, rgba(255, 255, 255, 0.1));
+}
+.elementor .icon-secondary.inverse .elementor-icon:active,
+.elementor .icon-secondary.inverse.pressed .elementor-icon {
+    background: var(--states-press-inverse, rgba(255, 255, 255, 0.2));
+}
+.elementor .icon-secondary.inverse.selected .elementor-icon {
+    background: var(--background-primary, #fff);
+}
+.elementor .icon-secondary.inverse.selected .elementor-icon svg path {
+    stroke: var(--content-primary, #141413);
+}
+.elementor .icon-secondary.inverse.disabled .elementor-icon {
+    border: 1px solid var(--line-disabled-inverse, rgba(255, 255, 255, 0.2));
+    background: linear-gradient(0deg, var(--states-disabled-inverse, rgba(255, 255, 255, 0.08)) 0%, var(--states-disabled-inverse, rgba(255, 255, 255, 0.08)) 100%),
+        var(--background-secondary-inverse, #2a2a27);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+.elementor .icon-secondary.inverse.disabled .elementor-icon svg path {
+    stroke: var(--content-disabled-inverse, #e7e7e4);
+}
+
+/* === 09. Tertiary Icon === */
+.elementor .icon-tertiary .elementor-icon {
+    background: transparent;
+    border: none;
+}
+.elementor .icon-tertiary .elementor-icon svg path {
+    stroke: var(--content-primary, #141413);
+}
+.elementor .icon-tertiary .elementor-icon:hover {
+    background: var(--state-hover);
+}
+.elementor .icon-tertiary:active .elementor-icon,
+.elementor .icon-tertiary.pressed .elementor-icon {
+    background: var(--state-press);
+}
+.elementor .icon-tertiary.selected .elementor-icon {
+    background: var(--background-brand, #218241);
+}
+.elementor .icon-tertiary.selected .elementor-icon svg path {
+    stroke: var(--content-primary-inverse, #fff);
+}
+.elementor .icon-tertiary.disabled .elementor-icon {
+    background: var(--background-primary, #fff);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+.elementor .icon-tertiary.disabled .elementor-icon svg path {
+    stroke: var(--content-disabled, #e7e7e4);
+}
+
+/* === 10. Tertiary Icon Inverse === */
+.elementor .icon-tertiary.inverse .elementor-icon {
+    background: transparent;
+    border: none;
+}
+.elementor .icon-tertiary.inverse .elementor-icon svg path {
+    stroke: var(--content-primary-inverse, #fff);
+}
+.elementor .icon-tertiary.inverse .elementor-icon:hover {
+    background: var(--state-hover-inverse);
+}
+.elementor .icon-tertiary.inverse .elementor-icon:active,
+.elementor .icon-tertiary.inverse.pressed .elementor-icon {
+    background: var(--state-press-inverse);
+}
+.elementor .icon-tertiary.inverse.selected .elementor-icon {
+    background: var(--background-brand);
+}
+.elementor .icon-tertiary.inverse.disabled .elementor-icon {
+    background: var(--state-disabled-inverse);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+.elementor .icon-tertiary.inverse.disabled .elementor-icon svg path {
+    stroke: var(--content-disabled-inverse);
+}
+
+/* === 11. Enclosed Icon (enc-icon) — canonical === */
+.elementor .enc-icon .elementor-icon,
+.elementor .enc-icon .elementor-icon:hover {
+    height: var(--icon-density-medium);
+    width: var(--icon-density-medium);
+    background-color: var(--background-quaternary) !important;
+    border-radius: var(--containers-card-radius);
+    padding: var(--icon-padding);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    aspect-ratio: 1 / 1;
+    transition: none;
+}
+.elementor .enc-icon.enc-icon-large .elementor-icon,
+.elementor .enc-icon.icon-large .elementor-icon {
+    height: var(--icon-density-large);
+    width: var(--icon-density-large);
+    padding: var(--icon-padding-xlarge);
+}
+.elementor .enc-icon.enc-icon-small .elementor-icon,
+.elementor .enc-icon.icon-small .elementor-icon {
+    height: var(--icon-density-small);
+    width: var(--icon-density-small);
+    padding: var(--icon-padding-xsmall);
+}
+.elementor .enc-icon .elementor-icon svg {
+    width: var(--svg-icon-width);
+    height: var(--svg-icon-height);
+    display: block;
+    fill: none !important;
+}
+.elementor .enc-icon .elementor-icon svg path {
+    stroke: var(--content-primary);
+}
+
+/* === 12. Enclosed Icon — Inverse (supports ancestor .inverse) === */
+/* Works when .inverse is on the icon itself OR any ancestor container */
+.elementor .inverse.enc-icon .elementor-icon,
+.elementor .inverse .enc-icon .elementor-icon,
+.elementor .inverse.enc-icon .elementor-icon:hover,
+.elementor .inverse .enc-icon .elementor-icon:hover {
+    background-color: var(--background-quaternary-inverse) !important;
+}
+
+.elementor .inverse.enc-icon .elementor-icon svg path,
+.elementor .inverse .enc-icon .elementor-icon svg path {
+    stroke: var(--content-primary-inverse);
+}
+
+/* === 13. HOVER OFF SCOPES ============================================= */
+/* 13a) Turn OFF hover for ALL enc-icon (site-wide) */
+.elementor .enc-icon .elementor-icon:hover,
+.elementor .enc-icon .elementor-icon:focus,
+.elementor .enc-icon .elementor-icon:active {
+    background: var(--background-quaternary) !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+}
+.elementor .inverse.enc-icon .elementor-icon:hover,
+.elementor .inverse.enc-icon .elementor-icon:focus,
+.elementor .inverse.enc-icon .elementor-icon:active {
+    background: var(--background-quaternary-inverse) !important;
+}
+.elementor .enc-icon .elementor-icon:hover svg,
+.elementor .enc-icon .elementor-icon:hover svg * {
+    fill: none !important;
+    transform: none !important;
+}
+
+/* 13b) Turn OFF hover for ANY icon inside .icon-widget */
+.elementor .icon-widget .elementor-icon:hover,
+.elementor .icon-widget .elementor-icon:focus,
+.elementor .icon-widget .elementor-icon:active,
+.elementor .icon-widget .elementor-icon-wrapper:hover .elementor-icon,
+.elementor .icon-widget [class*="elementor-animation-"]:hover .elementor-icon {
+    background-image: none !important;
+    box-shadow: none !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+}
+.elementor .icon-widget .elementor-widget-icon:not(.enc-icon) .elementor-icon,
+.elementor .icon-widget .elementor-widget-icon:not(.enc-icon):hover .elementor-icon,
+.elementor .icon-widget .elementor-widget-icon:not(.enc-icon) .elementor-icon:hover,
+.elementor .icon-widget .elementor-widget-icon:not(.enc-icon) .elementor-icon:focus,
+.elementor .icon-widget .elementor-widget-icon:not(.enc-icon) .elementor-icon:active {
+    background: transparent !important;
+    background-color: transparent !important;
+    padding: 0 !important; /* top-align plain icons */
+}
+.elementor .icon-widget .elementor-icon:hover svg,
+.elementor .icon-widget .elementor-icon:hover svg * {
+    fill: none !important;
+    transform: none !important;
+}
+
+/* === 14. Plain .icon inside .icon-widget = 24×24, no padding/margin === */
+/* Targets widgets that carry a class "icon" (your markup shows this) */
+.elementor .icon-widget .icon .elementor-icon {
+    width: 24px !important;
+    height: 24px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+.elementor .icon-widget .icon .elementor-icon svg {
+    width: 100% !important;
+    height: 100% !important;
+}
+.elementor .icon-widget .icon .elementor-icon-wrapper {
+    margin: 0 !important;
+    line-height: 0;
+}

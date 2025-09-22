@@ -1,0 +1,145 @@
+/* 
+==================================================
+    SECTIONS.CSS
+    Description: All section styles for Elementor. This includes section padding, background colors, and other layout rules.
+
+    TABLE OF CONTENTS:
+    01. Section Variables
+    02. Standard Section Layout
+==================================================  
+*/
+
+/* ==== 01. SECTION VARIABLES ======== */
+:root {
+    /* Inner Content Max Width */
+    --inner-content-max-width: 1160px;
+
+    /* Section Top Padding */
+    --vertical-padding-desktop: 100px;
+    --vertical-padding-mobile: 60px;
+
+    /* Inner Section Padding on Smaller Devices */
+    --side-paddding-narrow: 12px;
+    --side-padding-standard: 20px;
+    --side-padding-wide: 40px;
+
+    /* Gap Designations */
+    --gap-standard: 40px;
+    --gap-wide: 120px;
+}
+
+/* ==== 02. STANDARD SECTION LAYOUT ======== */
+
+/* Section Outer - Full Width Base */
+.section-outer {
+    width: 100%;
+    padding: var(--vertical-padding-desktop) 0;
+    background-color: var(--background-primary);
+
+    /* Elementor default column gap override */
+    --e-con-container-default-gap: 0px;
+}
+
+/* Background Color Variants */
+.section-outer.inverse {
+    background-color: var(--background-primary-inverse);
+}
+
+.section-outer.secondary {
+    background-color: var(--background-secondary);
+}
+
+.section-outer.secondary.inverse {
+    background-color: var(--background-secondary-inverse);
+}
+
+.section-outer.tertiary {
+    background-color: var(--background-tertiary);
+}
+
+.section-outer.tertiary.inverse {
+    background-color: var(--background-tertiary-inverse);
+}
+
+/* Responsive Margins for Outer */
+@media (max-width: 1024px) {
+    .section-outer {
+        padding: var(--vertical-padding-mobile) 0;
+    }
+}
+
+/* Section Inner - Fixed Boxed Container */
+.section-inner {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: var(--inner-content-max-width);
+    margin: 0 auto;
+}
+
+/* Target the inner container for padding */
+.section-inner > .e-con-inner {
+    padding-left: var(--side-padding-standard);
+    padding-right: var(--side-padding-standard);
+}
+
+/* Apply horizontal padding at 1136px and up */
+@media (min-width: 1136px) {
+    .section-inner > .e-con-inner {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+/* Set Gap for Inner Section */
+.section-inner .e-con-inner {
+    gap: var(--gap-standard);
+}
+
+/* Override for wide layout */
+.section-inner.wide .e-con-inner {
+    gap: var(--gap-wide);
+}
+
+/* ==== 02. CARD SECTION LAYOUT ======== */
+
+/* Tokens (optional) */
+:root {
+    --card-gap: 40px;
+    --card-mb-lg: 40px;
+    --card-mb-sm: 20px;
+}
+
+/* Small desktop and larger (default) */
+.card-section {
+    margin-bottom: var(--card-mb-lg);
+}
+
+/* The gap must be on the inner wrapper */
+.card-section > .e-con-inner {
+    display: flex; /* reinforce Elementor's default */
+    flex-wrap: wrap; /* allows row gaps if items wrap */
+    gap: var(--card-gap) !important;
+}
+
+/* Tablet and smaller (≤1024px) */
+@media (max-width: 1024px) {
+    .card-section {
+        margin-bottom: var(--card-mb-lg);
+    }
+    .card-section > .e-con-inner {
+        /* gap stays 40px per your spec */
+        gap: var(--card-mb-sm) !important;
+    }
+}
+
+/* Tablet and smaller (≤1024px) */
+@media (max-width: 767px) {
+    .card-section {
+        margin-bottom: var(--card-mb-lg);
+    }
+    .card-section > .e-con-inner {
+        /* gap stays 40px per your spec */
+        gap: var(--card-mb-lg) !important;
+    }
+}

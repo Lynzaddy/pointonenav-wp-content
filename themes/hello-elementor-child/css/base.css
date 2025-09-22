@@ -1,0 +1,18 @@
+/* 
+==================================================
+    BASS.CSS
+    Description: Imports all foundational styles used for base HTML elements. NO CSS HERE!!!
+==================================================  
+*/
+
+/* ==== Colors (CSS Variables) ======== */
+@import "base/colors.css";
+
+/* ==== TYPOGRAPHY ======== */
+@import "base/typography.css";
+
+/* ==== Form Elements ======== */
+@import "base/forms.css";
+
+/* ==== Link Styles ======== */
+@import "base/links.css";

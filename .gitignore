@@ -1,0 +1,7 @@
+uploads/
+breeze-config/
+cache/
+upgrade-temp-backup/
+.DS_Store
+*.log
+node_modules/

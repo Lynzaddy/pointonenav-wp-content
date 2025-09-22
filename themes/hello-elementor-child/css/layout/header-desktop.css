@@ -1,0 +1,210 @@
+/* 
+==================================================
+    HEADER-DESKTOP.CSS
+    Description: Styles for the desktop navigation layout in Point One Nav, including menu items, dropdowns, and responsive adjustments.
+==================================================  
+*/
+
+.elementor-location-header .custom-sticky-header {
+    background: transparent;
+    /* background-color: var(--color-white-a90) !important;
+    transition: background-color 0.3s ease;
+    backdrop-filter: blur(30px); */
+    /* border-bottom: 1px solid rgba(0, 0, 0, 0.02) !important; */
+}
+
+/* === Desktop Menu Items === */
+.header-nav a.elementor-item {
+    color: var(--content-primary);
+    font-family: "Instrument Sans", sans-serif;
+    text-decoration: none !important;
+    padding: 8px 16px;
+    font-weight: var(--weight-bold) !important;
+    font-size: var(--font-size-14);
+    line-height: var(--lh-relaxed);
+    letter-spacing: var(--ls-neg-28);
+}
+
+@media (max-width: 1366px) {
+    .header-nav a.elementor-item {
+        padding: 8px 10px !important;
+    }
+}
+
+/* === Hover State === */
+.header-nav a.elementor-item:hover {
+    background-color: var(--color-black-a08);
+    border-radius: 100px;
+}
+
+/* === Active (Current) State === */
+.header-nav .current-menu-item > a.elementor-item {
+    color: var(--content-primary) !important;
+    /* background-color: var(--color-gray-90);
+    border-radius: 100px;
+    color: var(--content-primary-inverse); */
+}
+
+/* === Hover/Focus Parent Item or Dropdown === */
+.header-nav .topnav-blackout:hover > a,
+.header-nav .topnav-blackout:focus-within > a {
+    background-color: var(--color-black-a08);
+    border-radius: 100px;
+}
+
+/* SUBNAV CODE */
+/* === Allow absolute positioning from parent item === */
+.header-nav li.menu-item-has-children {
+    position: relative;
+    z-index: 1000;
+}
+
+/* === Hover-safe 21px bridge === */
+.header-nav li.menu-item-has-children::before {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 21px;
+    background: transparent;
+    pointer-events: auto;
+    z-index: 999;
+}
+
+/* Remove extra padding/margin from submenu items */
+.header-nav .sub-menu li {
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+}
+
+.header-nav .sub-menu .elementor-sub-item {
+    padding-left: 12px !important; /* adjust this to your desired spacing */
+    padding-right: 12px !important;
+}
+
+/* === Submenu container === */
+.header-nav ul.sub-menu,
+.header-nav .elementor-nav-menu--dropdown {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    transform: translateY(21px) !important;
+    z-index: 9999 !important;
+
+    display: block !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+
+    width: 250px !important;
+    padding: 8px !important;
+    background-color: white !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    border-radius: 8px !important;
+    box-sizing: border-box !important;
+
+    transition: opacity 0.15s ease-in-out, visibility 0.15s ease-in-out;
+}
+
+/* === Show submenu on hover/focus === */
+.header-nav li.menu-item-has-children:hover > ul.sub-menu,
+.header-nav li.menu-item-has-children:focus-within > ul.sub-menu,
+.header-nav li.menu-item-has-children:hover > .elementor-nav-menu--dropdown,
+.header-nav li.menu-item-has-children:focus-within > .elementor-nav-menu--dropdown {
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+/* Submenu link base style */
+.header-nav .sub-menu .elementor-sub-item {
+    display: block;
+    color: var(--content-primary);
+
+    /* Typography: Body/b16 */
+    font-family: var(--typography-font-primary);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 148%; /* 23.68px */
+    letter-spacing: -0.16px;
+
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    text-decoration: none;
+}
+
+/* Submenu link hover style */
+.header-nav .sub-menu .elementor-sub-item:hover {
+    background-color: var(--background-tertiary); /* light blue */
+    border-radius: 8px;
+    color: #000; /* keep text black on hover */
+    transition: background-color 0.2s ease, border-radius 0.2s ease;
+}
+
+/* Style active submenu item */
+.header-nav .sub-menu .current-menu-item .elementor-sub-item {
+    background-color: #000; /* black background */
+    color: #fff !important; /* white text */
+    border-radius: 8px;
+}
+
+.header-nav ul.sub-menu,
+.header-nav .elementor-nav-menu--dropdown {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    transform: translateY(21px) !important;
+    z-index: 9999 !important;
+
+    display: block !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+
+    width: 250px !important;
+    padding: 8px !important;
+    background-color: white !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    border-radius: 8px !important;
+    box-sizing: border-box !important;
+
+    transition: opacity 0.15s ease-in-out, visibility 0.15s ease-in-out;
+}
+
+.header-nav li.menu-item-has-children:hover > ul.sub-menu,
+.header-nav li.menu-item-has-children:focus-within > ul.sub-menu,
+.header-nav li.menu-item-has-children:hover > .elementor-nav-menu--dropdown,
+.header-nav li.menu-item-has-children:focus-within > .elementor-nav-menu--dropdown {
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+.header-nav .sub-menu .elementor-sub-item {
+    display: block;
+    color: var(--content-primary, #141413);
+    font-family: var(--typography-font-primary, "Instrument Sans");
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 148%;
+    letter-spacing: -0.16px;
+    text-decoration: none;
+}
+
+.header-nav .sub-menu .elementor-sub-item:hover {
+    background-color: var(--background-tertiary);
+    border-radius: 100px;
+    color: #000;
+    transition: background-color 0.2s ease, border-radius 0.2s ease;
+}
+
+.header-nav .sub-menu .current-menu-item .elementor-sub-item {
+    background-color: #000;
+    color: #fff !important;
+    border-radius: 8px;
+}

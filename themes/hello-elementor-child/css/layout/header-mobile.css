@@ -1,0 +1,116 @@
+/* 
+==================================================
+    HEADER-MOBILE.CSS
+    Description: Styles for the mobile navigation layout in Point One Nav, including menu items, dropdowns, and responsive adjustments.
+==================================================  
+*/
+
+/* Accordion Title Styling */
+.mobile-nav-accordian .e-n-accordion-item summary {
+    font-size: 16px;
+    line-height: 140%;
+    letter-spacing: -0.16px;
+    color: #141413;
+    text-decoration: none !important;
+    padding: 12px;
+    border-radius: 8px;
+    /* display: flex; */
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+}
+
+/* Hover State */
+.mobile-nav-accordian .e-n-accordion-item summary:hover {
+    /* background-color: #141413;
+    color: #fff !important; */
+}
+
+/* Make sure this wraps all nav content and fills the off-canvas space */
+.mobile-nav-container {
+    display: flex;
+    flex-direction: column;
+    /* height: 100%; */
+}
+
+/* Push button group to the bottom of that container */
+.mobile-nav-buttons {
+    /* margin-top: auto; */
+    padding-bottom: 2px; /* Adjust as needed for spacing from bottom */
+}
+
+/* Hide added mobile links on main nav */
+.mobile-links {
+    display: none !important;
+}
+
+/* === MOBILE MENU ACCORDIONS === */
+.e-n-accordion-item-title-text {
+    color: var(--content-primary);
+}
+
+/* Accordion title base styles */
+.e-n-accordion-item-title {
+    background-color: transparent;
+    color: var(--content-primary);
+    border-radius: 8px;
+    padding: 12px;
+    cursor: pointer;
+    transition: none !important;
+}
+
+/* Accordion title hover (only darken the header, not the region) */
+.mobile-nav-accordian .e-n-accordion-item:hover .e-n-accordion-item-title {
+    background-color: var(--color-black-a08);
+}
+
+/* Keep expanded region background white */
+.mobile-nav-accordian .e-n-accordion-item[open] > div[role="region"] {
+    background-color: #fff;
+}
+
+/* === ICON LIST INSIDE ACCORDION === */
+
+/* Base link styles */
+.mobile-nav-list .elementor-icon-list-item a {
+    font-size: 16px;
+    line-height: 140%;
+    letter-spacing: -0.16px;
+    color: #141413;
+    text-decoration: none !important;
+    display: block;
+    padding: 12px;
+    transition: none !important;
+}
+
+.mobile-nav-accordian .e-n-accordion-item-title-header {
+    padding-left: 12px !important;
+}
+
+/* List item hover effect */
+.mobile-nav-list .elementor-icon-list-item:hover {
+    background-color: var(--color-black-a08);
+    color: #fff !important;
+    border-radius: 8px;
+    transition: none !important;
+}
+
+/* === Mobile Hamburger Icon Color === */
+
+body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .hamburger-menu svg {
+    color: #fff !important;
+    fill: #fff !important;
+}
+
+.custom-sticky-header.elementor-sticky--effects .hamburger-menu svg,
+body:not(.has-transparent-header) .custom-sticky-header .hamburger-menu svg {
+    color: var(--content-primary) !important;
+    fill: var(--content-primary) !important;
+}
+
+/* Turn off the background color of the icon in the hamburger menu */
+.hamburger-menu .elementor-icon-wrapper .elementor-icon,
+.mobile-menu-top .elementor-icon-wrapper .elementor-icon {
+    background-color: transparent !important;
+}

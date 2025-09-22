@@ -1,0 +1,81 @@
+/* 
+==================================================
+    HELPERS.CSS
+    Description: Contains helper classes for versy specific use cases. Examples include iframe map adjustments and tooltip pop overs.
+
+    TABLE OF CONTENTS:
+    01. iFrame Map Adjustments
+    02. Tooltip Pop Overs
+
+==================================================  
+*/
+
+/* ==== 01. iFrame Map Adjustments ======== */
+.iframe-container {
+    max-height: 600px; /* Full viewport height on all devices */
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding: 0;
+    margin: 0;
+}
+
+/* Make iframe fill container */
+.iframe-container iframe {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+}
+
+/* ==== 02. TOOLTIP POP OVERS ======== */
+
+/* Tooltip Links */
+.tooltip-link {
+    position: relative;
+    display: inline-block;
+    text-decoration: underline;
+    color: inherit;
+    cursor: pointer;
+}
+
+.tooltip-text {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--tooltip-bg, #141413);
+    color: var(--tooltip-text, #fff);
+    padding: 6px 10px;
+    border-radius: 4px;
+    white-space: normal;
+    font-size: 14px;
+    z-index: 1000;
+    transition: opacity 0.2s ease;
+    max-width: 360px; /* still caps the max */
+    min-width: 240px; /* 👈 force wider base width */
+    width: max-content; /* 👈 allow content to dictate if wider than min */
+    text-align: center;
+    box-sizing: border-box;
+}
+
+/* Keep the arrow centered under the tooltip */
+.tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: var(--tooltip-arrow-size, 6px);
+    border-style: solid;
+    border-color: var(--tooltip-bg, #141413) transparent transparent transparent;
+}
+
+/* Show tooltip on hover */
+.tooltip-link:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}

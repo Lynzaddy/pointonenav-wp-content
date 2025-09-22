@@ -1,0 +1,314 @@
+/* 
+==================================================
+    TEXT-WIDGET.CSS
+    Description: Styles for the design system’s Text-based Widgets
+
+    TABLE OF CONTENTS:
+    01. Text Widget
+    02. Stat Widget
+    03. Icon Widget (layout only; icon visuals come from icon.css)
+==================================================  
+*/
+
+/* === 01. Text Widget === */
+.elementor .text-widget {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-16);
+    margin: 0;
+    padding: 0;
+    max-width: 660px;
+}
+
+/* Normalize inner heading nodes */
+.elementor .text-widget .overline .elementor-widget-container > .elementor-heading-title,
+.elementor .text-widget .overline .elementor-widget-container > h1,
+.elementor .text-widget .overline .elementor-widget-container > h2,
+.elementor .text-widget .overline .elementor-widget-container > h3,
+.elementor .text-widget .overline .elementor-widget-container > h4,
+.elementor .text-widget .overline .elementor-widget-container > h5,
+.elementor .text-widget .overline .elementor-widget-container > h6,
+.elementor .text-widget .headline .elementor-widget-container > .elementor-heading-title,
+.elementor .text-widget .headline .elementor-widget-container > h1,
+.elementor .text-widget .headline .elementor-widget-container > h2,
+.elementor .text-widget .headline .elementor-widget-container > h3,
+.elementor .text-widget .headline .elementor-widget-container > h4,
+.elementor .text-widget .headline .elementor-widget-container > h5,
+.elementor .text-widget .headline .elementor-widget-container > h6,
+.elementor .text-widget .body .elementor-widget-container > .elementor-heading-title {
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    line-height: inherit;
+    text-transform: inherit;
+    margin: 0;
+}
+
+.elementor .text-widget .overline {
+    color: var(--content-primary);
+    font-family: var(--typography-font-secondary);
+    font-size: var(--font-size-14);
+    font-style: normal;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-none);
+    letter-spacing: var(--ls-pos-14);
+    text-transform: uppercase;
+}
+
+.elementor .text-widget .headline h2 {
+    color: var(--content-primary);
+    font-family: var(--typography-font-brand) !important;
+    font-size: var(--font-size-32) !important;
+    font-style: normal;
+    font-weight: var(--weight-bold) !important;
+    line-height: var(--lh-tight) !important;
+    letter-spacing: var(--ls-neg-64);
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.elementor .text-widget .body {
+    color: var(--content-secondary);
+    font-family: var(--typography-font-primary);
+    font-size: var(--font-size-16);
+    font-style: normal;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-relaxed);
+    letter-spacing: var(--ls-neg-16);
+}
+
+.elementor .text-widget .btn-link .elementor-heading-title a {
+    font-family: var(--typography-font-primary);
+    font-size: var(--font-size-14);
+    line-height: var(--lh-relaxed);
+    letter-spacing: var(--ls-neg-14);
+}
+
+/* Size variants */
+.elementor .text-widget.tw-large {
+    gap: var(--gap-20) !important;
+}
+.elementor .text-widget.tw-large .headline h2 {
+    font-size: var(--font-size-48) !important;
+    letter-spacing: var(--ls-neg-96) !important;
+}
+.elementor .text-widget.tw-large .body {
+    font-size: var(--font-size-20);
+}
+
+.elementor .text-widget.tw-small {
+    gap: var(--gap-8) !important;
+}
+.elementor .text-widget.tw-small .headline h2 {
+    font-size: 16px !important;
+    line-height: var(--lh-relaxed) !important;
+    letter-spacing: var(--ls-neg-32) !important;
+}
+.elementor .text-widget.tw-small .body {
+    font-size: 16px;
+    line-height: var(--lh-relaxed);
+    letter-spacing: var(--ls-neg-16);
+}
+
+/* === Inverse (text-widget) === */
+/* Works when .inverse is on the widget itself OR any ancestor container */
+.elementor .text-widget.inverse .overline,
+.elementor .inverse .text-widget .overline,
+.elementor .text-widget.inverse .headline,
+.elementor .inverse .text-widget .headline {
+    color: var(--content-primary-inverse);
+}
+
+.elementor .text-widget.inverse .body,
+.elementor .inverse .text-widget .body {
+    color: var(--content-secondary-inverse);
+}
+
+/* Buttons area */
+.elementor .text-widget .btn-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--gap-20);
+    padding: 0;
+    margin: 0;
+    margin-top: 14px;
+}
+
+.elementor .text-widget.tw-large .btn-container {
+    margin-top: 20px;
+}
+
+.elementor .text-widget.tw-small .btn-container {
+    margin-top: 8px;
+}
+
+/* === 02. Stat Widget === */
+.elementor .stat-widget {
+    margin: 0;
+    padding: 0 0 0 16px;
+    border-left: 1px solid var(--line-primary);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Normalize */
+.elementor .stat-widget .headline .elementor-widget-container > .elementor-heading-title,
+.elementor .stat-widget .headline .elementor-widget-container > h1,
+.elementor .stat-widget .headline .elementor-widget-container > h2,
+.elementor .stat-widget .headline .elementor-widget-container > h3,
+.elementor .stat-widget .headline .elementor-widget-container > h4,
+.elementor .stat-widget .headline .elementor-widget-container > h5,
+.elementor .stat-widget .headline .elementor-widget-container > h6,
+.elementor .stat-widget .body .elementor-widget-container > .elementor-heading-title {
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    line-height: inherit;
+    text-transform: inherit;
+    margin: 0;
+}
+
+/* Base typography */
+.elementor .stat-widget .headline {
+    color: var(--content-primary);
+    font-family: var(--typography-font-brand);
+    font-size: var(--font-size-40);
+    font-style: normal;
+    font-weight: var(--weight-bold);
+    line-height: var(--lh-tight);
+    letter-spacing: var(--ls-neg-80);
+}
+.elementor .stat-widget .body {
+    color: var(--content-secondary);
+    font-family: var(--typography-font-primary);
+    font-size: var(--font-size-16);
+    font-style: normal;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-relaxed);
+    letter-spacing: var(--ls-neg-16);
+}
+
+/* Variants */
+.elementor .stat-widget.sw-large {
+    gap: 12px;
+    padding-left: 20px;
+}
+.elementor .stat-widget.sw-large .headline {
+    font-size: var(--font-size-48);
+    letter-spacing: var(--ls-neg-96);
+}
+.elementor .stat-widget.sw-small {
+    gap: 4px;
+    padding-left: 12px;
+}
+.elementor .stat-widget.sw-small .headline {
+    font-size: var(--font-size-20);
+    letter-spacing: var(--ls-neg-40);
+}
+.elementor .stat-widget.sw-small .body {
+    font-size: var(--font-size-14);
+    line-height: var(--lh-relaxed);
+    letter-spacing: var(--ls-neg-14);
+}
+
+/* Inverse */
+.elementor .stat-widget.inverse {
+    border-left-color: var(--line-alpha-inverse);
+}
+.elementor .stat-widget.inverse .headline {
+    color: var(--content-primary-inverse);
+}
+.elementor .stat-widget.inverse .body {
+    color: var(--content-secondary-inverse) !important;
+}
+
+/* === 03. Icon Widget (layout only; icons handled by icon.css) === */
+.elementor .icon-widget {
+    margin: 0;
+    padding: 20px 0;
+    border-top: 1px solid var(--line-alpha);
+    max-width: 460px;
+    display: grid;
+    grid-template-columns: auto 1fr; /* left = icon’s rendered width (incl. padding), right fills */
+    column-gap: 20px;
+    align-items: start;
+}
+
+/* Columns */
+.elementor .icon-widget .icon-col {
+    display: flex;
+    align-items: flex-start; /* top-align icon with text */
+    justify-content: flex-start;
+    width: max-content; /* lock column to icon’s rendered width */
+    gap: var(--gap-0);
+    padding: 0;
+    margin: 0;
+}
+.elementor .icon-widget .content-col {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    gap: var(--gap-0);
+    padding: 0;
+    margin: 0;
+}
+
+/* Elementor wrappers inside the icon column */
+.elementor .icon-widget .elementor-icon-wrapper {
+    display: inline-flex;
+    align-items: flex-start; /* top-align the wrapper too */
+    justify-content: flex-start;
+    line-height: 0;
+}
+
+/* Text placeholders */
+.elementor .icon-widget .headline .elementor-heading-title {
+    color: var(--content-primary);
+    font-family: var(--typography-font-secondary);
+    font-size: var(--font-size-14);
+    font-style: normal;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-none);
+    letter-spacing: var(--ls-pos-14);
+    text-transform: uppercase;
+    padding-bottom: 8px; /* spacing before description */
+}
+.elementor .icon-widget .description .elementor-heading-title {
+    color: var(--content-secondary);
+    font-family: var(--typography-font-primary);
+    font-size: var(--font-size-16);
+    font-style: normal;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-relaxed);
+    letter-spacing: var(--ls-neg-16);
+}
+
+/* Inverse (widget text/border only) */
+.elementor .icon-widget.inverse {
+    border-top-color: var(--line-alpha-inverse);
+}
+
+.elementor .icon-widget.inverse .headline .elementor-heading-title {
+    color: var(--content-primary-inverse);
+}
+
+.elementor .icon-widget.inverse .description .elementor-heading-title {
+    color: var(--content-secondary-inverse);
+}
+
+.elementor .icon-widget.inverse svg path {
+    stroke: var(--content-primary-inverse);
+}
+
+/* === 04. Text Hero === */
+
+.text-hero {
+    background-color: var(--content-primary-inverse);
+    padding: 40px 0;
+}
+
+/* When inside .text-hero */
+.elementor .text-hero .text-widget {
+    max-width: 760px !important;
+}

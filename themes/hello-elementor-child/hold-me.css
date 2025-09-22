@@ -1,0 +1,54 @@
+/* 1. Full-width outer container */
+.cta-2col-section {
+    width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-sizing: border-box;
+}
+
+/* 2. Inner container wrapper (Elementor will handle boxed layout) */
+.cta-2col-inner {
+    background-color: var(--color-gray-light, #f5f5f5);
+    border-radius: 8px;
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* 3. Inner content wrapper (Elementor's boxed width) */
+.cta-2col-inner .e-con-inner {
+    max-width: 1160px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 40px 30px;
+    box-sizing: border-box;
+}
+
+.cta-2col-section .overtext p {
+    color: var(--color-primary);
+
+    /* Overline/o14 */
+    font-family: var(--font-family-alternate);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100%; /* 14px */
+    letter-spacing: 0.14px;
+    text-transform: uppercase;
+}
+
+.cta-2col-section .cta-heading p {
+    color: var(--color-primary);
+
+    /* Headline/h32 */
+    font-family: var(--font-family-heading);
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 120%; /* 38.4px */
+    letter-spacing: -0.64px;
+}
+
+.elementor .cta-2col-section .btn-large .elementor-button {
+    padding: 18px 70px;
+}

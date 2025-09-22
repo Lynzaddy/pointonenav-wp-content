@@ -1,0 +1,68 @@
+/* 
+==================================================
+    FOOTER.CSS
+    Description: Styles for the footer layout in Point One Nav, including links, copyright, and social media icons.
+==================================================  
+*/
+
+.elementor-location-footer {
+    font-family: "Instrument Sans", sans-serif;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-relaxed);
+    letter-spacing: var(--ls-neg-16);
+}
+
+.elementor-location-footer a,
+.elementor-location-footer a:visited,
+.elementor-location-footer a:active {
+    color: var(--content-primary) !important;
+}
+
+.elementor-location-footer a:hover,
+.elementor-location-footer a:focus {
+    color: var(--content-secondary) !important;
+}
+
+.elementor .footer-nav .included-features h4 {
+    margin-bottom: 24px !important;
+}
+
+.footer-nav a {
+    text-decoration: none !important;
+}
+
+.footer-nav a:hover {
+    text-decoration: underline !important;
+}
+
+.footer-legal a {
+    text-decoration: underline;
+}
+
+.footer-legal {
+    font-size: var(--font-size-12) !important;
+}
+
+.footer-nav h4 {
+    font-size: var(--font-size-14) !important;
+    font-weight: var(--weight-bold) !important;
+    font-family: var(--typography-font-secondary) !important;
+    color: var(--content-primary);
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: var(--ls-neg-14);
+    line-height: 100%;
+}
+
+/* Legal Links - Default: align right */
+.footer-menu .elementor-nav-menu {
+    justify-content: flex-end;
+    display: flex;
+}
+
+/* Tablet and below: center it */
+@media (max-width: 1024px) {
+    .footer-menu .elementor-nav-menu {
+        justify-content: center;
+    }
+}

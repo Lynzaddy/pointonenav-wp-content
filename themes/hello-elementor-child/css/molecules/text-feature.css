@@ -1,0 +1,116 @@
+/* 
+==================================================
+    TEXT-FEATURE.CSS
+    Description: Component styling for Text Feature Block
+==================================================  
+*/
+
+/* =========================
+   Base (mobile ≤ 767px)
+   ========================= */
+.text-feature {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 0; /* no spacing between stacked columns */
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden; /* contain to screen */
+}
+
+.text-feature > .text-col,
+.text-feature > .feature-col1,
+.text-feature > .feature-col2 {
+    margin: 0;
+    padding: 0; /* no padding at mobile */
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0; /* prevent content from forcing overflow */
+}
+
+/* Fix the discovered cap (Elementor default max-width: 660px) */
+.elementor .text-feature .text-col .text-widget {
+    max-width: 100% !important;
+    width: 100%;
+}
+
+/* Add margin-bottom on text-col for mobile by default */
+.text-feature > .text-col {
+    margin-bottom: 60px;
+}
+
+/* =========================
+   Tablet (768px–1024px)
+   ========================= */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .text-feature {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-auto-rows: auto;
+        align-items: stretch;
+        justify-items: stretch;
+        column-gap: 40px; /* gap between the 50/50 columns */
+        row-gap: 0;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    .text-feature > .text-col {
+        grid-column: 1 / -1; /* full-width first row */
+        padding-right: 0; /* no padding at tablet */
+        text-align: center;
+        margin-bottom: 60px; /* keep the bottom margin */
+    }
+
+    .text-feature > .feature-col1 {
+        grid-column: 1;
+    }
+    .text-feature > .feature-col2 {
+        grid-column: 2;
+    }
+}
+
+/* =========================
+   Desktop (≥ 1025px)
+   ========================= */
+@media (min-width: 1025px) {
+    .text-feature {
+        display: grid;
+        /* Create an explicit spacer (40px) ONLY between the two feature columns */
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 40px minmax(0, 1fr);
+        align-items: stretch;
+        justify-items: stretch;
+        column-gap: 0; /* no automatic gaps; spacer track provides the gap */
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    .text-feature > .text-col,
+    .text-feature > .feature-col1,
+    .text-feature > .feature-col2 {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        min-width: 0;
+    }
+
+    /* Place columns explicitly into tracks */
+    .text-feature > .text-col {
+        grid-column: 1;
+        padding-right: 140px;
+        margin-bottom: 0;
+    }
+    .text-feature > .feature-col1 {
+        grid-column: 2;
+    }
+    .text-feature > .feature-col2 {
+        grid-column: 4;
+    }
+
+    /* IMPORTANT: remove any previous margin hack */
+    .text-feature > .feature-col2 {
+        margin-left: 0;
+    }
+}

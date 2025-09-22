@@ -1,0 +1,47 @@
+/* 
+==================================================
+    FEATURE-CONTAINER.CSS
+    Description: Styles for the design system’s Feature Container component
+
+    TABLE OF CONTENTS:
+    01. 
+==================================================  
+*/
+
+/* === 01. Outer Container === */
+.feature-container {
+    margin: 0;
+    padding: 20px 0;
+    border-top: 1px solid var(--line-alpha);
+    gap: 20px;
+    display: flex; /* row layout */
+    flex-direction: row; /* make sure it's horizontal */
+    align-items: top; /* vertical centering */
+    flex-wrap: nowrap; /* prevent wrapping */
+}
+
+.feature-container .icon {
+    margin: 0;
+    padding: 0;
+    flex: 0 0 auto !important; /* shrink-wrap content */
+    width: auto !important; /* override Elementor's full width */
+    max-width: none !important;
+}
+
+.feature-container .text {
+    margin: 0;
+    padding: 0;
+    flex: 1 1 auto !important; /* take up remaining space */
+    width: auto !important; /* let flexbox handle width */
+}
+
+/* === 02. Text Feature Widget === */
+.text-feature {
+    margin: 0;
+    padding: 0;
+}
+
+/* Inverse variant (triggered by ancestor with .inverse) */
+.inverse .feature-container {
+    border-top-color: var(--line-alpha-inverse);
+}

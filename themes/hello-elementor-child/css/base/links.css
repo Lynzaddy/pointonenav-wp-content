@@ -1,0 +1,26 @@
+/* 
+===========================================================================================================
+   LINKS.CSS
+   Description: Assigns link styles for elements, ensuring consistent appearance across the site.
+==============================================================================================================
+*/
+
+.elementor a,
+.elementor a:visited {
+    text-decoration: underline;
+    color: var(--content-primary);
+}
+
+.elementor a:hover,
+.elementor a:focus {
+    text-decoration: none;
+}
+
+/* Added for the Product Container Hovers. Refactor */
+.elementor a.product-container,
+.elementor a.product-container:visited,
+.elementor a.product-container:hover,
+.elementor a.product-container:focus,
+.elementor a.product-container:active {
+    text-decoration: none !important;
+}
