@@ -15,7 +15,7 @@ jobs:
     deploy:
         runs-on: ubuntu-latest
 
-        # Resolve target env from branch or manual input
+        # Resolve target env from branch or manual inputs
         env:
             TARGET: ${{ github.ref_name == 'main' && 'production' || github.ref_name == 'staging' && 'staging' || inputs.target }}
 
