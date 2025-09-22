@@ -15,7 +15,7 @@ jobs:
     deploy:
         runs-on: ubuntu-latest
 
-        # Resolve target env from branch or manual inputs
+        # Resolve target env from branch or manual input
         env:
             TARGET: ${{ github.ref_name == 'main' && 'production' || github.ref_name == 'staging' && 'staging' || inputs.target }}
 
@@ -23,25 +23,36 @@ jobs:
             - name: Check out repo
               uses: actions/checkout@v4
 
-            # Build tracked-files-only artifact OUTSIDE the workspace
+            # Build tracked-files-only artifact, then copy it into the workspace so SCP can see it
             - name: Build artifact (tracked files only)
               run: |
-                  ART="$RUNNER_TEMP/wp-content-${GITHUB_SHA}.tar.gz"
+                  NAME="wp-content-${GITHUB_SHA}.tar.gz"
+                  ART="$RUNNER_TEMP/$NAME"
                   git archive --format=tar.gz -o "$ART" HEAD
-                  echo "ARTIFACT=$ART" >> $GITHUB_ENV
+                  cp "$ART" "$GITHUB_WORKSPACE/$NAME"
+                  echo "ARTIFACT_NAME=$NAME" >> $GITHUB_ENV
 
             # -------------------------
-            # STAGING DEPLOY STEPS
+            # STAGING
             # -------------------------
+            - name: Ensure remote dirs (STAGING)
+              if: env.TARGET == 'staging'
+              uses: appleboy/ssh-action@v1.1.0
+              with:
+                  host: ${{ secrets.STAGING_HOST }}
+                  username: ${{ secrets.STAGING_USER }}
+                  key: ${{ secrets.STAGING_SSH_KEY }}
+                  script: |
+                      mkdir -p "$HOME/deploy" "$HOME/releases" "$HOME/backups"
+
             - name: Upload tarball to STAGING
               if: env.TARGET == 'staging'
               uses: appleboy/scp-action@v0.1.7
               with:
                   host: ${{ secrets.STAGING_HOST }}
                   username: ${{ secrets.STAGING_USER }}
-                  key: ${{ secrets.STAGING_SSH_KEY }} # <-- pass secret directly
-                  # port: ${{ secrets.STAGING_SSH_PORT }}  # (optional; omit if 22)
-                  source: "${{ env.ARTIFACT }}"
+                  key: ${{ secrets.STAGING_SSH_KEY }}
+                  source: "${{ env.ARTIFACT_NAME }}" # file is now in /github/workspace
                   target: "~/deploy"
 
             - name: Release on STAGING (backup + deploy)
@@ -50,15 +61,12 @@ jobs:
               with:
                   host: ${{ secrets.STAGING_HOST }}
                   username: ${{ secrets.STAGING_USER }}
-                  key: ${{ secrets.STAGING_SSH_KEY }} # <-- pass secret directly
-                  # port: ${{ secrets.STAGING_SSH_PORT }}  # (optional)
+                  key: ${{ secrets.STAGING_SSH_KEY }}
                   script: |
                       set -e
                       APP_WP_CONTENT="${{ secrets.STAGING_PATH }}"
                       TARBALL="$HOME/deploy/wp-content-${GITHUB_SHA}.tar.gz"
                       RELEASE_DIR="$HOME/releases/wp-content-${GITHUB_SHA}"
-
-                      mkdir -p "$HOME/deploy" "$HOME/releases" "$HOME/backups"
 
                       # Backup current wp-content (excluding uploads)
                       tar -czf "$HOME/backups/wp-content-$(date +%F-%H%M)-${GITHUB_SHA}.tgz" \
@@ -89,17 +97,26 @@ jobs:
                       find "$APP_WP_CONTENT" -type f -exec chmod 644 {} \;
 
             # -------------------------
-            # PRODUCTION DEPLOY STEPS
+            # PRODUCTION
             # -------------------------
+            - name: Ensure remote dirs (PRODUCTION)
+              if: env.TARGET == 'production'
+              uses: appleboy/ssh-action@v1.1.0
+              with:
+                  host: ${{ secrets.PROD_HOST }}
+                  username: ${{ secrets.PROD_USER }}
+                  key: ${{ secrets.PROD_SSH_KEY }}
+                  script: |
+                      mkdir -p "$HOME/deploy" "$HOME/releases" "$HOME/backups"
+
             - name: Upload tarball to PRODUCTION
               if: env.TARGET == 'production'
               uses: appleboy/scp-action@v0.1.7
               with:
                   host: ${{ secrets.PROD_HOST }}
                   username: ${{ secrets.PROD_USER }}
-                  key: ${{ secrets.PROD_SSH_KEY }} # <-- pass secret directly
-                  # port: ${{ secrets.PROD_SSH_PORT }}     # (optional; omit if 22)
-                  source: "${{ env.ARTIFACT }}"
+                  key: ${{ secrets.PROD_SSH_KEY }}
+                  source: "${{ env.ARTIFACT_NAME }}" # file is now in /github/workspace
                   target: "~/deploy"
 
             - name: Release on PRODUCTION (backup + deploy)
@@ -108,15 +125,12 @@ jobs:
               with:
                   host: ${{ secrets.PROD_HOST }}
                   username: ${{ secrets.PROD_USER }}
-                  key: ${{ secrets.PROD_SSH_KEY }} # <-- pass secret directly
-                  # port: ${{ secrets.PROD_SSH_PORT }}      # (optional)
+                  key: ${{ secrets.PROD_SSH_KEY }}
                   script: |
                       set -e
                       APP_WP_CONTENT="${{ secrets.PROD_PATH }}"
                       TARBALL="$HOME/deploy/wp-content-${GITHUB_SHA}.tar.gz"
                       RELEASE_DIR="$HOME/releases/wp-content-${GITHUB_SHA}"
-
-                      mkdir -p "$HOME/deploy" "$HOME/releases" "$HOME/backups"
 
                       tar -czf "$HOME/backups/wp-content-$(date +%F-%H%M)-${GITHUB_SHA}.tgz" \
                         -C "$APP_WP_CONTENT" --exclude='uploads' .
