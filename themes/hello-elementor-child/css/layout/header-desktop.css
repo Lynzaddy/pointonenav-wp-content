@@ -204,7 +204,7 @@
 
 .header-nav .sub-menu .elementor-sub-item:hover {
     background-color: var(--background-tertiary);
-    border-radius: 100px;
+    border-radius: 8px;
     color: #000;
     transition: background-color 0.2s ease, border-radius 0.2s ease;
 }
