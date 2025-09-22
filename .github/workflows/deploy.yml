@@ -15,7 +15,6 @@ jobs:
     deploy:
         runs-on: ubuntu-latest
 
-        # Resolve target env from branch or manual input
         env:
             TARGET: ${{ github.ref_name == 'main' && 'production' || github.ref_name == 'staging' && 'staging' || inputs.target }}
 
@@ -23,7 +22,6 @@ jobs:
             - name: Check out repo
               uses: actions/checkout@v4
 
-            # Build tracked-files-only artifact, then copy it into the workspace so SCP can see it
             - name: Build artifact (tracked files only)
               run: |
                   NAME="wp-content-${GITHUB_SHA}.tar.gz"
@@ -32,9 +30,9 @@ jobs:
                   cp "$ART" "$GITHUB_WORKSPACE/$NAME"
                   echo "ARTIFACT_NAME=$NAME" >> $GITHUB_ENV
 
-            # -------------------------
+            # =======================
             # STAGING
-            # -------------------------
+            # =======================
             - name: Ensure remote dirs (STAGING)
               if: env.TARGET == 'staging'
               uses: appleboy/ssh-action@v1.1.0
@@ -43,7 +41,15 @@ jobs:
                   username: ${{ secrets.STAGING_USER }}
                   key: ${{ secrets.STAGING_SSH_KEY }}
                   script: |
-                      mkdir -p "$HOME/deploy" "$HOME/releases" "$HOME/backups"
+                      set -e
+                      APP_WP_CONTENT="${{ secrets.STAGING_PATH }}"              # $HOME/public_html/wp-content
+                      APP_ROOT="$(dirname "$APP_WP_CONTENT")"                   # $HOME/public_html
+                      DEPLOY_BASE="$APP_ROOT/.deploy"                           # $HOME/public_html/.deploy
+                      mkdir -p "$DEPLOY_BASE/deploy" "$DEPLOY_BASE/releases" "$DEPLOY_BASE/backups"
+                      # (optional) harden web access to the .deploy area
+                      if [ ! -f "$DEPLOY_BASE/.htaccess" ] && [ -d "$APP_ROOT" ]; then
+                        printf "%s\n" "Require all denied" > "$DEPLOY_BASE/.htaccess" || true
+                      fi
 
             - name: Upload tarball to STAGING
               if: env.TARGET == 'staging'
@@ -52,8 +58,8 @@ jobs:
                   host: ${{ secrets.STAGING_HOST }}
                   username: ${{ secrets.STAGING_USER }}
                   key: ${{ secrets.STAGING_SSH_KEY }}
-                  source: "${{ env.ARTIFACT_NAME }}" # file is now in /github/workspace
-                  target: "~/deploy"
+                  source: "${{ env.ARTIFACT_NAME }}" # file in /github/workspace
+                  target: "public_html/.deploy/deploy" # relative to $HOME → $HOME/public_html/.deploy/deploy
 
             - name: Release on STAGING (backup + deploy)
               if: env.TARGET == 'staging'
@@ -64,12 +70,14 @@ jobs:
                   key: ${{ secrets.STAGING_SSH_KEY }}
                   script: |
                       set -e
-                      APP_WP_CONTENT="${{ secrets.STAGING_PATH }}"
-                      TARBALL="$HOME/deploy/wp-content-${GITHUB_SHA}.tar.gz"
-                      RELEASE_DIR="$HOME/releases/wp-content-${GITHUB_SHA}"
+                      APP_WP_CONTENT="${{ secrets.STAGING_PATH }}"              # $HOME/public_html/wp-content
+                      APP_ROOT="$(dirname "$APP_WP_CONTENT")"                   # $HOME/public_html
+                      DEPLOY_BASE="$APP_ROOT/.deploy"
+                      TARBALL="$DEPLOY_BASE/deploy/wp-content-${GITHUB_SHA}.tar.gz"
+                      RELEASE_DIR="$DEPLOY_BASE/releases/wp-content-${GITHUB_SHA}"
 
                       # Backup current wp-content (excluding uploads)
-                      tar -czf "$HOME/backups/wp-content-$(date +%F-%H%M)-${GITHUB_SHA}.tgz" \
+                      tar -czf "$DEPLOY_BASE/backups/wp-content-$(date +%F-%H%M)-${GITHUB_SHA}.tgz" \
                         -C "$APP_WP_CONTENT" --exclude='uploads' .
 
                       # Prepare release
@@ -96,9 +104,9 @@ jobs:
                       find "$APP_WP_CONTENT" -type d -exec chmod 755 {} \;
                       find "$APP_WP_CONTENT" -type f -exec chmod 644 {} \;
 
-            # -------------------------
+            # =======================
             # PRODUCTION
-            # -------------------------
+            # =======================
             - name: Ensure remote dirs (PRODUCTION)
               if: env.TARGET == 'production'
               uses: appleboy/ssh-action@v1.1.0
@@ -107,7 +115,14 @@ jobs:
                   username: ${{ secrets.PROD_USER }}
                   key: ${{ secrets.PROD_SSH_KEY }}
                   script: |
-                      mkdir -p "$HOME/deploy" "$HOME/releases" "$HOME/backups"
+                      set -e
+                      APP_WP_CONTENT="${{ secrets.PROD_PATH }}"
+                      APP_ROOT="$(dirname "$APP_WP_CONTENT")"
+                      DEPLOY_BASE="$APP_ROOT/.deploy"
+                      mkdir -p "$DEPLOY_BASE/deploy" "$DEPLOY_BASE/releases" "$DEPLOY_BASE/backups"
+                      if [ ! -f "$DEPLOY_BASE/.htaccess" ] && [ -d "$APP_ROOT" ]; then
+                        printf "%s\n" "Require all denied" > "$DEPLOY_BASE/.htaccess" || true
+                      fi
 
             - name: Upload tarball to PRODUCTION
               if: env.TARGET == 'production'
@@ -116,8 +131,8 @@ jobs:
                   host: ${{ secrets.PROD_HOST }}
                   username: ${{ secrets.PROD_USER }}
                   key: ${{ secrets.PROD_SSH_KEY }}
-                  source: "${{ env.ARTIFACT_NAME }}" # file is now in /github/workspace
-                  target: "~/deploy"
+                  source: "${{ env.ARTIFACT_NAME }}"
+                  target: "public_html/.deploy/deploy"
 
             - name: Release on PRODUCTION (backup + deploy)
               if: env.TARGET == 'production'
@@ -129,10 +144,12 @@ jobs:
                   script: |
                       set -e
                       APP_WP_CONTENT="${{ secrets.PROD_PATH }}"
-                      TARBALL="$HOME/deploy/wp-content-${GITHUB_SHA}.tar.gz"
-                      RELEASE_DIR="$HOME/releases/wp-content-${GITHUB_SHA}"
+                      APP_ROOT="$(dirname "$APP_WP_CONTENT")"
+                      DEPLOY_BASE="$APP_ROOT/.deploy"
+                      TARBALL="$DEPLOY_BASE/deploy/wp-content-${GITHUB_SHA}.tar.gz"
+                      RELEASE_DIR="$DEPLOY_BASE/releases/wp-content-${GITHUB_SHA}"
 
-                      tar -czf "$HOME/backups/wp-content-$(date +%F-%H%M)-${GITHUB_SHA}.tgz" \
+                      tar -czf "$DEPLOY_BASE/backups/wp-content-$(date +%F-%H%M)-${GITHUB_SHA}.tgz" \
                         -C "$APP_WP_CONTENT" --exclude='uploads' .
 
                       mkdir -p "$RELEASE_DIR"
