@@ -31,6 +31,10 @@
     text-decoration: none !important;
 }
 
+.footer-nav .elementor-nav-menu .menu-item a {
+    transition: none !important;
+}
+
 .footer-nav a:hover {
     text-decoration: underline !important;
 }
