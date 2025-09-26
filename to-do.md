@@ -12,8 +12,8 @@ Header
 -   Make sure everything aligns with the logo
 -   Mobile (true mobile) padding on the left should be 12px, not 20px that is there.
 -   Check the pixel thinkness of the X (close) should be thinner and smaller like in Figma
--   Footer link (make sure there are no transitions on the links)
 
 FIXED:
 
 -   Footer legal (have the vertical gap smaller on mobile) so Refund Policy is closer to three above
+-   Footer link (make sure there are no transitions on the links) - There was a transition of .4s. I removed it.
