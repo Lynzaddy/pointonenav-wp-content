@@ -70,6 +70,11 @@
     background-color: #fff;
 }
 
+/* Target just the visible paths of the close icon */
+.icon-close svg path:not([stroke="none"]) {
+    stroke-width: 1.5 !important;
+}
+
 /* === ICON LIST INSIDE ACCORDION === */
 
 /* Base link styles */
@@ -113,4 +118,43 @@ body:not(.has-transparent-header) .custom-sticky-header .hamburger-menu svg {
 .hamburger-menu .elementor-icon-wrapper .elementor-icon,
 .mobile-menu-top .elementor-icon-wrapper .elementor-icon {
     background-color: transparent !important;
+}
+
+/* Lock the main page body AND html from scrolling when the menu is open */
+html.off-canvas-is-open,
+body.off-canvas-is-open {
+    overflow: hidden !important;
+}
+
+/* Keep the outer container full height with flex layout */
+.e-off-canvas__content > .elementor-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative; /* Needed for absolute positioning */
+}
+
+.mobile-menu-top {
+    /* No styling needed here */
+}
+
+.mobile-menu-middle {
+    padding-bottom: 10px;
+}
+
+.mobile-menu-bottom {
+    padding-bottom: 10px;
+}
+
+.mobile-nav-list .elementor-icon-list-item a {
+    padding-left: 8 !important;
+}
+
+.mobile-nav-accordian .elementor-widget-container {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+.mobile-nav-accordian .e-n-accordion-item-title {
+    padding-left: 0 !important;
 }

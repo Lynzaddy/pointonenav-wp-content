@@ -972,237 +972,194 @@ button:hover {
     }
 }
 
-/*
- * Custom CSS for Elementor Off-Canvas Mobile Menu (Sticky Bottom Version)
- */
-
-/* Lock the main page body AND html from scrolling when the menu is open */
-html.off-canvas-is-open,
-body.off-canvas-is-open {
-    overflow: hidden !important;
-}
-
-/* Keep the outer container full height with flex layout */
-.e-off-canvas__content > .elementor-container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    position: relative; /* Needed for absolute positioning */
-}
-
-/* Top: stays at the top */
-.mobile-menu-top {
-    /* No styling needed here */
-}
-
-/* Middle: scrollable and fills available space */
-.mobile-menu-middle {
-    flex-grow: 1;
-    min-height: 0;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-
-    /* THIS is critical: makes space for bottom section */
-    padding-bottom: 160px; /* Adjust to match bottom height */
-}
-
-/* Bottom: fixed at the bottom of the off-canvas panel */
-.mobile-menu-bottom {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    z-index: 10;
-}
-
-.mobile-nav-list .elementor-icon-list-item a {
-    padding-left: 8 !important;
-}
-
-.mobile-nav-accordian .elementor-widget-container {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-}
-
-.mobile-nav-accordian .e-n-accordion-item-title {
-    padding-left: 0 !important;
-}
-
-/* ----------------------------------------------
-   Safe Area Support for iOS
------------------------------------------------ */
-@supports (padding-bottom: env(safe-area-inset-bottom)) {
-    .mobile-menu-bottom {
-        padding-bottom: calc(24px + env(safe-area-inset-bottom));
-    }
-}
-
 /* ========== RTK Comparison Table (v2) ========== */
 
 /* 1) OUTER SCROLL CONTAINER */
-.competitor-table-outer{
-  overflow-x:auto;
-  -webkit-overflow-scrolling:touch;
-  touch-action:pan-x;
-  overscroll-behavior-x:contain;
-  -webkit-transform:translateZ(0);
-  max-width:100%;
-  margin-top:20px;
+.competitor-table-outer {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+    overscroll-behavior-x: contain;
+    -webkit-transform: translateZ(0);
+    max-width: 100%;
+    margin-top: 20px;
 }
 
 /* 2) INNER WIDTH WRAPPER */
-.competitor-table-wrapper{min-width:1000px}
+.competitor-table-wrapper {
+    min-width: 1000px;
+}
 
 /* 3) BASE TABLE */
-.competitor-table{
-  border-collapse:collapse;
-  width:100%;
-  table-layout:auto;
+.competitor-table {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: auto;
 }
 
 /* 4) ALL CELLS */
 .competitor-table th,
-.competitor-table td{
-  padding:10px 15px;
-  text-align:left;
-  white-space:normal;
-  border:1px solid #ccc;
-  background:transparent;
-  box-sizing:border-box;
-  vertical-align:top;
+.competitor-table td {
+    padding: 10px 15px;
+    text-align: left;
+    white-space: normal;
+    border: 1px solid #ccc;
+    background: transparent;
+    box-sizing: border-box;
+    vertical-align: top;
 }
 
 /* 5) BRAND COLUMN (1st) */
 .competitor-table th.sticky-col:first-child,
-.competitor-table td.sticky-col:first-child{
-  position:-webkit-sticky;position:sticky;
-  left:0;
-  min-width:180px;max-width:180px;              /* ↓ 20 px narrower */
-  background:#f2f2f0!important;
-  z-index:5;
-  border-right:1px solid rgba(0,0,0,.1);
+.competitor-table td.sticky-col:first-child {
+    position: -webkit-sticky;
+    position: sticky;
+    left: 0;
+    min-width: 180px;
+    max-width: 180px; /* ↓ 20 px narrower */
+    background: #f2f2f0 !important;
+    z-index: 5;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
 }
 .competitor-table th.sticky-col:first-child::before,
-.competitor-table td.sticky-col:first-child::before{
-  content:"";
-  position:absolute;top:0;left:0;
-  height:100%;width:1px;
-  background:rgba(0,0,0,.1);z-index:6;
+.competitor-table td.sticky-col:first-child::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 1px;
+    background: rgba(0, 0, 0, 0.1);
+    z-index: 6;
 }
 
 /* 6) POLARIS COLUMN (2nd) */
 .competitor-table th.sticky-col:nth-child(2),
-.competitor-table td.sticky-col:nth-child(2){
-  position:-webkit-sticky;position:sticky;
-  left:180px;                                  /* matches new col-1 width */
-  min-width:160px;max-width:160px;              /* ↓ 20 px narrower */
-  background:#fff!important;
-  z-index:10;
-  box-shadow:6px 0 10px rgba(0,0,0,.15);
-  border-right:1px solid rgba(0,0,0,.1);
+.competitor-table td.sticky-col:nth-child(2) {
+    position: -webkit-sticky;
+    position: sticky;
+    left: 180px; /* matches new col-1 width */
+    min-width: 160px;
+    max-width: 160px; /* ↓ 20 px narrower */
+    background: #fff !important;
+    z-index: 10;
+    box-shadow: 6px 0 10px rgba(0, 0, 0, 0.15);
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
 }
-.competitor-table th.sticky-col:nth-child(2){
-  background:#218241!important;color:#fff!important;
+.competitor-table th.sticky-col:nth-child(2) {
+    background: #218241 !important;
+    color: #fff !important;
 }
 .competitor-table th.sticky-col:nth-child(2)::after,
-.competitor-table td.sticky-col:nth-child(2)::after{
-  content:"";
-  position:absolute;top:0;right:-1px;
-  width:6px;height:100%;
-  box-shadow:6px 0 10px rgba(0,0,0,.15);
-  pointer-events:none;
+.competitor-table td.sticky-col:nth-child(2)::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -1px;
+    width: 6px;
+    height: 100%;
+    box-shadow: 6px 0 10px rgba(0, 0, 0, 0.15);
+    pointer-events: none;
 }
 
 /* 7) REMAINING COLUMNS */
 .competitor-table th:not(.sticky-col),
-.competitor-table td:not(.sticky-col){
-  min-width:150px;max-width:190px;              /* tightened a bit */
-  word-break:break-word;
+.competitor-table td:not(.sticky-col) {
+    min-width: 150px;
+    max-width: 190px; /* tightened a bit */
+    word-break: break-word;
 }
 
 /* 8) SLIMMER SCROLLBAR */
-.competitor-table-outer::-webkit-scrollbar{height:6px}
-.competitor-table-outer::-webkit-scrollbar-thumb{background:#ccc;border-radius:3px}
-
-/* 9) MOBILE OVERRIDES  (under 768 px) */
-@media(max-width:767px){
-  /* first column */
-  .competitor-table th.sticky-col:first-child,
-  .competitor-table td.sticky-col:first-child{
-    min-width:120px;max-width:120px;
-  }
-  /* second column */
-  .competitor-table th.sticky-col:nth-child(2),
-  .competitor-table td.sticky-col:nth-child(2){
-    left:120px;                                 /* align after col-1 */
-    min-width:120px;max-width:120px;
-  }
-  /* all other columns */
-  .competitor-table th:not(.sticky-col),
-  .competitor-table td:not(.sticky-col){
-    min-width:120px;max-width:160px;
-  }
+.competitor-table-outer::-webkit-scrollbar {
+    height: 6px;
+}
+.competitor-table-outer::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
 }
 
+/* 9) MOBILE OVERRIDES  (under 768 px) */
+@media (max-width: 767px) {
+    /* first column */
+    .competitor-table th.sticky-col:first-child,
+    .competitor-table td.sticky-col:first-child {
+        min-width: 120px;
+        max-width: 120px;
+    }
+    /* second column */
+    .competitor-table th.sticky-col:nth-child(2),
+    .competitor-table td.sticky-col:nth-child(2) {
+        left: 120px; /* align after col-1 */
+        min-width: 120px;
+        max-width: 120px;
+    }
+    /* all other columns */
+    .competitor-table th:not(.sticky-col),
+    .competitor-table td:not(.sticky-col) {
+        min-width: 120px;
+        max-width: 160px;
+    }
+}
 
 /* FAQ Section */
 .faq-accordion {
-  border-top: 1px solid #d9d9d6;
-  border-bottom: 1px solid #d9d9d6;
+    border-top: 1px solid #d9d9d6;
+    border-bottom: 1px solid #d9d9d6;
 }
 
 .faq-item {
-  border-bottom: 1px solid #d9d9d6;
+    border-bottom: 1px solid #d9d9d6;
 }
 
 .faq-question {
-  all: unset;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  cursor: pointer;
-  padding: 16px 0;
-  font-family: 'AllianceNo2', sans-serif;
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 24px;
-  color: #222222 !important;
-  background: none;
+    all: unset;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    cursor: pointer;
+    padding: 16px 0;
+    font-family: "AllianceNo2", sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 24px;
+    color: #222222 !important;
+    background: none;
 }
 
 .faq-question:hover,
 .faq-question:focus {
-  color: #222222 !important;
-  background: none;
+    color: #222222 !important;
+    background: none;
 }
 
 .faq-toggle-indicator {
-  display: inline-block;
-  width: 18px;
-  height: 18px;
-  background-image: url('/wp-content/uploads/2025/06/chevron-right.svg');
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
-  transition: transform 0.3s ease;
-  margin-right: 12px;
-  flex-shrink: 0;
-  transform: rotate(0deg); /* Default right-facing */
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-image: url("/wp-content/uploads/2025/06/chevron-right.svg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    transition: transform 0.3s ease;
+    margin-right: 12px;
+    flex-shrink: 0;
+    transform: rotate(0deg); /* Default right-facing */
 }
 
 .faq-question[aria-expanded="true"] .faq-toggle-indicator {
-  transform: rotate(90deg); /* Down when open */
+    transform: rotate(90deg); /* Down when open */
 }
 
 .faq-question-text {
-  color: #222222;
-  display: inline-block;
+    color: #222222;
+    display: inline-block;
 }
 
 .faq-answer {
-  padding: 8px 0 24px 32px;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 22.4px;
-  color: #4d4d47;
+    padding: 8px 0 24px 32px;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 22.4px;
+    color: #4d4d47;
 }

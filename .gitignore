@@ -13,3 +13,5 @@ plugins/*
 # !plugins/your-custom-plugin/
 # (add more exceptions below)
 # !plugins/another-custom-plugin/
+# Ignore WP cache drop-in created by cache plugins
+advanced-cache.php
