@@ -1,56 +1,50 @@
 /* 
 ==================================================
     HEADER-MOBILE.CSS
-    Description: Styles for the mobile navigation layout in Point One Nav, including menu items, dropdowns, and responsive adjustments.
+    Description: Styles for the mobile navigation layout in Point One Nav,
+    including menu items, dropdowns, and responsive adjustments.
 ==================================================  
 */
 
-/* Accordion Title Styling */
+/* =========================
+   ACCORDION TITLE / SUMMARY
+========================= */
 .mobile-nav-accordian .e-n-accordion-item summary {
+    /* Typography */
     font-size: 16px;
     line-height: 140%;
     letter-spacing: -0.16px;
     color: #141413;
     text-decoration: none !important;
+
+    /* Box */
     padding: 12px;
     border-radius: 8px;
-    /* display: flex; */
-    justify-content: space-between;
-    align-items: center;
-    transition: background-color 0.2s ease;
     cursor: pointer;
-}
 
-/* Hover State */
-.mobile-nav-accordian .e-n-accordion-item summary:hover {
-    /* background-color: #141413;
-    color: #fff !important; */
-}
-
-/* Make sure this wraps all nav content and fills the off-canvas space */
-.mobile-nav-container {
+    /* Layout (FIX: prevent SVG clipping) */
     display: flex;
-    flex-direction: column;
-    /* height: 100%; */
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    list-style: none;
+    overflow: visible;
+    transition: background-color 0.2s ease;
 }
 
-/* Push button group to the bottom of that container */
-.mobile-nav-buttons {
-    /* margin-top: auto; */
-    padding-bottom: 2px; /* Adjust as needed for spacing from bottom */
+/* Hide default <summary> triangle markers in all engines */
+.mobile-nav-accordian .e-n-accordion-item summary::marker,
+.mobile-nav-accordian .e-n-accordion-item summary::-webkit-details-marker {
+    display: none;
 }
 
-/* Hide added mobile links on main nav */
-.mobile-links {
-    display: none !important;
-}
-
-/* === MOBILE MENU ACCORDIONS === */
+/* =========================
+   ACCORDION TITLE WRAPPERS
+========================= */
 .e-n-accordion-item-title-text {
     color: var(--content-primary);
 }
 
-/* Accordion title base styles */
 .e-n-accordion-item-title {
     background-color: transparent;
     color: var(--content-primary);
@@ -58,26 +52,71 @@
     padding: 12px;
     cursor: pointer;
     transition: none !important;
+    overflow: visible;
 }
 
-/* Accordion title hover (only darken the header, not the region) */
 .mobile-nav-accordian .e-n-accordion-item:hover .e-n-accordion-item-title {
     background-color: var(--color-black-a08);
 }
 
-/* Keep expanded region background white */
 .mobile-nav-accordian .e-n-accordion-item[open] > div[role="region"] {
     background-color: #fff;
 }
 
-/* Target just the visible paths of the close icon */
-.icon-close svg path:not([stroke="none"]) {
-    stroke-width: 1.5 !important;
+.mobile-nav-accordian .e-n-accordion-item-title-header {
+    padding-left: 12px !important;
 }
 
-/* === ICON LIST INSIDE ACCORDION === */
+.mobile-nav-accordian .e-n-accordion-item-title {
+    padding-left: 0 !important;
+}
 
-/* Base link styles */
+/* =========================
+   CHEVRON ICONS (STROKED)
+   FIX: prevent clipping, control stroke width & color
+========================= */
+.e-n-accordion-item-title-icon {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+    line-height: 1;
+    overflow: visible;
+}
+
+/* Size bump here to match .icon-close */
+.e-n-accordion-item-title-icon svg {
+    display: block;
+    width: 32px; /* increased from 24px */
+    height: 32px; /* increased from 24px */
+    vertical-align: middle;
+    overflow: visible;
+}
+
+.e-n-accordion-item-title-icon .e-opened svg path,
+.e-n-accordion-item-title-icon .e-closed svg path {
+    stroke-width: 1.5 !important;
+    stroke: currentColor !important;
+    fill: none !important;
+}
+
+/* =========================
+   CLOSE ICON (separate control)
+========================= */
+.icon-close svg {
+    width: 32px;
+    height: 32px;
+    display: block;
+}
+
+.icon-close svg path:not([stroke="none"]) {
+    stroke-width: 1.5 !important;
+    stroke: #f90 !important;
+    fill: none !important;
+}
+
+/* =========================
+   ICON LIST INSIDE ACCORDION
+========================= */
 .mobile-nav-list .elementor-icon-list-item a {
     font-size: 16px;
     line-height: 140%;
@@ -87,13 +126,9 @@
     display: block;
     padding: 12px;
     transition: none !important;
+    padding-left: 8px !important;
 }
 
-.mobile-nav-accordian .e-n-accordion-item-title-header {
-    padding-left: 12px !important;
-}
-
-/* List item hover effect */
 .mobile-nav-list .elementor-icon-list-item:hover {
     background-color: var(--color-black-a08);
     color: #fff !important;
@@ -101,8 +136,46 @@
     transition: none !important;
 }
 
-/* === Mobile Hamburger Icon Color === */
+/* =========================
+   MOBILE NAV LAYOUT
+========================= */
+.mobile-nav-container {
+    display: flex;
+    flex-direction: column;
+}
 
+.mobile-nav-buttons {
+    padding-bottom: 2px;
+}
+
+.mobile-links {
+    display: none !important;
+}
+
+.e-off-canvas__content > .elementor-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.mobile-menu-top {
+}
+.mobile-menu-middle {
+    padding-bottom: 10px;
+}
+.mobile-menu-bottom {
+    padding-bottom: 10px;
+}
+
+.mobile-nav-accordian .elementor-widget-container {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* =========================
+   HAMBURGER ICON COLORS
+========================= */
 body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .hamburger-menu svg {
     color: #fff !important;
     fill: #fff !important;
@@ -114,47 +187,12 @@ body:not(.has-transparent-header) .custom-sticky-header .hamburger-menu svg {
     fill: var(--content-primary) !important;
 }
 
-/* Turn off the background color of the icon in the hamburger menu */
 .hamburger-menu .elementor-icon-wrapper .elementor-icon,
 .mobile-menu-top .elementor-icon-wrapper .elementor-icon {
     background-color: transparent !important;
 }
 
-/* Lock the main page body AND html from scrolling when the menu is open */
 html.off-canvas-is-open,
 body.off-canvas-is-open {
     overflow: hidden !important;
-}
-
-/* Keep the outer container full height with flex layout */
-.e-off-canvas__content > .elementor-container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    position: relative; /* Needed for absolute positioning */
-}
-
-.mobile-menu-top {
-    /* No styling needed here */
-}
-
-.mobile-menu-middle {
-    padding-bottom: 10px;
-}
-
-.mobile-menu-bottom {
-    padding-bottom: 10px;
-}
-
-.mobile-nav-list .elementor-icon-list-item a {
-    padding-left: 8 !important;
-}
-
-.mobile-nav-accordian .elementor-widget-container {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-}
-
-.mobile-nav-accordian .e-n-accordion-item-title {
-    padding-left: 0 !important;
 }
