@@ -127,7 +127,6 @@
 /* Buttons area */
 .elementor .text-widget .btn-container {
     display: flex;
-    justify-content: flex-start;
     align-items: center;
     gap: var(--gap-20);
     padding: 0;
