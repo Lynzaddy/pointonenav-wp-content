@@ -1,0 +1,309 @@
+/* 
+==================================================
+    CUSTOM-SLIDER.CSS
+    Description: Styles for the custom slider component. 
+==================================================  
+*/
+
+/* === SLIDE HEIGHT + STRUCTURE FIXES === */
+
+/* Slick slide: flex container */
+.custom-slick-slider .slick-slide {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: stretch;
+    align-items: stretch;
+    margin: 0 10px;
+    height: 100%;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Track stretches slide height */
+.custom-slick-slider .slick-track {
+    display: flex !important;
+    align-items: stretch !important;
+}
+
+/* Slide wrapper */
+.custom-slick-slider .slick-slide-item {
+    display: flex;
+    flex-direction: column;
+    width: 650px !important;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+/* Mobile size */
+@media (max-width: 767px) {
+    .custom-slick-slider .slick-slide-item {
+        width: 300px !important;
+    }
+}
+
+/* Slide content */
+.pon-slide {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    height: 100%;
+}
+
+/* Text block grows to push footer down */
+.pon-slide .text-block {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+/* Align keep-reading to bottom */
+.pon-slide .keep-reading {
+    margin-top: auto;
+    padding-top: 16px;
+    border: 1px solid red; /* for testing only */
+}
+
+/* === CONTENT STYLING === */
+
+.pon-slide .video {
+    padding-top: 8px;
+    margin-bottom: 32px;
+}
+
+.pon-slide .video video {
+    border-radius: 8px;
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.pon-slide .title h3 {
+    color: var(--content-primary);
+    font-family: var(--typography-font-brand);
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 120%;
+    letter-spacing: -0.48px;
+    margin-bottom: 12px;
+}
+
+.pon-slide .description p {
+    color: var(--content-secondary);
+    font-family: var(--typography-font-primary);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 148%;
+    letter-spacing: -0.16px;
+    margin-bottom: 8px;
+}
+
+/* === REMOVE UNDERLINES === */
+
+/* Kill all underlines inside .pon-slide and full-slide-link */
+.pon-slide a,
+.pon-slide a:hover,
+.pon-slide .title h3,
+.pon-slide .title h3:hover,
+.pon-slide .description p,
+.pon-slide .description p:hover,
+.pon-slide .keep-reading,
+.pon-slide .keep-reading:hover {
+    text-decoration: none !important;
+    border-bottom: none !important;
+}
+
+/* Just in case some nested tags override */
+.pon-slide * {
+    text-decoration: none !important;
+}
+
+/* === CONTAINER === */
+.custom-slick-slider {
+    position: relative;
+    padding-bottom: 80px;
+    overflow: visible !important;
+}
+
+.custom-slick-slider .slick-list {
+    margin: 0 -10px;
+}
+
+.custom-slick-slider .slick-center {
+    z-index: 2;
+}
+
+/* Elementor max-width override fixes */
+.custom-slick-slider .slick-slide-item .elementor-section,
+.custom-slick-slider .slick-slide-item .elementor-container {
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box;
+    margin: 0 !important;
+}
+
+.custom-slick-slider .slick-slide-item .elementor-widget:not(.elementor-widget-icon) * {
+    max-width: 100% !important;
+}
+
+/* === Arrows === */
+
+/* Shared arrow button styling */
+.custom-slick-slider .slick-prev,
+.custom-slick-slider .slick-next {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    bottom: 20px;
+    transform: translateY(4px);
+    z-index: 2;
+    font-size: 0; /* Hide default 'Previous' / 'Next' text */
+    text-indent: -9999px;
+    overflow: hidden;
+}
+
+/* Arrow positioning */
+.custom-slick-slider .slick-prev {
+    left: calc(50% - 150px);
+}
+
+.custom-slick-slider .slick-next {
+    right: calc(50% - 150px);
+}
+
+/* Tabler Icon font arrow content */
+.custom-slick-slider .slick-prev:before,
+.custom-slick-slider .slick-next:before {
+    font-family: "tabler-icons";
+    content: "";
+    font-size: 20px;
+    color: #fff;
+    line-height: 1;
+    display: inline-block;
+    text-indent: 0;
+    overflow: visible;
+}
+
+.custom-slick-slider .slick-prev:before {
+    content: "\ea60"; /* Tabler chevron-left */
+}
+
+.custom-slick-slider .slick-next:before {
+    content: "\ea61"; /* Tabler chevron-right */
+}
+
+/* Arrow hover effect */
+.custom-slick-slider .slick-prev:hover,
+.custom-slick-slider .slick-next:hover {
+    background-color: rgba(0, 0, 0, 0.6) !important;
+}
+
+.custom-slick-slider .slick-prev:focus,
+.custom-slick-slider .slick-next:focus {
+    outline: none;
+    background-color: #141413 !important;
+}
+
+/* === Dots === */
+
+/* Dots container layout */
+.custom-slick-slider .slick-dots {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    height: auto;
+    overflow: visible !important;
+    z-index: 2;
+    width: auto;
+    bottom: 20px;
+}
+
+/* Dot item layout */
+.custom-slick-slider .slick-dots li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+    overflow: visible;
+}
+
+/* Default dot style */
+.custom-slick-slider .slick-dots li button {
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 100px;
+    width: 20px;
+    height: 4px;
+    padding: 0;
+    border: none;
+    text-indent: -9999px;
+    overflow: hidden;
+    transition: background-color 0.3s ease;
+}
+
+/* Dot hover */
+.custom-slick-slider .slick-dots li button:hover {
+    background-color: rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Active dot */
+.custom-slick-slider .slick-dots li.slick-active button {
+    background-color: #141413 !important;
+    width: 36px;
+    height: 8px;
+}
+
+/* Dot focus accounted for */
+.custom-slick-slider .slick-dots li button:focus {
+    outline: none;
+    background-color: #141413 !important;
+}
+
+/* Blog arrow icon in carousel */
+.custom-slick-slider .carousel-icon-button {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    background-color: #fff;
+    color: #000;
+    border-radius: 50%;
+    z-index: 999;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    padding: 0;
+    text-align: center;
+}
+
+/* Center icon within the button */
+.custom-slick-slider .carousel-icon-button .elementor-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    line-height: 1;
+    display: block;
+    font-size: 20px;
+    margin: 0;
+}
+
+/* Hover effect */
+.custom-slick-slider .carousel-icon-button:hover {
+    background-color: #f0f0f0;
+}

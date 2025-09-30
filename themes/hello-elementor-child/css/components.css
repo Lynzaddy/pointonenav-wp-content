@@ -10,407 +10,64 @@
 @import "atoms/image.css";
 @import "atoms/input.css";
 @import "atoms/tooltip.css";
+@import "atoms/floating-icon.css";
 
 @import "molecules/cards.css";
 @import "molecules/text-widget.css";
 @import "molecules/feature-container.css";
 @import "molecules/text-feature.css";
 @import "molecules/single-image-sections.css";
+@import "molecules/custom-slider.css";
+@import "molecules/trusted-by-logos.css";
 
 /* CLEANUP BELOW \|/ */
 
-/* Transparent (homepage only) */
-body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .btn-primary.inverse .elementor-button {
-    background: transparent;
-    color: white;
-    border: 1px solid white;
-}
+/* =========================
+   Global Utilities
+========================= */
 
-body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .btn-primary.inverse .elementor-button:hover {
-    background: transparent;
-    color: var(--color-white-a70) !important;
-    border: 1px solid var(--color-white-a70) !important;
-}
+/* Laptop breakpoint (Elementor: ≤1366px) */
+@media (max-width: 1366px) {
+    /* 1) Kill side padding on ALL parent containers (full-width) */
+    .elementor .e-con-full.e-parent {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
 
-body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .btn-tertiary .elementor-button {
-    background: transparent;
-    color: var(--color-white-a100) !important;
-    font-weight: var(--font-weight-500);
-}
+    /* 2) Also kill the usual inner padding on boxed containers */
+    .elementor .e-con-boxed > .e-con-inner {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
 
-body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .btn-tertiary .elementor-button:hover {
-    color: var(--color-white-a70) !important;
-}
+    /* 3) Belt-and-suspenders: target your exact outer parent container */
+    .elementor .elementor-element-952631e.e-con.e-parent {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
 
-/* Scrolled/internal */
-.custom-sticky-header.elementor-sticky--effects .btn-primary.inverse .elementor-button,
-body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .elementor-button {
-    background-color: transparent;
-    color: var(--color-gray-90) !important;
-    border: 1px solid var(--color-gray-90);
-}
-
-body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .btn-primary.inverse .elementor-button:hover {
-    /* background-color: var(--color-black-a08); */
-}
-
-/* 
-============================================================================================
-   06. Homepage Slider Overflow
-============================================================================================ 
-*/
-
-/* === SLIDE HEIGHT + STRUCTURE FIXES === */
-
-/* Slick slide: flex container */
-.custom-slick-slider .slick-slide {
-    display: flex !important;
-    flex-direction: column;
-    justify-content: stretch;
-    align-items: stretch;
-    margin: 0 10px;
-    height: 100%;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-/* Track stretches slide height */
-.custom-slick-slider .slick-track {
-    display: flex !important;
-    align-items: stretch !important;
-}
-
-/* Slide wrapper */
-.custom-slick-slider .slick-slide-item {
-    display: flex;
-    flex-direction: column;
-    width: 650px !important;
-    height: 100%;
-    box-sizing: border-box;
-}
-
-/* Mobile size */
-@media (max-width: 767px) {
-    .custom-slick-slider .slick-slide-item {
-        width: 300px !important;
+    /* 4) If your kit uses a CSS variable for container padding, zero it */
+    .elementor-kit-7357 {
+        --container-padding-inline: 0px !important; /* common var */
+        --container-default-padding-inline: 0px !important; /* alt var some kits use */
     }
 }
 
-/* Slide content */
-.pon-slide {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    height: 100%;
-}
-
-/* Text block grows to push footer down */
-.pon-slide .text-block {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-}
-
-/* Align keep-reading to bottom */
-.pon-slide .keep-reading {
-    margin-top: auto;
-    padding-top: 16px;
-    border: 1px solid red; /* for testing only */
-}
-
-/* === CONTENT STYLING === */
-
-.pon-slide .video {
-    padding-top: 8px;
-    margin-bottom: 32px;
-}
-
-.pon-slide .video video {
-    border-radius: 8px;
-    width: 100%;
-    height: auto;
-    display: block;
-}
-
-.pon-slide .title h3 {
-    color: var(--content-primary);
-    font-family: var(--typography-font-brand);
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 120%;
-    letter-spacing: -0.48px;
-    margin-bottom: 12px;
-}
-
-.pon-slide .description p {
-    color: var(--content-secondary);
-    font-family: var(--typography-font-primary);
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 148%;
-    letter-spacing: -0.16px;
-    margin-bottom: 8px;
-}
-
-/* === REMOVE UNDERLINES === */
-
-/* Kill all underlines inside .pon-slide and full-slide-link */
-.pon-slide a,
-.pon-slide a:hover,
-.pon-slide .title h3,
-.pon-slide .title h3:hover,
-.pon-slide .description p,
-.pon-slide .description p:hover,
-.pon-slide .keep-reading,
-.pon-slide .keep-reading:hover {
-    text-decoration: none !important;
-    border-bottom: none !important;
-}
-
-/* Just in case some nested tags override */
-.pon-slide * {
-    text-decoration: none !important;
-}
-
-/* === CONTAINER === */
-.custom-slick-slider {
-    position: relative;
-    padding-bottom: 80px;
-    overflow: visible !important;
-}
-
-.custom-slick-slider .slick-list {
-    margin: 0 -10px;
-}
-
-.custom-slick-slider .slick-center {
-    z-index: 2;
-}
-
-/* Elementor max-width override fixes */
-.custom-slick-slider .slick-slide-item .elementor-section,
-.custom-slick-slider .slick-slide-item .elementor-container {
-    max-width: 100% !important;
-    width: 100% !important;
-    box-sizing: border-box;
-    margin: 0 !important;
-}
-
-.custom-slick-slider .slick-slide-item .elementor-widget:not(.elementor-widget-icon) * {
-    max-width: 100% !important;
-}
-
-/* === Arrows === */
-
-/* Shared arrow button styling */
-.custom-slick-slider .slick-prev,
-.custom-slick-slider .slick-next {
-    background-color: #000;
-    color: #fff;
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    bottom: 20px;
-    transform: translateY(4px);
-    z-index: 2;
-    font-size: 0; /* Hide default 'Previous' / 'Next' text */
-    text-indent: -9999px;
-    overflow: hidden;
-}
-
-/* Arrow positioning */
-.custom-slick-slider .slick-prev {
-    left: calc(50% - 150px);
-}
-
-.custom-slick-slider .slick-next {
-    right: calc(50% - 150px);
-}
-
-/* Tabler Icon font arrow content */
-.custom-slick-slider .slick-prev:before,
-.custom-slick-slider .slick-next:before {
-    font-family: "tabler-icons";
-    content: "";
-    font-size: 20px;
-    color: #fff;
-    line-height: 1;
-    display: inline-block;
-    text-indent: 0;
-    overflow: visible;
-}
-
-.custom-slick-slider .slick-prev:before {
-    content: "\ea60"; /* Tabler chevron-left */
-}
-
-.custom-slick-slider .slick-next:before {
-    content: "\ea61"; /* Tabler chevron-right */
-}
-
-/* Arrow hover effect */
-.custom-slick-slider .slick-prev:hover,
-.custom-slick-slider .slick-next:hover {
-    background-color: rgba(0, 0, 0, 0.6) !important;
-}
-
-.custom-slick-slider .slick-prev:focus,
-.custom-slick-slider .slick-next:focus {
-    outline: none;
-    background-color: #141413 !important;
-}
-
-/* === Dots === */
-
-/* Dots container layout */
-.custom-slick-slider .slick-dots {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex !important;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 0;
-    height: auto;
-    overflow: visible !important;
-    z-index: 2;
-    width: auto;
-    bottom: 20px;
-}
-
-/* Dot item layout */
-.custom-slick-slider .slick-dots li {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: auto;
-    overflow: visible;
-}
-
-/* Default dot style */
-.custom-slick-slider .slick-dots li button {
-    background-color: rgba(0, 0, 0, 0.6);
-    border-radius: 100px;
-    width: 20px;
-    height: 4px;
-    padding: 0;
-    border: none;
-    text-indent: -9999px;
-    overflow: hidden;
-    transition: background-color 0.3s ease;
-}
-
-/* Dot hover */
-.custom-slick-slider .slick-dots li button:hover {
-    background-color: rgba(0, 0, 0, 0.6) !important;
-}
-
-/* Active dot */
-.custom-slick-slider .slick-dots li.slick-active button {
-    background-color: #141413 !important;
-    width: 36px;
-    height: 8px;
-}
-
-/* Dot focus accounted for */
-.custom-slick-slider .slick-dots li button:focus {
-    outline: none;
-    background-color: #141413 !important;
-}
-
-/* Blog arrow icon in carousel */
-.custom-slick-slider .carousel-icon-button {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    width: 44px;
-    height: 44px;
-    background-color: #fff;
-    color: #000;
-    border-radius: 50%;
-    z-index: 999;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    padding: 0;
-    text-align: center;
-}
-
-/* Center icon within the button */
-.custom-slick-slider .carousel-icon-button .elementor-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 20px;
-    height: 20px;
-    line-height: 1;
-    display: block;
-    font-size: 20px;
+.elementor-divider .elementor-divider-separator {
+    border-block-start-color: rgba(0, 0, 0, 0.12) !important;
     margin: 0;
+    padding: 0;
 }
 
-/* Hover effect */
-.custom-slick-slider .carousel-icon-button:hover {
-    background-color: #f0f0f0;
+.elementor .inverse .elementor-divider .elementor-divider-separator {
+    border-block-start-color: var(--color-line-inverse) !important;
+    /* border-block-start-color: #f90 !important; */
 }
 
-/* 
-============================================================================================
-   07. Trusted By Logo Section
-============================================================================================ 
-*/
-/* === Homepage Trusted By Logo Section */
-.elementor .trusted-by-logos {
-    background-color: var(--background-secondary);
-    padding: 40px 20px 40px 20px;
-}
-
-.elementor .trusted-by-logos h2,
-.elementor .trusted-by-logos a {
-    font-family: var(--typography-font-secondary);
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 100%; /* 14px */
-    letter-spacing: 0.14px;
-    text-transform: uppercase;
-    text-decoration: none;
-    color: var(--content-primary);
-}
-
-.elementor .trusted-by-logos a:hover {
-    text-decoration: underline;
-}
-
-.elementor .trusted-by-logos h2::after {
-    content: "";
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    margin-left: 8px;
-    background-image: url("/wp-content/uploads/2025/06/chevron-right.svg");
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
-    vertical-align: middle;
-    transform: translateY(-1px); /* Nudge upward */
-    color: var(--content-primary); /* Match the heading color */
-}
-
-/* 
-============================================================================================
+/* =========================
    08. Floating Icon
-============================================================================================ 
-*/
+========================= */
+
 .floating-icon {
     position: absolute;
     bottom: 16px;
@@ -430,230 +87,4 @@ body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects
 
     aspect-ratio: 1 / 1;
     z-index: 10;
-}
-
-/* 
-============================================================================================
-   09. Blog Listing Card
-============================================================================================ 
-*/
-/* Typography and layout styling */
-.elementor .blog-section .elementor-post-date,
-.elementor .blog-section .elementor-post__title,
-.elementor .blog-section .elementor-post__read-more {
-    color: var(--content-primary);
-    font-style: normal;
-}
-
-/* Post date styling */
-.elementor .blog-section .elementor-post-date {
-    font-family: var(--typography-font-secondary);
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 100%; /* 14px */
-    letter-spacing: 0.14px;
-    text-transform: uppercase;
-}
-
-/* Post title styling */
-.elementor .blog-section .elementor-post__title {
-    font-family: var(--typography-font-primary);
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 148%; /* 23.68px */
-    letter-spacing: -0.32px;
-    margin: 0 0 0 0; /* merged margin-top: 0; */
-    padding-bottom: 50px;
-}
-
-/* Title link styling */
-.elementor .blog-section .elementor-post__title a {
-    text-decoration: none !important;
-}
-
-/* Read more styling */
-.elementor .blog-section .elementor-post__read-more {
-    font-family: var(--typography-font-primary);
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 148%; /* 23.68px */
-    letter-spacing: -0.16px;
-    text-decoration: underline;
-    margin-top: auto;
-    padding-top: 16px;
-}
-
-/* Post item container layout */
-.elementor .blog-section .elementor-post {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-/* Post content layout and positioning */
-.elementor .blog-section .elementor-post__text {
-    position: relative;
-    padding-top: 1.5em; /* Adjust if needed */
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Date positioning */
-.blog-section .elementor-post__meta-data {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-}
-
-/* Thumbnail spacing */
-.elementor .blog-section .elementor-post__thumbnail__link {
-    margin-bottom: 32px !important;
-}
-
-/* 
-============================================================================================
-   10. Search Box on Blog pages
-============================================================================================ 
-*/
-/* Wrapper for input and icon */
-.custom-search-form .search-wrapper {
-    position: relative;
-    width: 100%;
-}
-
-/* Tabler icon positioning */
-.custom-search-form .search-icon {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Search input */
-.custom-search-form input[type="search"] {
-    width: 100%;
-    padding: 10px 12px 10px 40px; /* space for the icon */
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    transition: border-color 0.3s ease;
-}
-
-/* Optional: Input focus style */
-.custom-search-form input[type="search"]:focus {
-    border-color: #218241;
-    outline: none;
-}
-
-/* Container */
-.industry-dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-/* Toggle button */
-.industry-dropdown .dropdown-toggle {
-    background-color: #000;
-    color: #fff;
-    padding: 12px 16px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    border-radius: 4px;
-}
-
-/* Arrow */
-.industry-dropdown .dropdown-toggle .arrow {
-    font-size: 12px;
-}
-
-/* Dropdown container */
-.industry-dropdown {
-    position: relative;
-    display: inline-block;
-    font-family: inherit;
-}
-
-/* Dropdown button */
-.industry-dropdown .dropdown-toggle {
-    background-color: black;
-    color: white;
-    padding: 12px 16px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-}
-
-/* Fix: keep background black and text white on hover */
-.industry-dropdown .dropdown-toggle:hover,
-.industry-dropdown .dropdown-toggle:focus,
-.industry-dropdown:hover .dropdown-toggle {
-    background-color: black !important;
-    color: white;
-}
-
-/* Dropdown menu */
-.industry-dropdown .dropdown-menu {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    min-width: 220px;
-    background-color: #f2f2f0; /* light gray background */
-    border-radius: 0 0 4px 4px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 999;
-    padding: 0;
-    margin: 0;
-    list-style: none;
-}
-
-/* Show menu on hover */
-.industry-dropdown:hover .dropdown-menu {
-    display: block;
-}
-
-/* Menu links */
-.industry-dropdown .dropdown-menu li a {
-    display: block;
-    padding: 10px 16px;
-    color: black;
-    text-decoration: none; /* no underline by default */
-    transition: all 0.2s ease;
-}
-
-/* Hover effect on items: underline + darker gray */
-.industry-dropdown .dropdown-menu li a:hover {
-    background-color: #e6e6e2; /* slightly darker gray */
-    text-decoration: underline;
-}
-
-/* Style the category tags */
-.topic-menu .elementor-item-active {
-    color: var(--content-primary) !important;
-}
-
-/* Table of Contents Block on Blog */
-.elementor-toc__header {
-    padding-bottom: 0 !important;
-}
-.elementor-toc__body {
-    padding-top: 0 !important;
 }

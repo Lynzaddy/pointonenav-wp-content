@@ -1,0 +1,44 @@
+/* 
+==================================================
+    TRUSTED-BY-LOGOS.CSS
+    Description: Styles for the "Trusted By" logo section on the homepage.
+==================================================  
+*/
+
+/* === Homepage Trusted By Logo Section */
+.elementor .trusted-by-logos {
+    background-color: var(--background-secondary);
+    padding: 40px 20px 40px 20px;
+}
+
+.elementor .trusted-by-logos h2,
+.elementor .trusted-by-logos a {
+    font-family: var(--typography-font-secondary);
+    font-size: var(--font-size-14);
+    font-style: normal;
+    font-weight: var(--weight-regular);
+    line-height: 100%; /* 14px */
+    letter-spacing: var(--letter-spacing-14);
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--content-primary);
+}
+
+.elementor .trusted-by-logos a:hover {
+    text-decoration: underline;
+}
+
+.elementor .trusted-by-logos h2::after {
+    content: "";
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-left: 8px;
+    background-image: url("/wp-content/uploads/2025/06/chevron-right.svg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    vertical-align: middle;
+    transform: translateY(-1px); /* Nudge upward */
+    color: var(--content-primary); /* Match the heading color */
+}

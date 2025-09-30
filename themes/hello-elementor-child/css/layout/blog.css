@@ -1,0 +1,212 @@
+/* 
+==================================================
+    BLOG.CSS
+    Description: Styles for blog layouts, post listings, and single post views.
+==================================================  
+*/
+
+/* =========================
+   09. Blog Listing Card
+========================= */
+
+/* Typography and layout styling */
+.elementor .blog-section .elementor-post-date,
+.elementor .blog-section .elementor-post__title,
+.elementor .blog-section .elementor-post__read-more {
+    color: var(--content-primary);
+    font-style: normal;
+}
+
+/* Post date styling */
+.elementor .blog-section .elementor-post-date {
+    font-family: var(--typography-font-secondary);
+    font-size: var(--font-size-14);
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-none); /* 14px */
+    letter-spacing: var(--letter-spacing-14);
+    text-transform: uppercase;
+}
+
+/* Post title styling */
+.elementor .blog-section .elementor-post__title {
+    font-family: var(--typography-font-primary);
+    font-size: var(--font-size-16);
+    font-weight: var(--weight-bold);
+    line-height: var(--lh-relaxed); /* 23.68px */
+    letter-spacing: var(--ls-neg-32);
+    margin: 0 0 0 0; /* merged margin-top: 0; */
+    padding-bottom: 50px;
+}
+
+/* Title link styling */
+.elementor .blog-section .elementor-post__title a {
+    text-decoration: none !important;
+}
+
+/* Read more styling */
+.elementor .blog-section .elementor-post__read-more {
+    font-family: var(--typography-font-primary);
+    font-size: var(--font-size-16);
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-relaxed); /* 23.68px */
+    letter-spacing: var(--ls-neg-16);
+    text-decoration: underline;
+    margin-top: auto;
+    padding-top: 16px;
+}
+
+/* Post item container layout */
+.elementor .blog-section .elementor-post {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Post content layout and positioning */
+.elementor .blog-section .elementor-post__text {
+    position: relative;
+    padding-top: 1.5em; /* Adjust if needed */
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Date positioning */
+.blog-section .elementor-post__meta-data {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+/* Thumbnail spacing */
+.elementor .blog-section .elementor-post__thumbnail__link {
+    margin-bottom: 32px !important;
+}
+
+/* =========================
+   10. Search Box on Blog pages
+========================= */
+
+/* Wrapper for input and icon */
+.custom-search-form .search-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* Tabler icon positioning */
+.custom-search-form .search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Search input */
+.custom-search-form input[type="search"] {
+    width: 100%;
+    padding: 10px 12px 10px 40px; /* space for the icon */
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+/* Optional: Input focus style */
+.custom-search-form input[type="search"]:focus {
+    border-color: var(--color-brand-60);
+    outline: none;
+}
+
+/* === Industry Dropdown (merged duplicates) === */
+
+/* Container */
+.industry-dropdown {
+    position: relative;
+    display: inline-block;
+    font-family: inherit;
+}
+
+/* Toggle button (merged) */
+.industry-dropdown .dropdown-toggle {
+    background-color: black;
+    color: var(--color-white-a100);
+    padding: 12px 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Arrow */
+.industry-dropdown .dropdown-toggle .arrow {
+    font-size: 12px;
+}
+
+/* Fix: keep background black and text white on hover */
+.industry-dropdown .dropdown-toggle:hover,
+.industry-dropdown .dropdown-toggle:focus,
+.industry-dropdown:hover .dropdown-toggle {
+    background-color: black !important;
+    color: white;
+}
+
+/* Dropdown menu */
+.industry-dropdown .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 220px;
+    background-color: #f2f2f0; /* light gray background */
+    border-radius: 0 0 4px 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 999;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+/* Show menu on hover */
+.industry-dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+/* Menu links */
+.industry-dropdown .dropdown-menu li a {
+    display: block;
+    padding: 10px 16px;
+    color: var(--color-black-a100);
+    text-decoration: none; /* no underline by default */
+    transition: all 0.2s ease;
+}
+
+/* Hover effect on items: underline + darker gray */
+.industry-dropdown .dropdown-menu li a:hover {
+    background-color: var(--color-gray-20); /* slightly darker gray */
+    text-decoration: underline;
+}
+
+/* Style the category tags */
+.topic-menu .elementor-item-active {
+    color: var(--content-primary) !important;
+}
+
+/* Table of Contents Block on Blog */
+.elementor-toc__header {
+    padding-bottom: 0 !important;
+}
+.elementor-toc__body {
+    padding-top: 0 !important;
+}

@@ -6,6 +6,122 @@
 ==================================================  
 */
 
+/* =========================
+   Header & Navigation
+========================= */
+
+/* Hide both Logos to start */
+.logo-white {
+    display: none;
+}
+.logo-black {
+    display: block;
+}
+
+/* === CODE FOR TRANSPARENT MENU ON HOMEPAGE */
+/* === Sticky Header Background Control === */
+
+body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) {
+    background-color: transparent !important;
+}
+
+body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .logo-white {
+    display: block;
+}
+
+body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .logo-black {
+    display: none;
+}
+
+body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .elementor-item {
+    color: white !important;
+}
+
+body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .sub-arrow svg path {
+    fill: var(--color-white-a100);
+}
+
+/* === Menu Hover Styles (Transparent) === */
+body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .elementor-item:hover {
+    background-color: var(--color-white-a20);
+    border-radius: 100px;
+    transition: background-color 0.3s ease, border-radius 0.3s ease;
+}
+
+/* Divider (Transparent) */
+body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .header-nav {
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Buttons (Transparent) */
+body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .btn-primary.inverse .elementor-button {
+    background: transparent;
+    color: white;
+    border: 1px solid white;
+}
+
+body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .btn-primary.inverse .elementor-button:hover {
+    background: transparent;
+    color: var(--color-white-a70) !important;
+    border: 1px solid var(--color-white-a70) !important;
+}
+
+body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .btn-tertiary .elementor-button {
+    background: transparent;
+    color: var(--color-white-a100) !important;
+    font-weight: var(--font-weight-500);
+}
+
+body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .btn-tertiary .elementor-button:hover {
+    color: var(--color-white-a70) !important;
+}
+
+/* === NORMAL HEADER STYLES === */
+/* Scrolled state or any internal page */
+.custom-sticky-header.elementor-sticky--effects,
+body:not(.has-transparent-header) .custom-sticky-header {
+    background-color: var(--color-white-a90) !important;
+    transition: background-color 0.3s ease;
+    backdrop-filter: blur(30px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
+}
+
+.custom-sticky-header.elementor-sticky--effects .elementor-item,
+body:not(.has-transparent-header) .custom-sticky-header .elementor-item {
+    color: var(--content-primary);
+}
+
+.custom-sticky-header.elementor-sticky--effects .sub-arrow svg path,
+body:not(.has-transparent-header) .custom-sticky-header .sub-arrow svg path {
+    fill: var(--content-primary);
+}
+
+/* === Menu Hover Styles (Scrolled/Internal) === */
+.custom-sticky-header.elementor-sticky--effects .elementor-item:hover,
+body:not(.has-transparent-header) .custom-sticky-header .elementor-item:hover {
+    background-color: var(--background-tertiary);
+    border-radius: 100px;
+}
+
+/* Divider (Scrolled/Internal) */
+.custom-sticky-header.elementor-sticky--effects .header-nav,
+body:not(.has-transparent-header) .custom-sticky-header .header-nav {
+    border-left: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+/* Buttons (Scrolled/Internal) */
+.custom-sticky-header.elementor-sticky--effects .btn-primary.inverse .elementor-button,
+body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .elementor-button {
+    background-color: transparent;
+    color: var(--color-gray-90) !important;
+    border: 1px solid var(--color-gray-90);
+}
+
+/* Active menu item */
+.elementor-item-active {
+    color: #fff !important;
+}
+
 .elementor-location-header .custom-sticky-header {
     background: transparent;
 }
