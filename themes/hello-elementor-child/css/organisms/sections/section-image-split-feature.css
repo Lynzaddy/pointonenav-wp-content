@@ -1,0 +1,30 @@
+/* 
+==================================================
+    SECTION-IMAGE-SPLIT-FEATURE.CSS
+    Description: Styles for the image split feature section.
+==================================================  
+*/
+
+.sec-img-split-feature {
+}
+
+.sec-img-split-feature .text-side {
+}
+
+.sec-img-split-feature .image-side {
+    min-height: 700px;
+}
+
+/* Responsive Margins for Outer */
+@media (max-width: 1024px) {
+    .sec-img-split-feature .image-side {
+        min-height: 850px;
+    }
+}
+
+/* Responsive Margins for Outer */
+@media (max-width: 767px) {
+    .sec-img-split-feature .image-side {
+        min-height: 475px;
+    }
+}
