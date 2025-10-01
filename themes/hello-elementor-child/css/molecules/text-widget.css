@@ -57,7 +57,7 @@
 
 .elementor .text-widget .headline h2 {
     color: var(--content-primary);
-    font-family: var(--typography-font-primary) !important;
+    font-family: var(--typography-font-brand) !important;
     font-size: var(--font-size-32) !important;
     font-style: normal;
     font-weight: var(--weight-bold) !important;
