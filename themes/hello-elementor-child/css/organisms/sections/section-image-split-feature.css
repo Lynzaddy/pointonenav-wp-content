@@ -10,6 +10,11 @@
 }
 
 .sec-img-split-feature .text-side {
+    padding: 0 140px 0 0;
+}
+
+.sec-img-split-feature .text-side-flip {
+    padding: 0 0 0 140px;
 }
 
 .sec-img-split-feature .image-side {
