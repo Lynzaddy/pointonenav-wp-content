@@ -26,8 +26,17 @@
     .sec-img-split-feature {
         padding: 60px 0;
     }
+
     .sec-img-split-feature .image-side {
         min-height: 850px;
+    }
+
+    .sec-img-split-feature .text-side {
+        padding: 0;
+    }
+
+    .sec-img-split-feature .text-side-flip {
+        padding: 0;
     }
 }
 
@@ -36,7 +45,16 @@
     .sec-img-split-feature {
         padding: 60px 0;
     }
+
     .sec-img-split-feature .image-side {
         min-height: 475px;
+    }
+
+    .sec-img-split-feature .text-side {
+        padding: 0;
+    }
+
+    .sec-img-split-feature .text-side-flip {
+        padding: 0;
     }
 }
