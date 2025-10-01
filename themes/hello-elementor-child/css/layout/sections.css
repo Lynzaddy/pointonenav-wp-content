@@ -16,6 +16,7 @@
 
     /* Section Top Padding */
     --vertical-padding-desktop: 100px;
+    --vertical-padding-tablet: 60px;
     --vertical-padding-mobile: 60px;
 
     /* Inner Section Padding on Smaller Devices */
@@ -33,7 +34,7 @@
 /* Section Outer - Full Width Base */
 .section-outer {
     width: 100%;
-    padding: var(--vertical-padding-desktop) 0;
+    padding: 0 0 var(--vertical-padding-desktop) 0;
     background-color: var(--background-primary);
 
     /* Elementor default column gap override */
@@ -64,7 +65,14 @@
 /* Responsive Margins for Outer */
 @media (max-width: 1024px) {
     .section-outer {
-        padding: var(--vertical-padding-mobile) 0;
+        padding: 0 0 var(--vertical-padding-tablet) 0;
+    }
+}
+
+/* Responsive Margins for Outer */
+@media (max-width: 767px) {
+    .section-outer {
+        padding: 0 0 var(--vertical-padding-mobile) 0;
     }
 }
 
