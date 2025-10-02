@@ -16,12 +16,10 @@
     letter-spacing: -0.16px;
     color: #141413;
     text-decoration: none !important;
-
     /* Box */
     padding: 12px;
     border-radius: 8px;
     cursor: pointer;
-
     /* Layout (FIX: prevent SVG clipping) */
     display: flex;
     align-items: center;
@@ -64,7 +62,7 @@
 }
 
 .mobile-nav-accordian .e-n-accordion-item-title-header {
-    padding-left: 12px !important;
+    padding-left: 6px !important;
 }
 
 .mobile-nav-accordian .e-n-accordion-item-title {
