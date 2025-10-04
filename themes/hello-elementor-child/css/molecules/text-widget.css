@@ -131,15 +131,18 @@
     gap: var(--gap-20);
     padding: 0;
     margin: 0;
-    margin-top: 14px;
+    /* Was 14px, but changed to zero, widget controls gap */
+    margin-top: 0px;
 }
 
 .elementor .text-widget.tw-large .btn-container {
-    margin-top: 20px;
+    /* Was 20px, but changed to zero, widget controls gap */
+    margin-top: 0px;
 }
 
 .elementor .text-widget.tw-small .btn-container {
-    margin-top: 8px;
+    /* Was 8px, but changed to zero, widget controls gap */
+    margin-top: 0px;
 }
 
 /* === 02. Stat Widget === */
