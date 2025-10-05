@@ -70,6 +70,7 @@
     --ls-neg-80: -0.8px;
     --ls-neg-64: -0.64px;
     --ls-neg-60: -0.6px;
+    --ls-neg-48: -0.48px;
     --ls-neg-40: -0.4px;
     --ls-neg-32: -0.32px;
     --ls-neg-28: -0.28px;
@@ -132,6 +133,9 @@
 
     /* Icon Border Radius */
     --icon-border-radius: 100px;
+
+    /* Image Border Radius */
+    --image-border-radius: 8px;
 
     /* Containers Card Radius */
     --containers-card-radius: 8px;

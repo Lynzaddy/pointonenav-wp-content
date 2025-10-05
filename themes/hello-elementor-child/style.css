@@ -58,7 +58,7 @@ button:hover {
     font-family: var(--typography-font-brand);
     color: var(--content-primary-inverse);
     font-size: var(--font-size-48);
-    letter-spacing: -0.96px;
+    letter-spacing: var(--ls-neg-96);
     line-height: var(--line-height-120);
     font-weight: var(--font-weight-500);
     margin: 0 0 20px 0;
@@ -71,9 +71,9 @@ button:hover {
     font-family: var(--typography-font-primary);
     font-size: 20px;
     font-style: normal;
-    font-weight: 500;
-    line-height: 148%; /* 29.6px */
-    letter-spacing: -0.2px;
+    font-weight: var(--weight-bold);
+    line-height: var(--lh-relaxed); /* 29.6px */
+    letter-spacing: var(--ls-neg-20);
     margin-bottom: 40px;
 }
 
@@ -158,9 +158,9 @@ button:hover {
     font-family: var(--typography-font-secondary);
     font-size: 14px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 100%; /* 14px */
-    letter-spacing: 0.14px;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-none); /* 14px */
+    letter-spacing: var(--ls-pos-14);
     text-transform: uppercase;
     color: var(--content-primary);
     margin-bottom: 16px;
@@ -174,14 +174,14 @@ button:hover {
 .elementor .platform-section h3 {
     font-size: 32px;
     font-style: normal;
-    font-weight: 500;
-    line-height: 120%; /* 38.4px */
-    letter-spacing: -0.64px;
+    font-weight: var(--weight-bold);
+    line-height: var(--lh-tight); /* 38.4px */
+    letter-spacing: var(--ls-neg-64);
     font-family: var(--typography-font-brand);
 }
 
 .elementor .products-section .product-container {
-    border-radius: 8px;
+    border-radius: var(--image-border-radius);
     border: 1px solid var(--color-black-a12, rgba(0, 0, 0, 0.12));
     padding: 16px;
 }
@@ -199,7 +199,7 @@ button:hover {
     height: 32px;
     padding: 14px;
     box-sizing: content-box;
-    border-radius: 8px;
+    border-radius: var(--image-border-radius);
     border: 0;
     /* border: 1px solid var(--color-black-a12, rgba(0, 0, 0, 0.12)); */
     background-color: var(--background-quaternary);
@@ -228,9 +228,9 @@ button:hover {
     font-family: var(--typography-font-secondary);
     font-size: 14px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 100%; /* 14px */
-    letter-spacing: 0.14px;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-none); /* 14px */
+    letter-spacing: var(--ls-pos-14);
     text-transform: uppercase;
     margin: 0 0 4px 0 !important;
     padding: 0 !important;
@@ -241,9 +241,9 @@ button:hover {
     font-family: var(--typography-font-primary);
     font-size: 16px;
     font-style: normal;
-    font-weight: 500;
-    line-height: 148%; /* 23.68px */
-    letter-spacing: -0.32px;
+    font-weight: var(--weight-bold);
+    line-height: var(--lh-relaxed); /* 23.68px */
+    letter-spacing: var(--ls-neg-32);
     margin-bottom: 8px;
 }
 
@@ -252,9 +252,9 @@ button:hover {
     color: var(--content-secondary);
     font-size: 16px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 148%; /* 23.68px */
-    letter-spacing: -0.16px;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-relaxed); /* 23.68px */
+    letter-spacing: var(--ls-neg-016);
 }
 
 .products-section .product-container .chevron img {
@@ -272,9 +272,9 @@ button:hover {
     font-family: var(--content-primary);
     font-size: 16px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 148%; /* 23.68px */
-    letter-spacing: -0.16px;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-relaxed); /* 23.68px */
+    letter-spacing: var(--ls-neg-016);
     text-decoration-line: underline;
 }
 .products-section .product-container .mobile-link p:hover {
@@ -292,9 +292,9 @@ button:hover {
     color: var(--content-primary-inverse);
     font-size: 14px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 100%; /* 14px */
-    letter-spacing: 0.14px;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-none); /* 14px */
+    letter-spacing: var(--ls-pos-14);
     text-transform: uppercase;
     color: var(--content-primary);
     margin-bottom: 16px;
@@ -305,27 +305,27 @@ button:hover {
     font-size: 32px;
     color: var(--content-primary-inverse);
     font-style: normal;
-    font-weight: 500;
-    line-height: 120%; /* 38.4px */
-    letter-spacing: -0.64px;
+    font-weight: var(--weight-bold);
+    line-height: var(--lh-tight); /* 38.4px */
+    letter-spacing: var(--ls-neg-64);
     font-family: var(--typography-font-brand);
 }
 
 .platform-section .inner-map {
     background-color: #1f1f1f;
-    border-radius: 8px;
+    border-radius: var(--image-border-radius);
 }
 
 .platform-section .inner-code .overline-heading p,
 .platform-section .inner-video .overline-heading p,
 .platform-section .inner-map .overline-heading p {
-    color: #fff;
+    color: var(--color-white-a100);
     font-family: var(--typography-font-secondary);
     font-size: 14px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 100%; /* 14px */
-    letter-spacing: 0.14px;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-none); /* 14px */
+    letter-spacing: var(--ls-pos-14);
     text-transform: uppercase;
     margin-bottom: 16px;
 }
@@ -333,13 +333,13 @@ button:hover {
 .platform-section .inner-code .heading p,
 .platform-section .inner-map .heading p,
 .platform-section .inner-video .heading p {
-    color: #fff;
+    color: var(--color-white-a100);
     font-family: var(--typography-font-brand);
     font-size: 32px;
     font-style: normal;
-    font-weight: 500;
-    line-height: 120%; /* 38.4px */
-    letter-spacing: -0.64px;
+    font-weight: var(--weight-bold);
+    line-height: var(--lh-tight); /* 38.4px */
+    letter-spacing: var(--ls-neg-64);
     margin-bottom: 16px;
 }
 
@@ -350,9 +350,9 @@ button:hover {
     font-family: var(--typography-font-primary);
     font-size: 16px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 148%; /* 23.68px */
-    letter-spacing: -0.16px;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-relaxed); /* 23.68px */
+    letter-spacing: var(--ls-neg-016);
 }
 
 .platform-section .inner-map .stats-block {
@@ -360,38 +360,38 @@ button:hover {
 }
 
 .platform-section .inner-map .stats-block .container {
-    border-left: 1px solid var(--color-line-inverse, rgba(255, 255, 255, 0.2));
+    border-left: 1px solid var(--color-line-inverse);
     padding-left: 12px;
 }
 .platform-section .inner-map .stats-block .stat-heading p {
-    color: var(--content-primary-inverse, #fff);
+    color: var(--content-primary-inverse);
 
     /* Headline/h20 */
     font-family: var(--typography-font-primary);
     font-size: 20px;
     font-style: normal;
-    font-weight: 500;
-    line-height: 120%; /* 24px */
-    letter-spacing: -0.4px;
+    font-weight: var(--weight-bold);
+    line-height: var(--lh-tight); /* 24px */
+    letter-spacing: var(--ls-neg-40);
     margin-bottom: 4px;
 }
 .platform-section .inner-map .stats-block .stat-figure p {
-    color: var(--content-secondary-inverse, rgba(255, 255, 255, 0.7));
+    color: var(--content-secondary-inverse);
     font-size: 14px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 148%; /* 20.72px */
-    letter-spacing: -0.14px;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-relaxed); /* 20.72px */
+    letter-spacing: var(--ls-neg-14);
 }
 
 .platform-section .inner-video {
-    background-color: #000;
-    border-radius: 8px;
+    background-color: var(--color-black-a100);
+    border-radius: var(--image-border-radius);
 }
 
 .platform-section .inner-code {
     background-color: var(--background-secondary-inverse);
-    border-radius: 8px;
+    border-radius: var(--image-border-radius);
 }
 
 .cta-1col-section {
@@ -428,9 +428,9 @@ button:hover {
     font-family: var(--typography-font-brand);
     font-size: 24px;
     font-style: normal;
-    font-weight: 500;
-    line-height: 120%; /* 28.8px */
-    letter-spacing: -0.48px;
+    font-weight: var(--weight-bold);
+    line-height: var(--lh-tight); /* 28.8px */
+    letter-spacing: var(--ls-neg-48);
     margin-bottom: 8px;
 }
 
@@ -439,9 +439,9 @@ button:hover {
     font-family: var(--typography-font-primary);
     font-size: 16px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 148%; /* 23.68px */
-    letter-spacing: -0.16px;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-relaxed); /* 23.68px */
+    letter-spacing: var(--ls-neg-016);
 }
 
 .platform-hero .title h1 {
@@ -452,9 +452,9 @@ button:hover {
     font-family: var(--typography-font-brand);
     font-size: 48px;
     font-style: normal;
-    font-weight: 500;
-    line-height: 120%; /* 57.6px */
-    letter-spacing: -0.96px;
+    font-weight: var(--weight-bold);
+    line-height: var(--lh-tight); /* 57.6px */
+    letter-spacing: var(--ls-neg-96);
     margin: 0;
 }
 .platform-hero .subheading p {
@@ -465,9 +465,9 @@ button:hover {
     font-family: var(--typography-font-primary);
     font-size: 20px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 148%; /* 29.6px */
-    letter-spacing: -0.2px;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-relaxed); /* 29.6px */
+    letter-spacing: var(--ls-neg-20);
     margin: 0;
 }
 
@@ -476,9 +476,9 @@ button:hover {
     font-family: var(--typography-font-secondary);
     font-size: 14px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 100%;
-    letter-spacing: 0.14px;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-none);
+    letter-spacing: var(--ls-pos-14);
     text-transform: uppercase;
     margin-bottom: 16px;
 }
@@ -488,9 +488,9 @@ button:hover {
     font-family: var(--typography-font-brand);
     font-size: 32px;
     font-style: normal;
-    font-weight: 500;
-    line-height: 120%; /* 38.4px */
-    letter-spacing: -0.64px;
+    font-weight: var(--weight-bold);
+    line-height: var(--lh-tight); /* 38.4px */
+    letter-spacing: var(--ls-neg-64);
     margin-bottom: 20px;
 }
 
@@ -499,9 +499,9 @@ button:hover {
     font-family: var(--typography-font-primary);
     font-size: 16px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 148%; /* 23.68px */
-    letter-spacing: -0.16px;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-relaxed); /* 23.68px */
+    letter-spacing: var(--ls-neg-016);
     margin-bottom: 28px;
     text-transform: none;
 }
@@ -515,9 +515,9 @@ button:hover {
     font-family: "Azeret Mono", monospace !important;
     font-size: 14px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 100%; /* 14px */
-    letter-spacing: 0.14px;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-none); /* 14px */
+    letter-spacing: var(--ls-pos-14);
     text-transform: uppercase;
 }
 
@@ -526,17 +526,18 @@ button:hover {
     font-family: var(--typography-font-primary);
     font-size: 16px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 148%; /* 23.68px */
-    letter-spacing: -0.16px;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-relaxed); /* 23.68px */
+    letter-spacing: var(--ls-neg-016);
 }
 
 .pe-section {
     background-color: var(--background-secondary);
 }
 
-.platform .image-container {
-    border-radius: 8px; /* Adjust corner radius */
+.platform .image-container,
+.platform .image-container .elementor-background-video-container {
+    border-radius: var(--image-border-radius); /* Adjust corner radius */
 }
 
 .applications-section {
@@ -548,9 +549,9 @@ button:hover {
     font-family: var(--typography-font-primary);
     font-size: 16px;
     font-style: normal;
-    font-weight: 500;
-    line-height: 148%; /* 23.68px */
-    letter-spacing: -0.32px;
+    font-weight: var(--weight-bold);
+    line-height: var(--lh-relaxed); /* 23.68px */
+    letter-spacing: var(--ls-neg-32);
     margin-bottom: 8px;
 }
 .success-stories .description p {
@@ -558,9 +559,9 @@ button:hover {
     font-family: var(--typography-font-primary);
     font-size: 16px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 148%; /* 23.68px */
-    letter-spacing: -0.16px;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-relaxed); /* 23.68px */
+    letter-spacing: var(--ls-neg-016);
     margin-bottom: 16px;
 }
 .success-stories .link p {
@@ -585,7 +586,7 @@ button:hover {
 /* Background box with border-radius */
 .cta-2col-background-container {
     background-color: var(--background-tertiary);
-    border-radius: 8px;
+    border-radius: var(--image-border-radius);
     overflow: hidden; /* ensures content respects border radius */
     width: 100%;
     box-sizing: border-box;
@@ -613,9 +614,9 @@ button:hover {
     font-family: var(--typography-font-secondary);
     font-size: 14px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 100%; /* 14px */
-    letter-spacing: 0.14px;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-none); /* 14px */
+    letter-spacing: var(--ls-pos-14);
     text-transform: uppercase;
     margin-bottom: 16px;
 }
@@ -625,9 +626,9 @@ button:hover {
     font-family: var(--typography-font-brand);
     font-size: 32px;
     font-style: normal;
-    font-weight: 500;
-    line-height: 120%; /* 38.4px */
-    letter-spacing: -0.64px;
+    font-weight: var(--weight-bold);
+    line-height: var(--lh-tight); /* 38.4px */
+    letter-spacing: var(--ls-neg-64);
 }
 
 /* Default: large screens */
@@ -656,8 +657,8 @@ button:hover {
 .elementor-toc__header-title {
     color: var(--content-primary);
     font-size: 16px;
-    font-weight: 400;
-    line-height: 22.4px;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-medium);
     padding-bottom: 0px !important;
 }
 
@@ -676,7 +677,7 @@ button:hover {
 .elementor-widget-table-of-contents .elementor-toc__list-wrapper svg.e-font-icon-svg {
     width: 8px;
     height: 8px;
-    fill: #218241;
+    fill: var(--color-brand-60);
     flex-shrink: 0;
     margin-top: 3px; /* adjust this value to fine tune vertical alignment */
 }
@@ -687,7 +688,7 @@ button:hover {
     text-transform: uppercase;
     letter-spacing: 1px;
     color: var(--content-primary);
-    line-height: 1.2em;
+    line-height: var(--lh-tight);
     text-decoration: none;
     flex-grow: 1;
     font-weight: var(--font-weight-500);
@@ -792,7 +793,7 @@ button:hover {
     display: block;
     object-fit: cover;
     aspect-ratio: 680 / 382;
-    border-radius: 8px;
+    border-radius: var(--image-border-radius);
     margin-bottom: 24px; /* was 32px */
 }
 
@@ -814,10 +815,10 @@ button:hover {
     display: inline; /* KEY: prevents full-width underline */
     font-family: var(--typography-font-brand) !important;
     font-size: 24px !important;
-    font-weight: 500;
-    line-height: 120%;
-    letter-spacing: -0.48px;
-    color: #141413;
+    font-weight: var(--weight-bold);
+    line-height: var(--lh-tight);
+    letter-spacing: var(--ls-neg-48);
+    color: var(--color-gray-90);
     margin: 0 0 8px 0 !important;
     text-align: left;
     text-decoration: none !important;
@@ -833,9 +834,9 @@ button:hover {
 .carousel-card a p {
     font-family: "Instrument Sans", sans-serif;
     font-size: 16px;
-    font-weight: 400;
-    line-height: 148%;
-    letter-spacing: -0.16px;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-relaxed);
+    letter-spacing: var(--ls-neg-016);
     color: var(--color-black-a60) !important;
     margin-top: 4px;
     text-align: left;
@@ -871,7 +872,7 @@ button:hover {
     position: relative !important;
     width: 40px;
     height: 40px;
-    background-color: #000;
+    background-color: var(--color-black-a100);
     border-radius: 50%;
     display: flex !important;
     justify-content: center;
@@ -909,7 +910,7 @@ button:hover {
     width: 20px;
     height: 4px;
     border-radius: 100px;
-    background: #929285;
+    background: var(--color-gray-50);
     opacity: 1;
     transition: all 0.3s ease;
 }
@@ -918,7 +919,7 @@ button:hover {
     width: 36px;
     height: 8px;
     border-radius: 100px;
-    background: #141413;
+    background: var(--color-gray-90);
 }
 
 /* ==========================================================================
@@ -1041,14 +1042,14 @@ button:hover {
     left: 180px; /* matches new col-1 width */
     min-width: 160px;
     max-width: 160px; /* ↓ 20 px narrower */
-    background: #fff !important;
+    background: var(--color-white-a100) !important;
     z-index: 10;
     box-shadow: 6px 0 10px rgba(0, 0, 0, 0.15);
     border-right: 1px solid rgba(0, 0, 0, 0.1);
 }
 .competitor-table th.sticky-col:nth-child(2) {
-    background: #218241 !important;
-    color: #fff !important;
+    background: var(--color-brand-60) !important;
+    color: var(--color-white-a100) !important;
 }
 .competitor-table th.sticky-col:nth-child(2)::after,
 .competitor-table td.sticky-col:nth-child(2)::after {
@@ -1119,9 +1120,9 @@ button:hover {
     width: 100%;
     cursor: pointer;
     padding: 16px 0;
-    font-family: "AllianceNo2", sans-serif;
+    font-family: var(--typography-font-brand);
     font-size: 20px;
-    font-weight: 400;
+    font-weight: var(--weight-regular);
     line-height: 24px;
     color: #222222 !important;
     background: none;
@@ -1159,7 +1160,7 @@ button:hover {
 .faq-answer {
     padding: 8px 0 24px 32px;
     font-size: 16px;
-    font-weight: 400;
-    line-height: 22.4px;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-medium);
     color: #4d4d47;
 }

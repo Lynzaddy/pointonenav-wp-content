@@ -68,7 +68,7 @@ body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects
 
 body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .btn-tertiary .elementor-button {
     background: transparent;
-    color: var(--color-white-a100) !important;
+    color: var(--color-white-a100); !important;
     font-weight: var(--font-weight-500);
 }
 
@@ -205,12 +205,10 @@ body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .el
     left: 0 !important;
     transform: none !important; /* no translate */
     margin: 0 !important;
-
     /* Visibility model */
     visibility: hidden !important;
     opacity: 0 !important;
     pointer-events: none !important;
-
     /* Box styling */
     z-index: 9999 !important;
     display: block !important;
@@ -218,9 +216,8 @@ body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .el
     padding: 8px !important;
     background-color: #fff !important;
     border: 1px solid rgba(0, 0, 0, 0.12) !important;
-    border-radius: 8px !important;
+    border-radius: var(--image-border-radius) !important;
     box-sizing: border-box !important;
-
     /* No animations that could reflow */
     transition: none !important;
     animation: none !important;
@@ -248,11 +245,11 @@ body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .el
     font-family: var(--typography-font-primary, "Instrument Sans");
     font-size: 16px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 148%;
-    letter-spacing: -0.16px;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-relaxed);
+    letter-spacing: var(--ls-neg-016);
     text-decoration: none;
-    border-radius: 8px;
+    border-radius: var(--image-border-radius);
     padding-left: 12px !important;
     padding-right: 12px !important;
     transition: none !important;
@@ -261,15 +258,15 @@ body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .el
 /* Submenu link hover */
 .header-nav .sub-menu .elementor-sub-item:hover {
     background-color: var(--background-tertiary);
-    border-radius: 8px;
+    border-radius: var(--image-border-radius);
     color: #000;
     transition: none !important;
 }
 
 /* Active submenu item */
 .header-nav .sub-menu .current-menu-item .elementor-sub-item {
-    background-color: #000;
+    background-color: var(--color-black-a100);
     color: #fff !important;
-    border-radius: 8px;
+    border-radius: var(--image-border-radius);
     transition: none !important;
 }

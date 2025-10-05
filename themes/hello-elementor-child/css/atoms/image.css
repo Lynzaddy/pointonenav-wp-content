@@ -5,17 +5,6 @@
 ==============================================================================================================
 */
 
-:root {
-    --image-border-radius: 8px; /* Default border radius for images */
-}
-
-/* .full-width-img img {
-    width: 100%;
-    height: auto;
-    display: block;
-    object-fit: cover;
-} */
-
 .elementor img {
     max-width: 100%;
     height: auto;

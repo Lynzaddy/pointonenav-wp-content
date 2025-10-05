@@ -17,7 +17,7 @@
     font-size: var(--font-size-14);
     font-style: normal;
     font-weight: var(--weight-regular);
-    line-height: 100%; /* 14px */
+    line-height: var(--lh-none); /* 14px */
     letter-spacing: var(--letter-spacing-14);
     text-transform: uppercase;
     text-decoration: none;

@@ -72,7 +72,7 @@
 }
 
 .pon-slide .video video {
-    border-radius: 8px;
+    border-radius: var(--image-border-radius);
     width: 100%;
     height: auto;
     display: block;
@@ -83,9 +83,9 @@
     font-family: var(--typography-font-brand);
     font-size: 24px;
     font-style: normal;
-    font-weight: 500;
-    line-height: 120%;
-    letter-spacing: -0.48px;
+    font-weight: var(--weight-bold);
+    line-height: var(--lh-tight);
+    letter-spacing: var(--ls-neg-48);
     margin-bottom: 12px;
 }
 
@@ -94,9 +94,9 @@
     font-family: var(--typography-font-primary);
     font-size: 16px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 148%;
-    letter-spacing: -0.16px;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-relaxed);
+    letter-spacing: var(--ls-neg-016);
     margin-bottom: 8px;
 }
 
@@ -153,8 +153,8 @@
 /* Shared arrow button styling */
 .custom-slick-slider .slick-prev,
 .custom-slick-slider .slick-next {
-    background-color: #000;
-    color: #fff;
+    background-color: var(--color-black-a100);
+    color: var(--color-white-a100);
     border: none;
     width: 40px;
     height: 40px;
@@ -186,7 +186,7 @@
     font-family: "tabler-icons";
     content: "";
     font-size: 20px;
-    color: #fff;
+    color: var(--color-white-a100);
     line-height: 1;
     display: inline-block;
     text-indent: 0;
@@ -279,7 +279,7 @@
     right: 20px;
     width: 44px;
     height: 44px;
-    background-color: #fff;
+    background-color: var(--color-white-a100);
     color: #000;
     border-radius: 50%;
     z-index: 999;

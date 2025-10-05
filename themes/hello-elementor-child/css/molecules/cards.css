@@ -58,15 +58,15 @@
 @media (max-width: 768px) {
     .card-image .image-box {
         min-height: clamp(220px, 60vw, 360px); /* responsive height range */
-        display: flex;             /* so image can align perfectly */
-        align-items: center;       /* vertically center image */
-        justify-content: center;   /* horizontally center image (for contain) */
+        display: flex; /* so image can align perfectly */
+        align-items: center; /* vertically center image */
+        justify-content: center; /* horizontally center image (for contain) */
     }
 
     .card-image .image-box img {
         height: 100%;
         max-height: none;
-        width: auto;  /* let it scale proportionally; avoids forced stretching */
+        width: auto; /* let it scale proportionally; avoids forced stretching */
         object-fit: contain;
     }
 }
@@ -160,7 +160,7 @@ a.card-image .btn-link:hover .elementor-heading-title {
 /* Card - Avatar */
 
 .card-avatar {
-    border-radius: 8px;
+    border-radius: var(--image-border-radius);
     border: 1px solid var(--line-alpha, rgba(0, 0, 0, 0.12));
     display: flex;
     width: 540px;
@@ -182,7 +182,7 @@ a.card-image .btn-link:hover .elementor-heading-title {
 }
 
 .card-avatar-flipped {
-    border-radius: 8px;
+    border-radius: var(--image-border-radius);
     border: 1px solid var(--line-alpha, rgba(0, 0, 0, 0.12));
     display: flex;
     width: 540px;
@@ -215,7 +215,7 @@ a.card-image .btn-link:hover .elementor-heading-title {
 }
 
 .banner-contact {
-    border-radius: 8px;
+    border-radius: var(--image-border-radius);
     background: var(--background-tertiary, #e7e7e4);
     backdrop-filter: blur(20px);
     display: flex;
@@ -313,9 +313,9 @@ a.card-image .btn-link:hover .elementor-heading-title {
     font-family: var(--typography-font-secondary, "Azeret Mono");
     font-size: 14px;
     font-style: normal;
-    font-weight: 400;
+    font-weight: var(--weight-regular);
     line-height: 1; /* tight line height to match icon */
-    letter-spacing: 0.14px;
+    letter-spacing: var(--ls-pos-14);
     text-transform: uppercase;
 }
 

@@ -79,7 +79,7 @@
     font-size: 14px;
     height: 40px;
     border: 0px;
-    color: #fff;
+    color: var(--color-white-a100);
     border-radius: 50px;
 }
 
