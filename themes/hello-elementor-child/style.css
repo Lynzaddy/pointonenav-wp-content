@@ -647,6 +647,9 @@ button:hover {
 @media (max-width: 767px) {
     .cta-2col-background-container .btn-cta .elementor-button {
         padding-inline: 40px;
+        width: 100% !important;
+        display: block !important;
+        text-align: center;
     }
 }
 
