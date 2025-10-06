@@ -646,10 +646,15 @@ button:hover {
 /* Small screens: 767px and below */
 @media (max-width: 767px) {
     .cta-2col-background-container .btn-cta .elementor-button {
+        /* existing horizontal padding */
         padding-inline: 40px;
+        /* make the button full width */
         width: 100% !important;
-        display: block !important;
+        display: flex !important;
+        justify-content: center;
+        align-items: center; /* ✅ centers the text vertically */
         text-align: center;
+        box-sizing: border-box;
     }
 
     /* ensure wrapper allows full width */
