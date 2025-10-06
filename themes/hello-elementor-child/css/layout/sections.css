@@ -6,6 +6,7 @@
     TABLE OF CONTENTS:
     01. Section Variables
     02. Standard Section Layout
+    03. Card Section Layout
 ==================================================  
 */
 
@@ -109,7 +110,7 @@
     gap: var(--gap-wide);
 }
 
-/* ==== 02. CARD SECTION LAYOUT ======== */
+/* ==== 03. CARD SECTION LAYOUT ======== */
 
 /* Tokens (optional) */
 :root {

@@ -6,7 +6,7 @@
 */
 
 .elementor-location-footer {
-    font-family: "Instrument Sans", sans-serif;
+    font-family: var(--typography-font-primary);
     font-weight: var(--weight-regular);
     line-height: var(--lh-relaxed);
     letter-spacing: var(--ls-neg-16);
