@@ -651,6 +651,18 @@ button:hover {
         display: block !important;
         text-align: center;
     }
+
+    /* ensure wrapper allows full width */
+    .cta-2col-background-container .btn-cta .elementor-button-wrapper {
+        width: 100% !important;
+        display: block;
+    }
+
+    /* ensure parent flex container doesn’t constrain width */
+    .cta-2col-background-container .btn-cta {
+        width: 100% !important;
+        justify-content: center;
+    }
 }
 
 /* === Buttons === */
