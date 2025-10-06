@@ -1,16 +1,20 @@
 /* 
 ==================================================
-    HEADER-DESKTOP.CSS — 20px gap + reliable hover
-    Approach: parent ::before hover-bridge + submenu top: calc(100% + 20px)
-    No transforms, no transitions, no lift.
+    HEADER-DESKTOP.CSS
+    Description: Custom CSS for Desktop Header and Navigation
+
+    TABLE OF CONTENTS:
+    01. Hide both Logos to start
+    02. Transparent Menu / Sticky Header Background
+    03. Transparent Menu / Menu Hover Styles
+    04. Normal Header Styles / Scrolled State or Internal Page  
+    05. Scrolled/Internal / Menu Hover Styles
+    06. Desktop Menu Items
+    07. Subnav Code
 ==================================================  
 */
 
-/* =========================
-   Header & Navigation
-========================= */
-
-/* Hide both Logos to start */
+/* === 01. Hide both Logos to start === */
 .logo-white {
     display: none;
 }
@@ -18,9 +22,7 @@
     display: block;
 }
 
-/* === CODE FOR TRANSPARENT MENU ON HOMEPAGE */
-/* === Sticky Header Background Control === */
-
+/* === 02. Transparent Menu / Sticky Header Background === */
 body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) {
     background-color: transparent !important;
 }
@@ -41,7 +43,7 @@ body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects
     fill: var(--color-white-a100);
 }
 
-/* === Menu Hover Styles (Transparent) === */
+/* === 03. Transparent Menu / Menu Hover Styles === */
 body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .elementor-item:hover {
     background-color: var(--color-white-a20);
     border-radius: 100px;
@@ -68,7 +70,7 @@ body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects
 
 body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .btn-tertiary .elementor-button {
     background: transparent;
-    color: var(--color-white-a100); !important;
+    color: var(--color-white-a100) !important;
     font-weight: var(--font-weight-500);
 }
 
@@ -76,8 +78,7 @@ body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects
     color: var(--color-white-a70) !important;
 }
 
-/* === NORMAL HEADER STYLES === */
-/* Scrolled state or any internal page */
+/* === 04. Normal Header Styles / Scrolled State or Internal Page === */
 .custom-sticky-header.elementor-sticky--effects,
 body:not(.has-transparent-header) .custom-sticky-header {
     background-color: var(--color-white-a90) !important;
@@ -96,7 +97,7 @@ body:not(.has-transparent-header) .custom-sticky-header .sub-arrow svg path {
     fill: var(--content-primary);
 }
 
-/* === Menu Hover Styles (Scrolled/Internal) === */
+/* === 05. Scrolled/Internal / Menu Hover Styles === */
 .custom-sticky-header.elementor-sticky--effects .elementor-item:hover,
 body:not(.has-transparent-header) .custom-sticky-header .elementor-item:hover {
     background-color: var(--background-tertiary);
@@ -126,12 +127,11 @@ body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .el
     background: transparent;
 }
 
-/* === Desktop Menu Items === */
+/* === 06. Desktop Menu Items === */
 .header-nav a.elementor-item {
     color: var(--content-primary);
-    font-family: "Instrument Sans", sans-serif;
+    font-family: var(--typography-font-primary);
     text-decoration: none !important;
-    /* NOTE: no padding here to avoid the prior 'lift' */
     font-weight: var(--weight-bold) !important;
     font-size: var(--font-size-14);
     line-height: var(--lh-relaxed);
@@ -144,27 +144,25 @@ body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .el
     }
 }
 
-/* === Hover State === */
+/* Hover State */
 .header-nav a.elementor-item:hover {
     background-color: var(--color-black-a08);
     border-radius: 100px;
 }
 
-/* === Active (Current) State === */
+/* Active (Current) State  */
 .header-nav .current-menu-item > a.elementor-item {
     color: var(--content-primary) !important;
 }
 
-/* === Hover/Focus Parent Item or Dropdown === */
+/* Hover/Focus Parent Item or Dropdown */
 .header-nav .topnav-blackout:hover > a,
 .header-nav .topnav-blackout:focus-within > a {
     background-color: var(--color-black-a08);
     border-radius: 100px;
 }
 
-/* =========================
-   SUBNAV CODE
-========================= */
+/* === 07. Subnav Code === */
 
 /* Parent anchors submenu and exposes hover bridge */
 .header-nav li.menu-item-has-children {
@@ -173,7 +171,7 @@ body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .el
     overflow: visible; /* ensure bridge/dropdown are hoverable */
 }
 
-/* === Hover bridge on the parent li (fills the 20px outside gap) === */
+/* Hover bridge on the parent li (fills the 20px outside gap) */
 .header-nav li.menu-item-has-children::before {
     content: "";
     position: absolute;
@@ -197,7 +195,7 @@ body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .el
     padding-right: 12px !important;
 }
 
-/* === Submenu container — placed 20px below the parent, no transform === */
+/* Submenu container — placed 20px below the parent, no transform */
 .header-nav ul.sub-menu,
 .header-nav .elementor-nav-menu--dropdown {
     position: absolute !important;
@@ -214,8 +212,8 @@ body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .el
     display: block !important;
     width: 250px !important;
     padding: 8px !important;
-    background-color: #fff !important;
-    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    background-color: var(--color-white-a100) !important;
+    border: 1px solid var(--color-black-a12) !important;
     border-radius: var(--image-border-radius) !important;
     box-sizing: border-box !important;
     /* No animations that could reflow */
@@ -223,7 +221,7 @@ body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .el
     animation: none !important;
 }
 
-/* === Show submenu on hover/focus (geometry stays identical) === */
+/* Show submenu on hover/focus (geometry stays identical) */
 .header-nav li.menu-item-has-children:hover > ul.sub-menu,
 .header-nav li.menu-item-has-children:focus-within > ul.sub-menu,
 .header-nav li.menu-item-has-children:hover > .elementor-nav-menu--dropdown,
@@ -231,7 +229,6 @@ body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .el
     visibility: visible !important;
     opacity: 1 !important;
     pointer-events: auto !important;
-
     top: calc(100% + 20px) !important; /* lock position in shown state */
     left: 0 !important;
     transform: none !important;
@@ -241,8 +238,8 @@ body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .el
 /* Submenu links */
 .header-nav .sub-menu .elementor-sub-item {
     display: block;
-    color: var(--content-primary, #141413);
-    font-family: var(--typography-font-primary, "Instrument Sans");
+    color: var(--content-primary);
+    font-family: var(--typography-font-primary);
     font-size: 16px;
     font-style: normal;
     font-weight: var(--weight-regular);
@@ -259,14 +256,14 @@ body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .el
 .header-nav .sub-menu .elementor-sub-item:hover {
     background-color: var(--background-tertiary);
     border-radius: var(--image-border-radius);
-    color: #000;
+    color: var(--color-black-a100);
     transition: none !important;
 }
 
 /* Active submenu item */
 .header-nav .sub-menu .current-menu-item .elementor-sub-item {
     background-color: var(--color-black-a100);
-    color: #fff !important;
+    color: var(--color-white-a100) !important;
     border-radius: var(--image-border-radius);
     transition: none !important;
 }
