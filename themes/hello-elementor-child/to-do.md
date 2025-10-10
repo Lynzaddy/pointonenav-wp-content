@@ -29,3 +29,9 @@
 -   Clean this up to make the button full width on mobile to match Figma; but no need for a component;
 
 ## Call with Dev Only (Bill out) 10/08/2025
+
+### Platform Page
+
+-   Decrease the gap between the product sections from 140px to 80px on small desktop (all other screens stay the same)
+-   On card component, reduce the gap between the image and text widget from 32px to 20px
+-   On card component, make sure the background images maintain a 3:2 aspect ratio across all screen sizes

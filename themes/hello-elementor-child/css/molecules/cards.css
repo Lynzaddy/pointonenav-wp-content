@@ -12,6 +12,8 @@
 .card-image {
     border: 0;
     padding: 0;
+    row-gap: 20px;
+    column-gap: 20px;
 }
 
 .card-image .image-box {
