@@ -21,6 +21,17 @@
     min-height: 700px;
 }
 
+/* Reduce padding for Small Desktop */
+@media (max-width: 1366px) {
+    .sec-img-split-feature .text-side {
+        padding: 0 80px 0 0;
+    }
+
+    .sec-img-split-feature .text-side-flip {
+        padding: 0 0 0 80px;
+    }
+}
+
 /* Responsive Margins for Outer */
 @media (max-width: 1024px) {
     .sec-img-split-feature {
