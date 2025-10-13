@@ -108,32 +108,49 @@ jobs:
                       mkdir -p "$RELEASE_DIR"
                       tar -xzf "$TARBALL" -C "$RELEASE_DIR"
 
-                      # Deploy:
-                      # - Exclude 'uploads' entirely
-                      # - Exclude all plugins EXCEPT 'plugins/pointone-card-carousel/**'
+                      # Detect archive layout (repo root = wp-content OR site root)
+                      if [ -d "$RELEASE_DIR/plugins" ]; then
+                        SRC_BASE="$RELEASE_DIR"
+                        SRC_PLUGINS_DIR="$RELEASE_DIR/plugins"
+                      else
+                        SRC_BASE="$RELEASE_DIR/wp-content"
+                        SRC_PLUGINS_DIR="$RELEASE_DIR/wp-content/plugins"
+                      fi
+
+                      echo ":: info :: SRC_BASE       = $SRC_BASE"
+                      echo ":: info :: SRC_PLUGINS_DIR = $SRC_PLUGINS_DIR"
+                      echo ":: info :: APP_WP_CONTENT  = $APP_WP_CONTENT"
+                      ls -lah "$SRC_PLUGINS_DIR/pointone-card-carousel" || true
+
+                      # 1) Deploy everything EXCEPT uploads and ALL plugins (keep server plugins intact)
                       if command -v rsync >/dev/null 2>&1; then
                         rsync -rltD --delete \
                           --exclude 'uploads' \
                           --exclude 'uploads/**' \
-                          --include 'plugins/' \
-                          --include 'plugins/pointone-card-carousel/**' \
+                          --exclude 'plugins' \
                           --exclude 'plugins/**' \
                           --no-perms --no-owner --no-group \
                           --omit-dir-times --no-times \
                           --chmod=Du=rwx,Fu=rw \
-                          "$RELEASE_DIR"/ "$APP_WP_CONTENT"/
+                          "$SRC_BASE"/ "$APP_WP_CONTENT"/
                       else
-                        # Fallback (no rsync): preserve uploads and all plugins except copy only our plugin over
                         shopt -s dotglob
                         find "$APP_WP_CONTENT" -mindepth 1 -maxdepth 1 \
                           ! -name 'uploads' ! -name 'plugins' -exec rm -rf {} +
-                        cp -a "$RELEASE_DIR"/. "$APP_WP_CONTENT"/
-                        # Overwrite only the desired plugin (if present in release)
-                        if [ -d "$RELEASE_DIR/plugins/pointone-card-carousel" ]; then
-                          rm -rf "$APP_WP_CONTENT/plugins/pointone-card-carousel"
-                          mkdir -p "$APP_WP_CONTENT/plugins"
-                          cp -a "$RELEASE_DIR/plugins/pointone-card-carousel" "$APP_WP_CONTENT/plugins/"
-                        fi
+                        cp -a "$SRC_BASE"/. "$APP_WP_CONTENT"/
+                      fi
+
+                      # 2) Explicitly deploy ONLY the Point One plugin
+                      if [ -d "$SRC_PLUGINS_DIR/pointone-card-carousel" ]; then
+                        echo ":: info :: Deploying plugins/pointone-card-carousel"
+                        rsync -rltD --delete \
+                          --no-perms --no-owner --no-group \
+                          --omit-dir-times --no-times \
+                          --chmod=Du=rwx,Fu=rw \
+                          "$SRC_PLUGINS_DIR/pointone-card-carousel/" \
+                          "$APP_WP_CONTENT/plugins/pointone-card-carousel/"
+                      else
+                        echo ":: warning :: pointone-card-carousel not found in artifact; skipping plugin sync."
                       fi
 
                       # Safe cache flushes
@@ -222,28 +239,49 @@ jobs:
                       mkdir -p "$RELEASE_DIR"
                       tar -xzf "$TARBALL" -C "$RELEASE_DIR"
 
-                      # Same include/exclude logic as staging
+                      # Detect archive layout (repo root = wp-content OR site root)
+                      if [ -d "$RELEASE_DIR/plugins" ]; then
+                        SRC_BASE="$RELEASE_DIR"
+                        SRC_PLUGINS_DIR="$RELEASE_DIR/plugins"
+                      else
+                        SRC_BASE="$RELEASE_DIR/wp-content"
+                        SRC_PLUGINS_DIR="$RELEASE_DIR/wp-content/plugins"
+                      fi
+
+                      echo ":: info :: SRC_BASE       = $SRC_BASE"
+                      echo ":: info :: SRC_PLUGINS_DIR = $SRC_PLUGINS_DIR"
+                      echo ":: info :: APP_WP_CONTENT  = $APP_WP_CONTENT"
+                      ls -lah "$SRC_PLUGINS_DIR/pointone-card-carousel" || true
+
+                      # 1) Deploy everything EXCEPT uploads and ALL plugins
                       if command -v rsync >/dev/null 2>&1; then
                         rsync -rltD --delete \
                           --exclude 'uploads' \
                           --exclude 'uploads/**' \
-                          --include 'plugins/' \
-                          --include 'plugins/pointone-card-carousel/**' \
+                          --exclude 'plugins' \
                           --exclude 'plugins/**' \
                           --no-perms --no-owner --no-group \
                           --omit-dir-times --no-times \
                           --chmod=Du=rwx,Fu=rw \
-                          "$RELEASE_DIR"/ "$APP_WP_CONTENT"/
+                          "$SRC_BASE"/ "$APP_WP_CONTENT"/
                       else
                         shopt -s dotglob
                         find "$APP_WP_CONTENT" -mindepth 1 -maxdepth 1 \
                           ! -name 'uploads' ! -name 'plugins' -exec rm -rf {} +
-                        cp -a "$RELEASE_DIR"/. "$APP_WP_CONTENT"/
-                        if [ -d "$RELEASE_DIR/plugins/pointone-card-carousel" ]; then
-                          rm -rf "$APP_WP_CONTENT/plugins/pointone-card-carousel"
-                          mkdir -p "$APP_WP_CONTENT/plugins"
-                          cp -a "$RELEASE_DIR/plugins/pointone-card-carousel" "$APP_WP_CONTENT/plugins/"
-                        fi
+                        cp -a "$SRC_BASE"/. "$APP_WP_CONTENT"/
+                      fi
+
+                      # 2) Explicitly deploy ONLY the Point One plugin
+                      if [ -d "$SRC_PLUGINS_DIR/pointone-card-carousel" ]; then
+                        echo ":: info :: Deploying plugins/pointone-card-carousel"
+                        rsync -rltD --delete \
+                          --no-perms --no-owner --no-group \
+                          --omit-dir-times --no-times \
+                          --chmod=Du=rwx,Fu=rw \
+                          "$SRC_PLUGINS_DIR/pointone-card-carousel/" \
+                          "$APP_WP_CONTENT/plugins/pointone-card-carousel/"
+                      else
+                        echo ":: warning :: pointone-card-carousel not found in artifact; skipping plugin sync."
                       fi
 
                       if command -v wp >/dev/null 2>&1; then
