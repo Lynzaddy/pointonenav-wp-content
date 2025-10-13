@@ -11,6 +11,7 @@ wp-rocket-config/
 plugins/*
 # But DO track these custom plugins:
 !plugins/pointone-card-carousel/
+!plugins/pointone-card-carousel/**
 # (add more exceptions below)
 # !plugins/another-custom-plugin/
 # Ignore WP cache drop-in created by cache plugins
