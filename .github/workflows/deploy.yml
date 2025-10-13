@@ -108,29 +108,38 @@ jobs:
                       mkdir -p "$RELEASE_DIR"
                       tar -xzf "$TARBALL" -C "$RELEASE_DIR"
 
-                      # Deploy: DO NOT touch uploads or plugins (leave vendor plugins alone)
+                      # Deploy:
+                      # - Exclude 'uploads' entirely
+                      # - Exclude all plugins EXCEPT 'plugins/pointone-card-carousel/**'
                       if command -v rsync >/dev/null 2>&1; then
                         rsync -rltD --delete \
                           --exclude 'uploads' \
-                          --exclude 'plugins' \
+                          --exclude 'uploads/**' \
+                          --include 'plugins/' \
+                          --include 'plugins/pointone-card-carousel/**' \
                           --exclude 'plugins/**' \
                           --no-perms --no-owner --no-group \
                           --omit-dir-times --no-times \
                           --chmod=Du=rwx,Fu=rw \
                           "$RELEASE_DIR"/ "$APP_WP_CONTENT"/
                       else
+                        # Fallback (no rsync): preserve uploads and all plugins except copy only our plugin over
                         shopt -s dotglob
-                        # delete everything except uploads and plugins, then copy in new content
                         find "$APP_WP_CONTENT" -mindepth 1 -maxdepth 1 \
                           ! -name 'uploads' ! -name 'plugins' -exec rm -rf {} +
                         cp -a "$RELEASE_DIR"/. "$APP_WP_CONTENT"/
+                        # Overwrite only the desired plugin (if present in release)
+                        if [ -d "$RELEASE_DIR/plugins/pointone-card-carousel" ]; then
+                          rm -rf "$APP_WP_CONTENT/plugins/pointone-card-carousel"
+                          mkdir -p "$APP_WP_CONTENT/plugins"
+                          cp -a "$RELEASE_DIR/plugins/pointone-card-carousel" "$APP_WP_CONTENT/plugins/"
+                        fi
                       fi
 
-                      # Safe: run WP-CLI without loading plugins/themes (avoid fatal if a plugin is broken)
+                      # Safe cache flushes
                       if command -v wp >/dev/null 2>&1; then
                         cd "$APP_ROOT"
                         wp --skip-plugins --skip-themes cache flush || true
-                        # If Elementor is active and healthy, try to flush CSS (won't crash if plugins are the issue)
                         wp --skip-themes elementor flush_css || true
                       fi
 
@@ -139,7 +148,7 @@ jobs:
                       find "$APP_WP_CONTENT" -type f -exec chmod 644 {} \;
 
             # =======================
-            # PRODUCTION (mirror)
+            # PRODUCTION
             # =======================
             - name: Ensure remote dirs (PRODUCTION)
               if: env.TARGET == 'production'
@@ -213,10 +222,13 @@ jobs:
                       mkdir -p "$RELEASE_DIR"
                       tar -xzf "$TARBALL" -C "$RELEASE_DIR"
 
+                      # Same include/exclude logic as staging
                       if command -v rsync >/dev/null 2>&1; then
                         rsync -rltD --delete \
                           --exclude 'uploads' \
-                          --exclude 'plugins' \
+                          --exclude 'uploads/**' \
+                          --include 'plugins/' \
+                          --include 'plugins/pointone-card-carousel/**' \
                           --exclude 'plugins/**' \
                           --no-perms --no-owner --no-group \
                           --omit-dir-times --no-times \
@@ -227,6 +239,11 @@ jobs:
                         find "$APP_WP_CONTENT" -mindepth 1 -maxdepth 1 \
                           ! -name 'uploads' ! -name 'plugins' -exec rm -rf {} +
                         cp -a "$RELEASE_DIR"/. "$APP_WP_CONTENT"/
+                        if [ -d "$RELEASE_DIR/plugins/pointone-card-carousel" ]; then
+                          rm -rf "$APP_WP_CONTENT/plugins/pointone-card-carousel"
+                          mkdir -p "$APP_WP_CONTENT/plugins"
+                          cp -a "$RELEASE_DIR/plugins/pointone-card-carousel" "$APP_WP_CONTENT/plugins/"
+                        fi
                       fi
 
                       if command -v wp >/dev/null 2>&1; then
