@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Point One Card Carousel
  * Description: Reusable Swiper carousel powered by ACF + Elementor widget (Point One).
- * Version: 1.0.0
+ * Version: 0.1.0
  * Author: Point One
  * Text Domain: pointone
  */
