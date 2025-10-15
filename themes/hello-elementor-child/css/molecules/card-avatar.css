@@ -1,0 +1,107 @@
+/* 
+==================================================
+    CARD-AVATAR.CSS
+    Description: Styles for avatar cards used in Point One Nav.
+
+    TABLE OF CONTENTS:
+
+==================================================  
+*/
+
+.elementor .product-container {
+    border-radius: var(--image-border-radius);
+    border: 1px solid var(--color-black-a12, rgba(0, 0, 0, 0.12));
+    padding: 16px;
+}
+
+.elementor .products-section .product-container:hover {
+    background-color: #ebebeb;
+}
+.elementor .applications-section .icon img,
+.elementor .graphql-section .icon img,
+.elementor .pe-section .icon img,
+.elementor .rtk-section .icon img,
+.elementor .solutions-section .icon img,
+.elementor .products-section .product-container .icon img {
+    width: 32px;
+    height: 32px;
+    padding: 14px;
+    box-sizing: content-box;
+    border-radius: var(--image-border-radius);
+    border: 0;
+    /* border: 1px solid var(--color-black-a12, rgba(0, 0, 0, 0.12)); */
+    background-color: var(--background-quaternary);
+}
+
+/* Wrap title + chevron in a flex container to align items to top */
+.products-section .product-container .title-chev-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Top align */
+    gap: 16px; /* Optional spacing between title and chevron */
+}
+
+.products-section .product-container .title-chev-wrapper .title {
+    flex: 1;
+}
+
+.products-section .product-container .title-chev-wrapper .chevron {
+    flex-shrink: 0;
+}
+
+/* Card - Avatar */
+
+.card-avatar {
+    border-radius: var(--image-border-radius);
+    border: 1px solid var(--line-alpha, rgba(0, 0, 0, 0.12));
+    display: flex;
+    width: 540px;
+    padding: 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 40px;
+}
+
+/* if .inverse can be applied to any ancestor: */
+.inverse .card-avatar,
+.card-avatar.inverse {
+    border: 1px solid var(--line-alpha-inverse, rgba(255, 255, 255, 0.2));
+}
+
+.card-avatar:hover,
+.card-avatar-flipped:hover {
+    background: var(--states-hover, rgba(0, 0, 0, 0.08));
+}
+
+.card-avatar-flipped {
+    border-radius: var(--image-border-radius);
+    border: 1px solid var(--line-alpha, rgba(0, 0, 0, 0.12));
+    display: flex;
+    width: 540px;
+    padding: 16px;
+    align-items: flex-start;
+    gap: 30px;
+}
+
+/* if .inverse can be applied to any ancestor: */
+.inverse .card-avatar-flipped,
+.card-avatar-flipped.inverse {
+    border: 1px solid var(--line-alpha-inverse, rgba(255, 255, 255, 0.2));
+}
+
+.card-avatar.inverse:hover,
+.card-avatar-flipped.inverse:hover {
+    background: var(--state-hover-inverse, rgba(0, 0, 0, 0.08));
+}
+
+.card-avatar-flipped .elementor-icon {
+    background-color: transparent !important;
+}
+
+.card-avatar-flipped .elementor-icon:hover {
+    background-color: transparent !important;
+}
+
+.card-avatar-flipped.inverse .elementor-icon svg {
+    stroke: white;
+}

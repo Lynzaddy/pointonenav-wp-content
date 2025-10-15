@@ -159,63 +159,6 @@ a.card-image .btn-link:hover .elementor-heading-title {
     letter-spacing: var(--letter-spacing-pos-014) !important;
 }
 
-/* Card - Avatar */
-
-.card-avatar {
-    border-radius: var(--image-border-radius);
-    border: 1px solid var(--line-alpha, rgba(0, 0, 0, 0.12));
-    display: flex;
-    width: 540px;
-    padding: 16px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 40px;
-}
-
-/* if .inverse can be applied to any ancestor: */
-.inverse .card-avatar,
-.card-avatar.inverse {
-    border: 1px solid var(--line-alpha-inverse, rgba(255, 255, 255, 0.2));
-}
-
-.card-avatar:hover,
-.card-avatar-flipped:hover {
-    background: var(--states-hover, rgba(0, 0, 0, 0.08));
-}
-
-.card-avatar-flipped {
-    border-radius: var(--image-border-radius);
-    border: 1px solid var(--line-alpha, rgba(0, 0, 0, 0.12));
-    display: flex;
-    width: 540px;
-    padding: 16px;
-    align-items: flex-start;
-    gap: 30px;
-}
-
-/* if .inverse can be applied to any ancestor: */
-.inverse .card-avatar-flipped,
-.card-avatar-flipped.inverse {
-    border: 1px solid var(--line-alpha-inverse, rgba(255, 255, 255, 0.2));
-}
-
-.card-avatar.inverse:hover,
-.card-avatar-flipped.inverse:hover {
-    background: var(--state-hover-inverse, rgba(0, 0, 0, 0.08));
-}
-
-.card-avatar-flipped .elementor-icon {
-    background-color: transparent !important;
-}
-
-.card-avatar-flipped .elementor-icon:hover {
-    background-color: transparent !important;
-}
-
-.card-avatar-flipped.inverse .elementor-icon svg {
-    stroke: white;
-}
-
 .banner-contact {
     border-radius: var(--image-border-radius);
     background: var(--background-tertiary, #e7e7e4);
