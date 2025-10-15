@@ -1,15 +1,7 @@
 /* 
 ==================================================
     BANNER-LOGO.CSS
-    Description: Styles that control the banner of logos (Trusted By)
-
-    TABLE OF CONTENTS:
-    01. HEADER — inline title + arrow (precise alignment)
-    02. INVERSE MODE — ancestor has .inverse
-    03. LOGO GRID — layout & exact gaps
-    04. LOGO SIZE — per breakpoint
-    05. SVG COLOR CONTROL
-    06. Small polish
+    (Trusted By + chevron + logo grid)
 ==================================================  
 */
 
@@ -21,20 +13,18 @@
     gap: 20px;
 }
 
-/* === 01. HEADER — inline title + arrow (precise alignment) === */
-
-/* Keep title + arrow on one line */
+/* === 01. HEADER — title + chevron, pixel-perfect === */
 .banner-logo .header {
-    display: inline-flex !important;
-    align-items: center !important; /* center on the cross-axis */
+    display: flex !important;
+    align-items: center !important; /* cross-axis centering */
     justify-content: center;
     gap: 8px;
     color: inherit;
 }
 
-/* Reset Elementor widget wrappers so they don't fight alignment */
+/* Normalize Elementor wrappers */
 .banner-logo .header > .elementor-widget {
-    display: inline-flex !important;
+    display: flex !important;
     align-items: center !important;
     margin: 0 !important;
     padding: 0 !important;
@@ -44,44 +34,48 @@
     flex: 0 0 auto;
 }
 
-/* Heading: line-height matches the icon height (16px) to center perfectly */
-.banner-logo .header .elementor-heading-title {
-    margin: 0;
-    padding: 0;
+/* Heading: force a 16px line-box to match the icon height */
+.banner-logo .header .elementor-widget-heading .elementor-heading-title {
+    margin: 0 !important;
+    padding: 0 !important;
     display: inline-block;
     color: var(--content-primary);
     text-align: center;
     font-family: var(--typography-font-secondary);
-    font-size: 14px;
+    font-size: 14px; /* your approved size */
     font-style: normal;
     font-weight: var(--weight-regular);
-    line-height: 16px; /* 👈 match icon height for true centering */
+    line-height: 16px !important; /* 👈 match icon box height */
     letter-spacing: var(--ls-pos-14);
     text-transform: uppercase;
 }
 
-/* Image widget: kill baseline gap + force exact 16×16 */
+/* Image widget: fix baseline + hard-center the 16×16 icon */
 .banner-logo .header > .elementor-widget-image .elementor-widget-container {
-    line-height: 0 !important; /* removes baseline sag */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 16px !important; /* 👈 same as heading line-box */
+    line-height: 0 !important; /* kill baseline sag */
 }
 .banner-logo .header > .elementor-widget-image img,
 .banner-logo .header > .elementor-widget-image svg {
-    width: 16px !important; /* 👈 approved size */
+    width: 16px !important; /* approved size */
     height: 16px !important;
-    display: block; /* no descender gap */
+    display: block !important; /* no inline gap */
+    flex: 0 0 16px;
+    /* Optional micro-nudge if your font looks a hair high/low: */
+    /* transform: translateY(-0.25px); */
 }
 
-/* Optional microscopic nudge if your font renders a hair high/low */
-/* .banner-logo .header > .elementor-widget-image img { transform: translateY(-0.25px); } */
-
-/* Make inline SVGs adopt the text color */
+/* Inline SVG color follows text */
 .banner-logo .header svg,
 .banner-logo .header svg * {
     fill: currentColor !important;
     stroke: currentColor !important;
 }
 
-/* === 02. INVERSE MODE — ancestor has .inverse === */
+/* Inverse mode */
 .inverse .banner-logo .header,
 .banner-logo.inverse .header {
     color: var(--color-white-a100) !important;
@@ -90,13 +84,12 @@
 .banner-logo.inverse .header .elementor-heading-title {
     color: var(--color-white-a100) !important;
 }
-/* Fallback for non-inline SVG src */
 .inverse .banner-logo .header img[src$=".svg"],
 .banner-logo.inverse .header img[src$=".svg"] {
     filter: brightness(0) invert(1);
 }
 
-/* === 03. LOGO GRID — layout & exact gaps === */
+/* === 03. LOGO GRID — unchanged from your setup === */
 .logo-section {
     width: 100%;
     display: flex;
@@ -126,7 +119,6 @@
     align-self: center;
 }
 
-/* === 04. LOGO SIZE — per breakpoint === */
 /* Mobile ≤767px: max 120px */
 .logo-section .logo-grid .logo svg,
 .logo-section .logo-grid .logo img {
@@ -135,6 +127,7 @@
     width: auto;
     max-width: 120px;
 }
+
 /* Tablet (768–1024px): 5 across, gap 24px, max 90px */
 @media (min-width: 768px) and (max-width: 1024px) {
     .logo-section .logo-grid {
@@ -148,6 +141,7 @@
         max-width: 90px;
     }
 }
+
 /* Desktop (≥1025px): 5 across, gap 40px, max 140px */
 @media (min-width: 1025px) {
     .logo-section .logo-grid {
@@ -162,23 +156,7 @@
     }
 }
 
-/* === 05. SVG COLOR CONTROL === */
-.logo-section .logo-grid .logo svg,
-.logo-section .logo-grid .logo svg * {
-    fill: currentColor !important;
-    stroke: currentColor !important;
-}
-.inverse .logo-section,
-.logo-section.inverse,
-.inverse .logo-section .logo-grid {
-    color: var(--color-white-a100) !important;
-}
-.inverse .logo-section .logo-grid .logo img[src$=".svg"],
-.logo-section.inverse .logo-grid .logo img[src$=".svg"] {
-    filter: brightness(0) invert(1);
-}
-
-/* === 06. Small polish === */
+/* Small polish */
 .logo-section .logo-grid img {
     vertical-align: middle;
 }
