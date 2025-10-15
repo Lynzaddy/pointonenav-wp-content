@@ -40,7 +40,7 @@
     padding: 0 !important;
     width: auto !important;
     max-width: none !important;
-    line-height: 1 !important; /* avoid tall line boxes */
+    /* line-height: 1 !important;  avoid tall line boxes */
 }
 
 /* Heading styles (your typography, plus inline-friendly tweaks) */
@@ -54,7 +54,7 @@
     font-size: 14px;
     font-style: normal;
     font-weight: var(--weight-regular);
-    line-height: 1; /* tight line height to match icon */
+    /* line-height: 1;  tight line height to match icon */
     letter-spacing: var(--ls-pos-14);
     text-transform: uppercase;
 }
@@ -66,8 +66,7 @@
     height: 16px;
     display: inline-block; /* stable inline box */
     vertical-align: middle; /* belt-and-suspenders */
-    line-height: 1;
-    /* no translateY — centering is handled by flex */
+    /* line-height: 1; no translateY — centering is handled by flex */
 }
 
 /* Make inline SVGs adopt the text color */
