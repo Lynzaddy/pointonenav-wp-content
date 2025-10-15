@@ -1,7 +1,15 @@
 /* 
 ==================================================
     BANNER-LOGO.CSS
-    (Trusted By + chevron + logo grid)
+    Description: Styles that control the banner of logos (Trusted By)
+
+    TABLE OF CONTENTS:
+    01. HEADER — inline title + arrow (clean center alignment)
+    02. INVERSE MODE — ancestor has .inverse
+    03. LOGO GRID — layout & exact gaps
+    04. LOGO SIZE — per breakpoint
+    05. SVG COLOR CONTROL
+    06. Small polish
 ==================================================  
 */
 
@@ -13,115 +21,127 @@
     gap: 20px;
 }
 
-/* === 01. HEADER — title + chevron, bulletproof centering (CSS Grid) === */
+/* === 01. HEADER — inline title + arrow (clean center alignment) === */
+
+/* Put heading + arrow on one line, centered vertically, with 8px gap */
 .banner-logo .header {
-    display: grid !important;
-    grid-auto-flow: column;
-    grid-auto-columns: max-content;
-    align-items: center; /* ✅ vertical centering for BOTH */
+    display: inline-flex !important; /* override Elementor's container flex */
+    align-items: center !important; /* vertical centering for both items */
     justify-content: center;
-    column-gap: 8px;
-    color: inherit;
+    gap: 8px;
+    color: inherit; /* allows inverse to flip color */
 }
 
-/* Let Elementor widget wrappers behave as grid items, centered */
+/* Reset Elementor widget wrappers so they don't fight alignment */
 .banner-logo .header > .elementor-widget {
-    display: grid !important;
+    display: inline-flex !important; /* ensures child participates in flex centering */
     align-items: center !important;
     margin: 0 !important;
     padding: 0 !important;
     width: auto !important;
     max-width: none !important;
-    line-height: 1 !important;
+    line-height: 1 !important; /* avoid tall line boxes */
 }
 
-/* Your heading styles (unchanged typography) */
+/* Heading styles (your typography, plus inline-friendly tweaks) */
 .banner-logo .header .elementor-heading-title {
     margin: 0;
     padding: 0;
-    display: inline-block;
+    display: inline-block; /* keeps metrics tidy next to icon */
     color: var(--content-primary);
     text-align: center;
     font-family: var(--typography-font-secondary);
     font-size: 14px;
     font-style: normal;
     font-weight: var(--weight-regular);
-    /* keep your preferred line-height; no override needed */
+    line-height: 1; /* tight line height to match icon */
     letter-spacing: var(--ls-pos-14);
     text-transform: uppercase;
 }
 
-/* Image widget: kill baseline and hard-size the chevron to 16×16 */
-.banner-logo .header > .elementor-widget-image .elementor-widget-container {
-    line-height: 0 !important; /* no baseline sag */
-}
-.banner-logo .header > .elementor-widget-image img,
-.banner-logo .header > .elementor-widget-image svg {
-    width: 16px !important; /* ✅ approved size */
-    height: 16px !important;
-    display: block !important; /* no inline gap */
+/* Icon: same size as text (1em) and centered */
+.banner-logo .header img,
+.banner-logo .header svg {
+    width: 16px;
+    height: 16px;
+    display: inline-block; /* stable inline box */
+    vertical-align: middle; /* belt-and-suspenders */
+    line-height: 1;
+    /* no translateY — centering is handled by flex */
 }
 
-/* Optional microscopic adjust if your font renders a hair high/low */
-/* .banner-logo .header > .elementor-widget-image img { transform: translateY(-0.25px); } */
-
-/* Inline SVG color follows text */
+/* Make inline SVGs adopt the text color */
 .banner-logo .header svg,
 .banner-logo .header svg * {
     fill: currentColor !important;
     stroke: currentColor !important;
 }
 
-/* Inverse mode */
+/* === 02. INVERSE MODE — ancestor has .inverse === */
+
+/* Flip the whole header (and thus SVG) to white */
 .inverse .banner-logo .header,
 .banner-logo.inverse .header {
     color: var(--color-white-a100) !important;
 }
+
+/* Also ensure the heading text itself is white */
 .inverse .banner-logo .header .elementor-heading-title,
 .banner-logo.inverse .header .elementor-heading-title {
     color: var(--color-white-a100) !important;
 }
+
+/* Fallback for <img src="...svg"> icons (non-inline SVG) */
 .inverse .banner-logo .header img[src$=".svg"],
 .banner-logo.inverse .header img[src$=".svg"] {
     filter: brightness(0) invert(1);
 }
 
-/* === 03. LOGO GRID — unchanged from your setup === */
+/* === 03. LOGO GRID — layout & exact gaps === */
+
+/* Outer container: center the grid block */
 .logo-section {
     width: 100%;
     display: flex;
     justify-content: center;
-    color: inherit;
+    color: inherit; /* for SVG currentColor */
 }
+
+/* Base: Mobile first (≤767px) — 2 across, gap 32px, grid hugs content */
 .logo-section .logo-grid {
-    display: grid !important;
+    display: grid !important; /* beat Elementor e-flex */
     grid-template-columns: repeat(2, max-content);
     justify-items: center;
     align-items: center;
-    gap: 32px !important;
+    gap: 32px !important; /* exact mobile gap */
     column-gap: 32px !important;
     row-gap: 32px !important;
-    width: auto;
+    width: auto; /* shrink-wrap to content */
     margin: 0 auto;
     padding: 0;
+    /* neutralize Elementor gap vars just in case */
     --grid-column-gap: 0;
     --grid-row-gap: 0;
 }
+
+/* Children: prevent Elementor from stretching items or adding margins */
 .logo-section .logo-grid > .elementor-widget {
-    width: auto !important;
+    width: auto !important; /* stop 100% width */
     max-width: none !important;
-    margin: 0 !important;
+    margin: 0 !important; /* kill default widget margins */
     padding: 0 !important;
     justify-self: center;
     align-self: center;
 }
+
+/* === 04. LOGO SIZE — per breakpoint (Works for inline <svg> and <img src="...svg">) === */
 
 /* Mobile ≤767px: max 120px */
 .logo-section .logo-grid .logo svg,
 .logo-section .logo-grid .logo img {
     display: block;
     height: auto;
-    width: auto;
+    width: auto; /* do not stretch */
     max-width: 120px;
 }
 
@@ -153,11 +173,29 @@
     }
 }
 
-/* Small polish */
-.logo-section .logo-grid img {
-    vertical-align: middle;
+/* === 05. SVG COLOR CONTROL === */
+
+/* Force inline SVGs to follow currentColor (monochrome) */
+.logo-section .logo-grid .logo svg,
+.logo-section .logo-grid .logo svg * {
+    fill: currentColor !important;
+    stroke: currentColor !important;
 }
 
-.banner-logo .header > .elementor-widget-image img {
-    transform: translateY(-0.75px);
+/* Inverse mode: any ancestor with .inverse makes logos white */
+.inverse .logo-section,
+.logo-section.inverse,
+.inverse .logo-section .logo-grid {
+    color: var(--color-white-a100) !important;
+}
+
+/* Fallback for <img src="...svg"> when not inline: invert to white in inverse mode */
+.inverse .logo-section .logo-grid .logo img[src$=".svg"],
+.logo-section.inverse .logo-grid .logo img[src$=".svg"] {
+    filter: brightness(0) invert(1);
+}
+
+/* === 06. Small polish === */
+.logo-section .logo-grid img {
+    vertical-align: middle;
 }
