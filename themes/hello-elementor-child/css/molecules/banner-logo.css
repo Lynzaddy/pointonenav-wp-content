@@ -130,7 +130,7 @@
 /* Tablet (768–1024px): 5 across, gap 24px, max 90px */
 @media (min-width: 768px) and (max-width: 1024px) {
     .logo-section .logo-grid {
-        grid-template-columns: repeat(5, max-content);
+        grid-template-columns: repeat(6, max-content);
         gap: 24px !important;
         column-gap: 24px !important;
         row-gap: 24px !important;
@@ -144,7 +144,7 @@
 /* Desktop (≥1025px): 5 across, gap 40px, max 140px */
 @media (min-width: 1025px) {
     .logo-section .logo-grid {
-        grid-template-columns: repeat(5, max-content);
+        grid-template-columns: repeat(6, max-content);
         gap: 40px !important;
         column-gap: 40px !important;
         row-gap: 40px !important;
