@@ -25,7 +25,7 @@
 
 /* Put heading + arrow on one line, centered vertically, with 8px gap */
 .banner-logo .header {
-    display: inline-flex !important; /* override Elementor's container flex */
+    display: flex !important; /* override Elementor's container flex */
     align-items: center !important; /* vertical centering for both items */
     justify-content: center;
     gap: 8px;
@@ -34,7 +34,7 @@
 
 /* Reset Elementor widget wrappers so they don't fight alignment */
 .banner-logo .header > .elementor-widget {
-    display: inline-flex !important; /* ensures child participates in flex centering */
+    display: flex !important; /* ensures child participates in flex centering */
     align-items: center !important;
     margin: 0 !important;
     padding: 0 !important;
