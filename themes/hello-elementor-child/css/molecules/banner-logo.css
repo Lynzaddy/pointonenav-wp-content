@@ -93,7 +93,7 @@
 
 .logo-section .logo-grid {
     display: grid !important;
-    grid-template-columns: repeat(2, max-content);
+    grid-template-columns: repeat(2, 1fr);
     justify-items: center;
     align-items: center;
     gap: 32px !important;
@@ -127,10 +127,10 @@
     max-width: 120px;
 }
 
-/* Tablet (768–1024px): 5 across, gap 24px, max 90px */
+/* Tablet (768–1024px): 6 across, gap 24px, max 90px */
 @media (min-width: 768px) and (max-width: 1024px) {
     .logo-section .logo-grid {
-        grid-template-columns: repeat(6, max-content);
+        grid-template-columns: repeat(6, 1fr);
         gap: 24px !important;
         column-gap: 24px !important;
         row-gap: 24px !important;
@@ -144,7 +144,7 @@
 /* Desktop (≥1025px): 5 across, gap 40px, max 140px */
 @media (min-width: 1025px) {
     .logo-section .logo-grid {
-        grid-template-columns: repeat(6, max-content);
+        grid-template-columns: repeat(6, 1fr);
         gap: 40px !important;
         column-gap: 40px !important;
         row-gap: 40px !important;
@@ -180,4 +180,11 @@
 /* === 07. Small polish === */
 .logo-section .logo-grid img {
     vertical-align: middle;
+}
+
+.logo-section .logo-grid .logo img {
+    width: 100%; /* fills grid cell */
+    height: auto; /* preserves aspect ratio */
+    max-width: none; /* overrides earlier fixed max widths */
+    object-fit: contain;
 }
