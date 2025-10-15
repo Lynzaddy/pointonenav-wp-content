@@ -179,3 +179,8 @@
 .logo-section .logo-grid img {
     vertical-align: middle;
 }
+
+/* Optional 1px optical nudge if needed */
+.banner-logo .header > .elementor-widget-image img {
+    transform: translateY(-0.5px);
+}
