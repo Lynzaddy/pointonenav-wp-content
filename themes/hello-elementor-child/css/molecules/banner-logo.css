@@ -25,7 +25,7 @@
 
 /* Put heading + arrow on one line, centered vertically, with 8px gap */
 .banner-logo .header {
-    display: inline-flex !important; /* override Elementor's container flex */
+    display: flex !important; /* use real flex, not inline-flex */
     align-items: center !important; /* vertical centering for both items */
     justify-content: center;
     gap: 8px;
@@ -34,13 +34,14 @@
 
 /* Reset Elementor widget wrappers so they don't fight alignment */
 .banner-logo .header > .elementor-widget {
-    display: inline-flex !important; /* ensures child participates in flex centering */
+    display: flex !important; /* ensure children participate in flex centering */
     align-items: center !important;
     margin: 0 !important;
     padding: 0 !important;
     width: auto !important;
     max-width: none !important;
     line-height: 1 !important; /* avoid tall line boxes */
+    flex: 0 0 auto; /* prevent stretch */
 }
 
 /* Heading styles (your typography, plus inline-friendly tweaks) */
@@ -59,16 +60,19 @@
     text-transform: uppercase;
 }
 
-/* Icon: same size as text (1em) and centered */
+/* Icon: same optical size as text and perfectly centered */
 .banner-logo .header img,
 .banner-logo .header svg {
-    width: 1em;
-    height: 1em;
-    display: inline-block; /* stable inline box */
-    vertical-align: middle; /* belt-and-suspenders */
+    height: 1em; /* match text size */
+    width: auto; /* preserve aspect */
+    display: block; /* remove baseline gap that makes icon sit low */
     line-height: 1;
-    /* no translateY — centering is handled by flex */
+    flex: 0 0 auto;
 }
+
+/* Optional micro-adjust (uncomment if you want 1px nudge on some fonts) */
+/* .banner-logo .header img,
+.banner-logo .header svg { transform: translateY(-0.03em); } */
 
 /* Make inline SVGs adopt the text color */
 .banner-logo .header svg,
