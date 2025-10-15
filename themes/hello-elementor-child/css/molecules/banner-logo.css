@@ -45,7 +45,7 @@
 
 /* Heading styles (your typography, plus inline-friendly tweaks) */
 .banner-logo .header .elementor-heading-title {
-    margin: 0;
+    margin: -7 0 0 0;
     padding: 0;
     display: inline-block; /* keeps metrics tidy next to icon */
     color: var(--content-primary);
