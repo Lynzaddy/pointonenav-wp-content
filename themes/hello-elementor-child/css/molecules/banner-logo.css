@@ -4,7 +4,7 @@
     Description: Styles that control the banner of logos (Trusted By)
 
     TABLE OF CONTENTS:
-    01. HEADER — inline title + arrow (precise baseline alignment)
+    01. HEADER — inline title + arrow (precise alignment)
     02. INVERSE MODE — ancestor has .inverse
     03. LOGO GRID — layout & exact gaps
     04. LOGO SIZE — per breakpoint
@@ -21,12 +21,12 @@
     gap: 20px;
 }
 
-/* === 01. HEADER — inline title + arrow (precise baseline alignment) === */
+/* === 01. HEADER — inline title + arrow (precise alignment) === */
 
 /* Keep title + arrow on one line */
 .banner-logo .header {
     display: inline-flex !important;
-    align-items: center !important; /* centers cross-axis */
+    align-items: center !important; /* center on the cross-axis */
     justify-content: center;
     gap: 8px;
     color: inherit;
@@ -44,7 +44,7 @@
     flex: 0 0 auto;
 }
 
-/* Tighten heading metrics */
+/* Heading: line-height matches the icon height (16px) to center perfectly */
 .banner-logo .header .elementor-heading-title {
     margin: 0;
     padding: 0;
@@ -55,26 +55,24 @@
     font-size: 14px;
     font-style: normal;
     font-weight: var(--weight-regular);
-    line-height: 1; /* tight line box */
+    line-height: 16px; /* 👈 match icon height for true centering */
     letter-spacing: var(--ls-pos-14);
     text-transform: uppercase;
 }
 
-/* Keep the icon at EXACTLY the original approved size (24x24) */
+/* Image widget: kill baseline gap + force exact 16×16 */
 .banner-logo .header > .elementor-widget-image .elementor-widget-container {
-    line-height: 0 !important; /* remove baseline gap from the image wrapper */
+    line-height: 0 !important; /* removes baseline sag */
 }
 .banner-logo .header > .elementor-widget-image img,
 .banner-logo .header > .elementor-widget-image svg {
-    width: 24px !important;
-    height: 24px !important; /* force original size */
+    width: 16px !important; /* 👈 approved size */
+    height: 16px !important;
     display: block; /* no descender gap */
 }
 
-/* Optional tiny nudge if it still looks 1px low on your font stack */
-.banner-logo .header > .elementor-widget-image img {
-    transform: translateY(-0.5px);
-}
+/* Optional microscopic nudge if your font renders a hair high/low */
+/* .banner-logo .header > .elementor-widget-image img { transform: translateY(-0.25px); } */
 
 /* Make inline SVGs adopt the text color */
 .banner-logo .header svg,
