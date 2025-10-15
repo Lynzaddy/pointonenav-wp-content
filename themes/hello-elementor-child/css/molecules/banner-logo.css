@@ -4,7 +4,7 @@
     Description: Styles that control the banner of logos (Trusted By)
 
     TABLE OF CONTENTS:
-    01. HEADER — inline title + arrow (clean center alignment)
+    01. HEADER — inline title + arrow (precise baseline alignment)
     02. INVERSE MODE — ancestor has .inverse
     03. LOGO GRID — layout & exact gaps
     04. LOGO SIZE — per breakpoint
@@ -21,12 +21,12 @@
     gap: 20px;
 }
 
-/* === 01. HEADER — inline title + arrow (clean center alignment) === */
+/* === 01. HEADER — inline title + arrow (precise baseline alignment) === */
 
-/* Keep title + arrow inline, centered vertically, gap 8px */
+/* Keep title + arrow on one line */
 .banner-logo .header {
     display: inline-flex !important;
-    align-items: center !important;
+    align-items: center !important; /* centers cross-axis */
     justify-content: center;
     gap: 8px;
     color: inherit;
@@ -55,20 +55,25 @@
     font-size: 14px;
     font-style: normal;
     font-weight: var(--weight-regular);
-    line-height: 1; /* keep the line box tight */
+    line-height: 1; /* tight line box */
     letter-spacing: var(--ls-pos-14);
     text-transform: uppercase;
 }
 
-/* 🔧 Fix: remove baseline gap from the Image widget (no size change) */
+/* Keep the icon at EXACTLY the original approved size (24x24) */
 .banner-logo .header > .elementor-widget-image .elementor-widget-container {
-    line-height: 0 !important; /* kills extra inline box that makes the icon sit low */
+    line-height: 0 !important; /* remove baseline gap from the image wrapper */
 }
 .banner-logo .header > .elementor-widget-image img,
 .banner-logo .header > .elementor-widget-image svg {
-    display: block; /* ensures no descender gap */
-    height: auto; /* preserve original icon size */
-    width: auto; /* preserve original icon size */
+    width: 24px !important;
+    height: 24px !important; /* force original size */
+    display: block; /* no descender gap */
+}
+
+/* Optional tiny nudge if it still looks 1px low on your font stack */
+.banner-logo .header > .elementor-widget-image img {
+    transform: translateY(-0.5px);
 }
 
 /* Make inline SVGs adopt the text color */
@@ -178,9 +183,4 @@
 /* === 06. Small polish === */
 .logo-section .logo-grid img {
     vertical-align: middle;
-}
-
-/* Optional 1px optical nudge if needed */
-.banner-logo .header > .elementor-widget-image img {
-    transform: translateY(-0.5px);
 }
