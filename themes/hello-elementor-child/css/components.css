@@ -18,7 +18,7 @@
 @import "molecules/text-feature.css";
 @import "molecules/single-image-sections.css";
 @import "molecules/custom-slider.css";
-@import "molecules/trusted-by-logos.css";
+/* @import "molecules/trusted-by-logos.css"; */
 @import "molecules/banner-logo.css";
 
 @import "organisms/sections/section-banner-cta.css";
