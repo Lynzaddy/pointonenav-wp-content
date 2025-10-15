@@ -13,60 +13,57 @@
     gap: 20px;
 }
 
-/* === 01. HEADER — title + chevron, pixel-perfect === */
+/* === 01. HEADER — title + chevron, bulletproof centering (CSS Grid) === */
 .banner-logo .header {
-    display: flex !important;
-    align-items: center !important; /* cross-axis centering */
+    display: grid !important;
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    align-items: center; /* ✅ vertical centering for BOTH */
     justify-content: center;
-    gap: 8px;
+    column-gap: 8px;
     color: inherit;
 }
 
-/* Normalize Elementor wrappers */
+/* Let Elementor widget wrappers behave as grid items, centered */
 .banner-logo .header > .elementor-widget {
-    display: flex !important;
+    display: grid !important;
     align-items: center !important;
     margin: 0 !important;
     padding: 0 !important;
     width: auto !important;
     max-width: none !important;
     line-height: 1 !important;
-    flex: 0 0 auto;
 }
 
-/* Heading: force a 16px line-box to match the icon height */
-.banner-logo .header .elementor-widget-heading .elementor-heading-title {
-    margin: 0 !important;
-    padding: 0 !important;
+/* Your heading styles (unchanged typography) */
+.banner-logo .header .elementor-heading-title {
+    margin: 0;
+    padding: 0;
     display: inline-block;
     color: var(--content-primary);
     text-align: center;
     font-family: var(--typography-font-secondary);
-    font-size: 14px; /* your approved size */
+    font-size: 14px;
     font-style: normal;
     font-weight: var(--weight-regular);
-    line-height: 16px !important; /* 👈 match icon box height */
+    /* keep your preferred line-height; no override needed */
     letter-spacing: var(--ls-pos-14);
     text-transform: uppercase;
 }
 
-/* Image widget: fix baseline + hard-center the 16×16 icon */
+/* Image widget: kill baseline and hard-size the chevron to 16×16 */
 .banner-logo .header > .elementor-widget-image .elementor-widget-container {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    height: 16px !important; /* 👈 same as heading line-box */
-    line-height: 0 !important; /* kill baseline sag */
+    line-height: 0 !important; /* no baseline sag */
 }
 .banner-logo .header > .elementor-widget-image img,
 .banner-logo .header > .elementor-widget-image svg {
-    width: 16px !important; /* approved size */
+    width: 16px !important; /* ✅ approved size */
     height: 16px !important;
     display: block !important; /* no inline gap */
-    flex: 0 0 16px;
-    /* Optional micro-nudge if your font looks a hair high/low: */
-    /* transform: translateY(-0.25px); */
 }
+
+/* Optional microscopic adjust if your font renders a hair high/low */
+/* .banner-logo .header > .elementor-widget-image img { transform: translateY(-0.25px); } */
 
 /* Inline SVG color follows text */
 .banner-logo .header svg,
