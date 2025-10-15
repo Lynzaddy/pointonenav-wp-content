@@ -157,3 +157,7 @@
 .logo-section .logo-grid img {
     vertical-align: middle;
 }
+
+.banner-logo .header > .elementor-widget-image img {
+    transform: translateY(-0.25px);
+}
