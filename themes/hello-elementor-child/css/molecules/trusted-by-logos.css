@@ -42,3 +42,78 @@
     transform: translateY(-1px); /* Nudge upward */
     color: var(--content-primary); /* Match the heading color */
 }
+
+/* === 01. HEADER — inline title + arrow (clean center alignment) === */
+
+/* Put heading + arrow on one line, centered vertically, with 8px gap */
+.banner-logo .header {
+    display: flex !important; /* override Elementor's container flex */
+    align-items: center !important; /* vertical centering for both items */
+    justify-content: center;
+    gap: 8px;
+    color: inherit; /* allows inverse to flip color */
+}
+
+/* Reset Elementor widget wrappers so they don't fight alignment */
+.banner-logo .header > .elementor-widget {
+    display: flex !important; /* ensures child participates in flex centering */
+    align-items: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: auto !important;
+    max-width: none !important;
+    /* line-height: 1 !important;  avoid tall line boxes */
+}
+
+/* Heading styles (your typography, plus inline-friendly tweaks) */
+.banner-logo .header .elementor-heading-title {
+    margin: -14 0 0 0;
+    padding: 0;
+    display: inline-block; /* keeps metrics tidy next to icon */
+    color: var(--content-primary);
+    text-align: center;
+    font-family: var(--typography-font-secondary);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: var(--weight-regular);
+    /* line-height: 1;  tight line height to match icon */
+    letter-spacing: var(--ls-pos-14);
+    text-transform: uppercase;
+}
+
+/* Icon: same size as text (1em) and centered */
+.banner-logo .header img,
+.banner-logo .header svg {
+    width: 16px;
+    height: 16px;
+    display: inline-block; /* stable inline box */
+    vertical-align: middle; /* belt-and-suspenders */
+    /* line-height: 1; no translateY — centering is handled by flex */
+}
+
+/* Make inline SVGs adopt the text color */
+.banner-logo .header svg,
+.banner-logo .header svg * {
+    fill: currentColor !important;
+    stroke: currentColor !important;
+}
+
+/* === 02. INVERSE MODE — ancestor has .inverse === */
+
+/* Flip the whole header (and thus SVG) to white */
+.inverse .banner-logo .header,
+.banner-logo.inverse .header {
+    color: var(--color-white-a100) !important;
+}
+
+/* Also ensure the heading text itself is white */
+.inverse .banner-logo .header .elementor-heading-title,
+.banner-logo.inverse .header .elementor-heading-title {
+    color: var(--color-white-a100) !important;
+}
+
+/* Fallback for <img src="...svg"> icons (non-inline SVG) */
+.inverse .banner-logo .header img[src$=".svg"],
+.banner-logo.inverse .header img[src$=".svg"] {
+    filter: brightness(0) invert(1);
+}
