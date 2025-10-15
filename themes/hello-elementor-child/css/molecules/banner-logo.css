@@ -4,41 +4,104 @@
     Description: Styles that control the banner of logos (Trusted By)
 
     TABLE OF CONTENTS:
+    01. OUTER BANNER LOGO
+    02. HEADER SECTION (Text and Image)
+    03. INVERSE MODE — ancestor has .inverse
+    04. LOGO GRID — layout & exact gaps
+    05. LOGO SIZE — per breakpoint
+    06. SVG COLOR CONTROL
+    07. Small polish
 
 ==================================================  
 */
 
-/* 01. OUTER BANNER LOGO */
+/* === 01. OUTER BANNER LOGO === */
 .banner-logo {
+    margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 20px;
 }
 
-/* === 03. LOGO GRID — layout & exact gaps === */
+/* === 02. HEADER SECTION (Text and Image) === */
+.banner-logo .header {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    line-height: 14px;
+    color: inherit; /* allows inverse to flip color */
+}
 
-/* Outer container: center the grid block */
+.banner-logo .header .text {
+    margin: 0;
+    padding: 0;
+    color: var(--content-primary);
+    text-align: center;
+    font-family: var(--typography-font-secondary);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: var(--weight-regular);
+    letter-spacing: var(--ls-pos-14);
+    text-transform: uppercase;
+}
+
+.banner-logo .header .icon img,
+.banner-logo .header .icon svg {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.banner-logo .header .icon svg,
+.banner-logo .header .icon svg * {
+    fill: currentColor !important;
+    stroke: currentColor !important;
+}
+
+/* === 03. INVERSE MODE — ancestor has .inverse === */
+
+.inverse .banner-logo .header,
+.banner-logo.inverse .header {
+    color: var(--color-white-a100) !important;
+}
+
+.inverse .banner-logo .header .text,
+.banner-logo.inverse .header .text {
+    color: var(--color-white-a100) !important;
+}
+
+.inverse .banner-logo .header .icon img[src$=".svg"],
+.banner-logo.inverse .header .icon img[src$=".svg"] {
+    filter: brightness(0) invert(1);
+}
+
+/* === 04. LOGO GRID — layout & exact gaps === */
+
 .logo-section {
     width: 100%;
     display: flex;
     justify-content: center;
-    color: inherit; /* for SVG currentColor */
+    color: inherit;
 }
 
-/* Base: Mobile first (≤767px) — 2 across, gap 32px, grid hugs content */
 .logo-section .logo-grid {
-    display: grid !important; /* beat Elementor e-flex */
+    display: grid !important;
     grid-template-columns: repeat(2, max-content);
     justify-items: center;
     align-items: center;
-    gap: 32px !important; /* exact mobile gap */
+    gap: 32px !important;
     column-gap: 32px !important;
     row-gap: 32px !important;
-    width: auto; /* shrink-wrap to content */
+    width: auto;
     margin: 0 auto;
     padding: 0;
-    /* neutralize Elementor gap vars just in case */
     --grid-column-gap: 0;
     --grid-row-gap: 0;
 }
@@ -53,7 +116,7 @@
     align-self: center;
 }
 
-/* === 04. LOGO SIZE — per breakpoint (Works for inline <svg> and <img src="...svg">) === */
+/* === 05. LOGO SIZE — per breakpoint (Works for inline <svg> and <img src="...svg">) === */
 
 /* Mobile ≤767px: max 120px */
 .logo-section .logo-grid .logo svg,
@@ -92,7 +155,7 @@
     }
 }
 
-/* === 05. SVG COLOR CONTROL === */
+/* === 06. SVG COLOR CONTROL === */
 
 /* Force inline SVGs to follow currentColor (monochrome) */
 .logo-section .logo-grid .logo svg,
@@ -114,7 +177,7 @@
     filter: brightness(0) invert(1);
 }
 
-/* === 06. Small polish === */
+/* === 07. Small polish === */
 .logo-section .logo-grid img {
     vertical-align: middle;
 }
