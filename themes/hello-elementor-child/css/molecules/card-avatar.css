@@ -67,7 +67,7 @@
 /* if .inverse can be applied to any ancestor: */
 .inverse .card-avatar,
 .card-avatar.inverse {
-    border: 1px solid var(--line-alpha-inverse);
+    border: 1px solid #f90;
 }
 
 .card-avatar.inverse:hover {
