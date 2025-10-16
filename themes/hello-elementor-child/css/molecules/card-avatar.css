@@ -70,9 +70,9 @@
     border: 1px solid var(--line-alpha-inverse);
 }
 
+.inverse .card-avatar:hover,
 .card-avatar.inverse:hover {
-    /* background: var(--state-hover-inverse); */
-    background: #f90;
+    background: var(--state-hover-inverse);
 }
 
 .card-avatar .elementor-icon {

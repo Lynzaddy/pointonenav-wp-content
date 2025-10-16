@@ -55,7 +55,7 @@
 
 /* === 03. Base (Brand) Icon States === */
 .elementor .elementor-icon:hover {
-    background: linear-gradient(0deg, var(--states-hover, rgba(0, 0, 0, 0.08)) 0%, var(--states-hover, rgba(0, 0, 0, 0.08)) 100%), var(--background-brand, #218241);
+    background: linear-gradient(0deg, var(--state-hover, rgba(0, 0, 0, 0.08)) 0%, var(--state-hover, rgba(0, 0, 0, 0.08)) 100%), var(--background-brand, #218241);
 }
 .elementor .elementor-icon:active,
 .elementor .pressed .elementor-icon {
@@ -78,7 +78,7 @@
 
 /* === 04. Base (Brand) Inverse Modifier === */
 .elementor .inverse .elementor-icon:hover {
-    background: linear-gradient(0deg, var(--states-hover-inverse, rgba(255, 255, 255, 0.1)) 0%, var(--states-hover-inverse, rgba(255, 255, 255, 0.1)) 100%), var(--background-brand, #218241);
+    background: linear-gradient(0deg, var(--state-hover-inverse, rgba(255, 255, 255, 0.1)) 0%, var(--state-hover-inverse, rgba(255, 255, 255, 0.1)) 100%), var(--background-brand, #218241);
 }
 .elementor .inverse .elementor-icon:active,
 .elementor .inverse.pressed .elementor-icon {
@@ -110,7 +110,7 @@
     stroke: var(--content-primary-inverse);
 }
 .elementor .icon-primary .elementor-icon:hover {
-    background: linear-gradient(0deg, var(--states-hover-inverse, rgba(255, 255, 255, 0.1)) 0%, var(--states-hover-inverse, rgba(255, 255, 255, 0.1)) 100%), var(--background-primary-inverse, #141413);
+    background: linear-gradient(0deg, var(--state-hover-inverse, rgba(255, 255, 255, 0.1)) 0%, var(--state-hover-inverse, rgba(255, 255, 255, 0.1)) 100%), var(--background-primary-inverse, #141413);
 }
 .elementor .icon-primary .elementor-icon:active,
 .elementor .icon-primary.pressed .elementor-icon {
@@ -136,7 +136,7 @@
     stroke: var(--content-primary);
 }
 .elementor .inverse.icon-primary .elementor-icon:hover {
-    background: linear-gradient(0deg, var(--states-hover, rgba(0, 0, 0, 0.08)) 0%, var(--states-hover, rgba(0, 0, 0, 0.08)) 100%), var(--background-primary, #fff);
+    background: linear-gradient(0deg, var(--state-hover, rgba(0, 0, 0, 0.08)) 0%, var(--state-hover, rgba(0, 0, 0, 0.08)) 100%), var(--background-primary, #fff);
 }
 .elementor .inverse.icon-primary .elementor-icon:active,
 .elementor .inverse.icon-primary.pressed .elementor-icon {
@@ -200,7 +200,7 @@
     stroke: var(--content-primary-inverse, #fff);
 }
 .elementor .icon-secondary.inverse .elementor-icon:hover {
-    background: var(--states-hover-inverse, rgba(255, 255, 255, 0.1));
+    background: var(--state-hover-inverse, rgba(255, 255, 255, 0.1));
 }
 .elementor .icon-secondary.inverse .elementor-icon:active,
 .elementor .icon-secondary.inverse.pressed .elementor-icon {
