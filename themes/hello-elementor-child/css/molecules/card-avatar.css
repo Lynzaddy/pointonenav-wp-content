@@ -54,10 +54,10 @@
     border-radius: var(--image-border-radius);
     border: 1px solid var(--line-alpha);
     display: flex;
-    max-width: 100%;
+    max-width: 540px;
     padding: 16px;
     align-items: flex-start;
-    gap: 23px;
+    gap: 24px;
 }
 
 .card-avatar:hover {
@@ -86,6 +86,15 @@
 
 .card-avatar.inverse .elementor-icon svg {
     stroke: var(--color-white-a100);
+}
+
+/* === RESPONSIVE BEHAVIOR === */
+
+/* Tablet and below (≤1024px) */
+@media (max-width: 1024px) {
+    .card-avatar {
+        max-width: 100%;
+    }
 }
 
 /* Tablet and above (≥769px) */
