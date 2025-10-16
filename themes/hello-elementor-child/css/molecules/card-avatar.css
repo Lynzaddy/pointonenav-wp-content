@@ -49,7 +49,6 @@
     flex-shrink: 0;
 }
 
-/* === CARD - AVATAR === */
 .card-avatar {
     border-radius: var(--image-border-radius);
     border: 1px solid var(--line-alpha);
@@ -58,29 +57,38 @@
     padding: 16px;
     align-items: flex-start;
     gap: 24px;
-    position: relative; /* Needed for absolute positioning of link */
-    overflow: hidden; /* Ensures stretched link doesn't overflow */
+    position: relative;
+    overflow: hidden;
     cursor: pointer;
 }
 
+/* Stretched link - covers the card and is clickable */
 .full-card-link {
     position: absolute;
-    inset: 0; /* shorthand for top:0; right:0; bottom:0; left:0; */
-    z-index: 10;
-    text-indent: -9999px; /* Hides link text visually */
+    inset: 0;
+    z-index: 2; /* Higher than regular card content */
+    text-indent: -9999px;
     background: transparent;
+    cursor: pointer;
 }
 
-.card-avatar * {
+/* Allow inner links/buttons to still function above stretched link */
+.card-avatar a:not(.full-card-link),
+.card-avatar button {
     position: relative;
-    z-index: 11;
+    z-index: 3;
+}
+
+/* Remove this selector so that content doesn't get higher z-index than the stretched link */
+.card-avatar * {
+    /* position: relative;  <-- REMOVE THIS LINE */
+    /* z-index: 11;         <-- REMOVE THIS LINE */
 }
 
 .card-avatar:hover {
     background: var(--state-hover);
 }
 
-/* Inverse theme variants */
 .inverse .card-avatar,
 .card-avatar.inverse {
     border: 1px solid var(--line-alpha-inverse);
@@ -91,7 +99,6 @@
     background: var(--state-hover-inverse);
 }
 
-/* Icon behavior */
 .card-avatar .elementor-icon {
     background-color: transparent !important;
 }
@@ -106,16 +113,13 @@
 
 /* === RESPONSIVE BEHAVIOR === */
 
-/* Tablet and below (≤1024px) */
 @media (max-width: 1024px) {
     .card-avatar {
         max-width: 100%;
     }
 }
 
-/* Tablet and above (≥769px) */
 @media (min-width: 769px) {
-    /* Show chevron, hide button container */
     .card-avatar .chevron {
         display: block;
     }
@@ -125,19 +129,13 @@
     }
 }
 
-/* Mobile and below (≤768px) */
 @media (max-width: 768px) {
-    /* Reduce gap */
     .card-avatar {
         gap: 40px;
     }
-
-    /* Hide chevron */
     .card-avatar .chevron {
         display: none;
     }
-
-    /* Show button container */
     .card-avatar .btn-container,
     .btn-container .btn-link {
         display: block;
