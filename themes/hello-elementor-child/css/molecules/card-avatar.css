@@ -54,13 +54,26 @@
     border-radius: var(--image-border-radius);
     border: 1px solid var(--line-alpha);
     display: flex;
-    max-width: 540px; /* >1024px = 540px */
+    max-width: 540px;
     padding: 16px;
     align-items: flex-start;
     gap: 24px;
-    position: relative; /* Needed for stretched link positioning */
-    overflow: hidden; /* Keeps overlay inside rounded corners */
-    cursor: pointer; /* Whole card feels clickable */
+    position: relative; /* Needed for absolute positioning of link */
+    overflow: hidden; /* Ensures stretched link doesn't overflow */
+    cursor: pointer;
+}
+
+.full-card-link {
+    position: absolute;
+    inset: 0; /* shorthand for top:0; right:0; bottom:0; left:0; */
+    z-index: 10;
+    text-indent: -9999px; /* Hides link text visually */
+    background: transparent;
+}
+
+.card-avatar * {
+    position: relative;
+    z-index: 11;
 }
 
 .card-avatar:hover {
@@ -82,57 +95,27 @@
 .card-avatar .elementor-icon {
     background-color: transparent !important;
 }
+
 .card-avatar .elementor-icon:hover {
     background-color: transparent !important;
 }
+
 .card-avatar.inverse .elementor-icon svg {
     stroke: var(--color-white-a100);
 }
 
-/* ==================================================
-   STRETCHED-LINK OVERLAY (whole card clickable)
-   Place as first child: <a class="stretched-link" href="..."></a>
-   ================================================== */
+/* === RESPONSIVE BEHAVIOR === */
 
-/* The overlay link sits ON TOP of general content */
-.card-avatar .stretched-link {
-    position: absolute;
-    inset: 0; /* top/right/bottom/left: 0 */
-    z-index: 30; /* Above normal content */
-    display: block;
-    background: transparent;
-    /* keep it accessible without visible text */
-    color: transparent;
-    text-decoration: none;
-}
-
-/* Real interactive children must sit ABOVE the overlay so they remain clickable */
-.card-avatar :is(a:not(.stretched-link), button, input, select, textarea, [role="button"]) {
-    position: relative;
-    z-index: 40;
-}
-
-/* Optional keyboard focus ring for accessibility */
-.card-avatar .stretched-link:focus-visible {
-    outline: none;
-}
-.card-avatar:has(.stretched-link:focus-visible) {
-    box-shadow: 0 0 0 3px var(--focus-ring, rgba(0, 123, 255, 0.35));
-}
-
-/* ==================================================
-   RESPONSIVE BEHAVIOR
-   ================================================== */
-
-/* Tablet and below (≤1024px): full width */
+/* Tablet and below (≤1024px) */
 @media (max-width: 1024px) {
     .card-avatar {
         max-width: 100%;
     }
 }
 
-/* Tablet and above (≥769px): show chevron, hide button container */
+/* Tablet and above (≥769px) */
 @media (min-width: 769px) {
+    /* Show chevron, hide button container */
     .card-avatar .chevron {
         display: block;
     }
@@ -144,14 +127,17 @@
 
 /* Mobile and below (≤768px) */
 @media (max-width: 768px) {
+    /* Reduce gap */
     .card-avatar {
-        gap: 40px; /* adjust as needed */
+        gap: 40px;
     }
 
+    /* Hide chevron */
     .card-avatar .chevron {
         display: none;
     }
 
+    /* Show button container */
     .card-avatar .btn-container,
     .btn-container .btn-link {
         display: block;
