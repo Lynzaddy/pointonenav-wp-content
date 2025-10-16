@@ -49,76 +49,102 @@
     flex-shrink: 0;
 }
 
+/* === CARD - AVATAR === */
 .card-avatar {
     border-radius: var(--image-border-radius);
     border: 1px solid var(--line-alpha);
     display: flex;
-    max-width: 540px;
+    max-width: 540px; /* >1024px = 540px */
     padding: 16px;
     align-items: flex-start;
     gap: 24px;
-    position: relative;
-    overflow: hidden;
+    position: relative; /* Positioning context for stretched link */
+    overflow: hidden; /* Keeps overlay inside rounded corners */
     cursor: pointer;
-}
-
-/* Stretched link - covers the card and is clickable */
-.full-card-link {
-    position: absolute;
-    inset: 0;
-    z-index: 2; /* Higher than regular card content */
-    text-indent: -9999px;
-    background: transparent;
-    cursor: pointer;
-}
-
-/* Allow inner links/buttons to still function above stretched link */
-.card-avatar a:not(.full-card-link),
-.card-avatar button {
-    position: relative;
-    z-index: 3;
-}
-
-/* Remove this selector so that content doesn't get higher z-index than the stretched link */
-.card-avatar * {
-    /* position: relative;  <-- REMOVE THIS LINE */
-    /* z-index: 11;         <-- REMOVE THIS LINE */
+    z-index: 1; /* New stacking context; keeps overlay above neighbors */
 }
 
 .card-avatar:hover {
     background: var(--state-hover);
 }
 
+/* Inverse theme variants */
 .inverse .card-avatar,
 .card-avatar.inverse {
     border: 1px solid var(--line-alpha-inverse);
 }
-
 .inverse .card-avatar:hover,
 .card-avatar.inverse:hover {
     background: var(--state-hover-inverse);
 }
 
+/* Icon behavior */
 .card-avatar .elementor-icon {
     background-color: transparent !important;
 }
-
 .card-avatar .elementor-icon:hover {
     background-color: transparent !important;
 }
-
 .card-avatar.inverse .elementor-icon svg {
     stroke: var(--color-white-a100);
 }
 
-/* === RESPONSIVE BEHAVIOR === */
+/* ==================================================
+   STRETCHED-LINK OVERLAY (whole card clickable)
+   Place as FIRST child inside .card-avatar:
+   <div class="elementor-widget-html"><div class="elementor-widget-container">
+     <a class="stretched-link" href="/polaris" aria-label="Open Polaris card"></a>
+   </div></div>
+   ================================================== */
 
+/* Ensure intermediate Elementor wrappers don’t steal positioning */
+.card-avatar .elementor-widget-html,
+.card-avatar .elementor-widget-container {
+    position: static !important; /* key fix */
+    z-index: auto !important;
+    transform: none !important; /* avoid new stacking contexts */
+    filter: none !important;
+    perspective: none !important;
+}
+
+/* The overlay link spans the entire card */
+.card-avatar .stretched-link {
+    position: absolute;
+    inset: 0; /* top/right/bottom/left: 0 */
+    z-index: 30; /* above non-interactive content */
+    display: block;
+    background: transparent;
+    text-decoration: none;
+    color: transparent; /* visually hidden text; use aria-label */
+    pointer-events: auto;
+}
+
+/* Real interactive children remain usable (above the overlay) */
+.card-avatar :is(a:not(.stretched-link), button, input, select, textarea, [role="button"]) {
+    position: relative;
+    z-index: 40;
+}
+
+/* Optional focus ring for keyboard users */
+.card-avatar .stretched-link:focus-visible {
+    outline: none;
+}
+.card-avatar:has(.stretched-link:focus-visible) {
+    box-shadow: 0 0 0 3px var(--focus-ring, rgba(0, 123, 255, 0.35));
+}
+
+/* ==================================================
+   RESPONSIVE BEHAVIOR
+   ================================================== */
+
+/* Tablet and below (≤1024px): full width */
 @media (max-width: 1024px) {
     .card-avatar {
         max-width: 100%;
     }
 }
 
+/* Tablet and above (≥769px): show chevron, hide button container */
 @media (min-width: 769px) {
     .card-avatar .chevron {
         display: block;
@@ -129,10 +155,11 @@
     }
 }
 
+/* Mobile and below (≤768px) */
 @media (max-width: 768px) {
     .card-avatar {
         gap: 40px;
-    }
+    } /* adjust if you prefer another value */
     .card-avatar .chevron {
         display: none;
     }
@@ -141,3 +168,7 @@
         display: block;
     }
 }
+
+/* --- Optional DEBUG (uncomment temporarily)
+.card-avatar .stretched-link { outline: 1px dashed red; }
+*/
