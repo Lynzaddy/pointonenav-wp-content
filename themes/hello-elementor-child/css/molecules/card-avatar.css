@@ -57,7 +57,7 @@
     max-width: 540px;
     padding: 16px;
     align-items: flex-start;
-    gap: 30px;
+    gap: 20px;
 }
 
 .card-avatar:hover {
@@ -97,7 +97,6 @@
     .card-avatar .btn-container,
     .btn-container .btn-link {
         display: none;
-        border: 1px solid #f00;
     }
 }
 
@@ -105,7 +104,7 @@
 @media (max-width: 768px) {
     /* Reduce gap */
     .card-avatar {
-        gap: 12px;
+        gap: 40px;
     }
 
     /* Hide chevron */
@@ -117,6 +116,5 @@
     .card-avatar .btn-container,
     .btn-container .btn-link {
         display: block;
-        border: 1px solid #0f0;
     }
 }
