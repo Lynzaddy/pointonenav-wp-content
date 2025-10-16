@@ -10,7 +10,7 @@
 
 .elementor .product-container {
     border-radius: var(--image-border-radius);
-    border: 1px solid var(--color-black-a12, rgba(0, 0, 0, 0.12));
+    border: 1px solid var(--color-black-a12);
     padding: 16px;
 }
 
@@ -51,12 +51,12 @@
 
 /* Card - Avatar */
 .card-avatar:hover {
-    background: var(--states-hover, rgba(0, 0, 0, 0.08));
+    background: var(--state-hover);
 }
 
 .card-avatar {
     border-radius: var(--image-border-radius);
-    border: 1px solid var(--line-alpha, rgba(0, 0, 0, 0.12));
+    border: 1px solid var(--line-alpha);
     display: flex;
     max-width: 540px;
     padding: 16px;
@@ -67,11 +67,11 @@
 /* if .inverse can be applied to any ancestor: */
 .inverse .card-avatar,
 .card-avatar.inverse {
-    border: 1px solid var(--line-alpha-inverse, rgba(255, 255, 255, 0.2));
+    border: 1px solid var(--line-alpha-inverse);
 }
 
 .card-avatar.inverse:hover {
-    background: var(--state-hover-inverse, rgba(0, 0, 0, 0.08));
+    background: var(--state-hover-inverse);
 }
 
 .card-avatar .elementor-icon {
@@ -83,5 +83,5 @@
 }
 
 .card-avatar.inverse .elementor-icon svg {
-    stroke: white;
+    stroke: var(--color-white-a100);
 }
