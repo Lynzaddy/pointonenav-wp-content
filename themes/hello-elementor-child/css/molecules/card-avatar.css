@@ -49,11 +49,7 @@
     flex-shrink: 0;
 }
 
-/* Card - Avatar */
-.card-avatar:hover {
-    background: var(--state-hover);
-}
-
+/* === CARD - AVATAR === */
 .card-avatar {
     border-radius: var(--image-border-radius);
     border: 1px solid var(--line-alpha);
@@ -64,7 +60,11 @@
     gap: 30px;
 }
 
-/* if .inverse can be applied to any ancestor: */
+.card-avatar:hover {
+    background: var(--state-hover);
+}
+
+/* Inverse theme variants */
 .inverse .card-avatar,
 .card-avatar.inverse {
     border: 1px solid var(--line-alpha-inverse);
@@ -75,6 +75,7 @@
     background: var(--state-hover-inverse);
 }
 
+/* Icon behavior */
 .card-avatar .elementor-icon {
     background-color: transparent !important;
 }
@@ -85,4 +86,33 @@
 
 .card-avatar.inverse .elementor-icon svg {
     stroke: var(--color-white-a100);
+}
+
+/* Tablet and above (≥769px) */
+@media (min-width: 769px) {
+    /* Show chevron, hide button container */
+    .card-avatar .chevron {
+        display: block;
+    }
+    .card-avatar .btn-container {
+        display: none;
+    }
+}
+
+/* Mobile and below (≤768px) */
+@media (max-width: 768px) {
+    /* Reduce gap */
+    .card-avatar {
+        gap: 12px;
+    }
+
+    /* Hide chevron */
+    .card-avatar .chevron {
+        display: none;
+    }
+
+    /* Show button container */
+    .card-avatar .btn-container {
+        display: block;
+    }
 }
