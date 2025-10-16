@@ -54,10 +54,12 @@
     border-radius: var(--image-border-radius);
     border: 1px solid var(--line-alpha);
     display: flex;
-    max-width: 540px;
+    max-width: 540px; /* >1024px = 540px */
     padding: 16px;
     align-items: flex-start;
     gap: 24px;
+    position: relative; /* Required for stretched link positioning */
+    overflow: hidden; /* Keeps the overlay tidy within rounded corners */
 }
 
 .card-avatar:hover {
@@ -88,18 +90,57 @@
     stroke: var(--color-white-a100);
 }
 
-/* === RESPONSIVE BEHAVIOR === */
+/* ==================================================
+   STRETCHED-LINK OVERLAY (makes whole card clickable)
+   Usage: place <a class="stretched-link" href="..."> inside .card-avatar as first child
+   ================================================== */
 
-/* Tablet and below (≤1024px) */
+.card-avatar .stretched-link {
+    position: absolute;
+    inset: 0; /* top:0; right:0; bottom:0; left:0 */
+    z-index: 1; /* Below real interactive children (z-index:2) */
+    display: block;
+    /* Visually hide the text but keep it accessible */
+    color: transparent;
+    text-indent: -9999px;
+}
+
+/* Ensure actual content sits above the overlay so inner links/buttons remain clickable */
+.card-avatar > *:not(.stretched-link) {
+    position: relative;
+    z-index: 2;
+}
+
+/* Optional: show pointer cursor for clarity */
+.card-avatar {
+    cursor: pointer;
+}
+.card-avatar a,
+.card-avatar button {
+    cursor: pointer;
+}
+
+/* Optional: focus style for accessibility when the stretched link is focused via keyboard */
+.card-avatar .stretched-link:focus {
+    outline: none;
+}
+.card-avatar:has(.stretched-link:focus-visible) {
+    box-shadow: 0 0 0 3px var(--focus-ring, rgba(0, 123, 255, 0.35));
+}
+
+/* ==================================================
+   RESPONSIVE BEHAVIOR
+   ================================================== */
+
+/* Tablet and below (≤1024px): full width */
 @media (max-width: 1024px) {
     .card-avatar {
         max-width: 100%;
     }
 }
 
-/* Tablet and above (≥769px) */
+/* Tablet and above (≥769px): show chevron, hide button container */
 @media (min-width: 769px) {
-    /* Show chevron, hide button container */
     .card-avatar .chevron {
         display: block;
     }
@@ -111,9 +152,8 @@
 
 /* Mobile and below (≤768px) */
 @media (max-width: 768px) {
-    /* Reduce gap */
     .card-avatar {
-        gap: 40px;
+        gap: 40px; /* Use whatever value you prefer here */
     }
 
     /* Hide chevron */
