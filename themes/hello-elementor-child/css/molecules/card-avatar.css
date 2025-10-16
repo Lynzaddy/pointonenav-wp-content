@@ -67,11 +67,12 @@
 /* if .inverse can be applied to any ancestor: */
 .inverse .card-avatar,
 .card-avatar.inverse {
-    border: 1px solid #f90;
+    border: 1px solid var(--line-alpha-inverse);
 }
 
 .card-avatar.inverse:hover {
-    background: var(--state-hover-inverse);
+    /* background: var(--state-hover-inverse); */
+    background: #f90;
 }
 
 .card-avatar .elementor-icon {
