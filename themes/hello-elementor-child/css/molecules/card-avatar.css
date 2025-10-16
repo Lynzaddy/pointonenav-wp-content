@@ -141,10 +141,6 @@
     box-shadow: 0 0 0 3px var(--focus-ring, rgba(0, 123, 255, 0.35));
 }
 
-/* ==================================================
-   RESPONSIVE BEHAVIOR
-   ================================================== */
-
 /* Tablet and below (≤1024px): full width */
 @media (max-width: 1024px) {
     .card-avatar {
