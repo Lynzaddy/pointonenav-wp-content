@@ -94,8 +94,10 @@
     .card-avatar .chevron {
         display: block;
     }
-    .card-avatar .btn-container {
+    .card-avatar .btn-container,
+    .btn-container .btn-link {
         display: none;
+        border: 1px solid #f00;
     }
 }
 
@@ -112,7 +114,9 @@
     }
 
     /* Show button container */
-    .card-avatar .btn-container {
+    .card-avatar .btn-container,
+    .btn-container .btn-link {
         display: block;
+        border: 1px solid #0f0;
     }
 }
