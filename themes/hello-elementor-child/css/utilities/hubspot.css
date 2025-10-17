@@ -86,3 +86,9 @@
 .form-columns-1 .hs-input {
     width: 100% !important;
 }
+
+/* Add Padding for RECAPTCHA Logo */
+.hs_recaptcha,
+.hs-recaptcha {
+    padding: 24px 0 !important;
+}
