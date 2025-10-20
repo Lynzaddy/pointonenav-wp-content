@@ -32,10 +32,10 @@
 /* Post title styling */
 .elementor .blog-section .elementor-post__title {
     font-family: var(--typography-font-primary);
-    font-size: var(--font-size-16);
+    font-size: var(--font-size-20);
     font-weight: var(--weight-bold);
-    line-height: var(--lh-relaxed); /* 23.68px */
-    letter-spacing: var(--ls-neg-32);
+    line-height: var(--lh-tight); /* 23.68px */
+    letter-spacing: var(--ls-neg-40);
     margin: 0 0 0 0; /* merged margin-top: 0; */
     padding-bottom: 50px;
 }
