@@ -145,11 +145,17 @@
     box-shadow: 0 0 0 3px var(--focus-ring, rgba(0, 123, 255, 0.35));
 }
 
+/* ==================================================
+   ELEMENT VISIBILITY
+   ================================================== */
+
 .card-avatar .chevron {
     display: block;
 }
+
+/* Default: show button container (for 1024px and below) */
 .card-avatar .btn-container {
-    display: none;
+    display: block;
 }
 
 /* Tablet and below (≤1024px): full width */
@@ -157,28 +163,25 @@
     .card-avatar {
         max-width: 100%;
     }
-}
-
-/* Tablet and above (≥769px): show chevron, hide button container */
-@media (min-width: 769px) {
-    .card-avatar .chevron {
+    .card-avatar .btn-container {
         display: block;
     }
+}
+
+/* Desktop and above (≥1025px): hide button container */
+@media (min-width: 1025px) {
     .card-avatar .btn-container {
         display: none;
     }
 }
 
-/* Mobile and below (≤768px) */
+/* Mobile and below (≤768px): optional spacing + chevron visibility */
 @media (max-width: 768px) {
     .card-avatar {
         gap: 40px;
-    } /* your mobile gap */
+    }
     .card-avatar .chevron {
         display: none;
-    }
-    .card-avatar .btn-container {
-        display: block;
     }
 }
 
