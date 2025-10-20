@@ -149,43 +149,30 @@
    ELEMENT VISIBILITY
    ================================================== */
 
+/* Default (desktop and larger): chevron shown, button container hidden */
 .card-avatar .chevron {
     display: block;
 }
-
-/* Default: show button container (for 1024px and below) */
 .card-avatar .btn-container {
-    display: block;
+    display: none;
 }
 
-/* Tablet and below (≤1024px): full width */
+/* Tablet & below (≤1024px): swap visibility */
 @media (max-width: 1024px) {
     .card-avatar {
         max-width: 100%;
+    }
+    .card-avatar .chevron {
+        display: none;
     }
     .card-avatar .btn-container {
         display: block;
     }
 }
 
-/* Desktop and above (≥1025px): hide button container */
-@media (min-width: 1025px) {
-    .card-avatar .btn-container {
-        display: none;
-    }
-}
-
-/* Mobile and below (≤768px): optional spacing + chevron visibility */
+/* Mobile tweaks (≤768px): spacing only */
 @media (max-width: 768px) {
     .card-avatar {
-        gap: 40px;
-    }
-    .card-avatar .chevron {
-        display: none;
+        gap: 40px; /* your mobile gap */
     }
 }
-
-/* --- Optional DEBUG (uncomment while testing)
-.card-avatar .elementor-widget-html { outline: 1px dashed red; }
-.card-avatar .stretched-link { outline: 1px dashed blue; }
-*/
