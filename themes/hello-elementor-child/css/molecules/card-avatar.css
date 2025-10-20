@@ -153,8 +153,7 @@
     .card-avatar .chevron {
         display: block;
     }
-    .card-avatar .btn-container,
-    .btn-container .btn-link {
+    .card-avatar .btn-container {
         display: none;
     }
 }
@@ -167,8 +166,7 @@
     .card-avatar .chevron {
         display: none;
     }
-    .card-avatar .btn-container,
-    .btn-container .btn-link {
+    .card-avatar .btn-container {
         display: block;
     }
 }
