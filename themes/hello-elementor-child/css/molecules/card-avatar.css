@@ -145,9 +145,12 @@
     box-shadow: 0 0 0 3px var(--focus-ring, rgba(0, 123, 255, 0.35));
 }
 
-/* ==================================================
-   ELEMENT VISIBILITY
-   ================================================== */
+/* On the PE page, change the background color of the enc-icon */
+.pe-get-started .enc-icon {
+    background-color: #d3f754 !important;
+}
+
+/* ELEMENT VISIBILITY */
 
 /* Default (desktop and larger): chevron shown, button container hidden */
 .card-avatar .chevron {
