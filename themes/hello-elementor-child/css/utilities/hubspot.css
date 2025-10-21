@@ -71,7 +71,7 @@
     margin-bottom: 24px;
 }
 
-.hs-button {
+.hbspt-form .actions input.hs-button.primary.large {
     white-space: pre-wrap;
     background: #218241;
     padding: 8px 16px;
@@ -83,8 +83,11 @@
     border-radius: 50px;
 }
 
-.hs-button:hover {
-    color: #218241 !important;
+/* Hover / focus — more specific so it beats generic button hovers */
+.hbspt-form .actions input.hs-button.primary.large:hover,
+.hbspt-form .actions input.hs-button.primary.large:focus-visible {
+    background: #fff; /* invert to white on hover */
+    color: #218241 !important; /* keep !important only if your globals force a color */
     border: 1px solid #218241 !important;
 }
 
