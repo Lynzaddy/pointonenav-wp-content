@@ -83,6 +83,11 @@
     border-radius: 50px;
 }
 
+.hs-button:hover {
+    color: #218241;
+    border: 1px solid #218241;
+}
+
 .form-columns-1 .hs-input {
     width: 100% !important;
 }
