@@ -1,0 +1,212 @@
+/* ====== Base Page ====== */
+body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    padding: 24px;
+}
+h1 {
+    margin-bottom: 16px;
+}
+
+/* Let JS control spacing; avoid default margins that fight peek */
+.slick-slide {
+    margin: 0;
+    height: auto;
+}
+.slick-list {
+    margin: 0;
+}
+
+/* Slider container leaves space for controls; no vertical scroll surprises */
+.slider {
+    display: block;
+    overflow-x: hidden;
+    padding-bottom: 16px;
+}
+
+/* ====== Card (same element is also .slick-slide) ====== */
+.slider .slide {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 0;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+/* ====== Image & Video Styling ====== */
+.slider .slide .image,
+.slider .slide video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 8px; /* rounded corners just on media */
+    display: block;
+}
+
+/* ====== Slide Text Elements ====== */
+.slider .slide .overline {
+    margin: 12px 16px 0;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #6b7280;
+}
+.slider .slide .heading {
+    margin: 4px 16px 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+}
+.slider .slide .body {
+    margin: 6px 16px 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #374151;
+    flex: 1 1 auto; /* pushes link to the bottom */
+    min-height: 0;
+}
+.slider .slide .link {
+    margin: 16px;
+}
+.slider .slide .link a {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2563eb;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+}
+.slider .slide .link a:hover,
+.slider .slide .link a:focus-visible {
+    border-bottom-color: currentColor;
+}
+
+/* ====== Controls Row: [Prev] [Dots] [Next] ====== */
+.slick-controls {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    margin-top: 10px;
+    padding: 0 8px;
+    box-sizing: border-box;
+    min-height: 30px;
+}
+
+/* Place arrows inside the controls row (not on slide edges) */
+.slick-controls .slick-prev,
+.slick-controls .slick-next {
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    transform: none !important;
+    z-index: 1;
+}
+.slick-controls .slick-prev:before,
+.slick-controls .slick-next:before {
+    content: none !important;
+}
+
+/* ====== Arrow Buttons ====== */
+.slick-arrow-btn {
+    border: 0;
+    background: #000;
+    border-radius: 50%;
+    padding: 6px;
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    min-height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    line-height: 0;
+    flex: 0 0 auto;
+    transition: background-color 0.15s ease;
+    outline: none;
+    box-shadow: none;
+    -webkit-tap-highlight-color: transparent;
+}
+.slick-arrow-btn:hover {
+    background: #6b7280;
+} /* medium gray */
+.slick-arrow-btn:focus,
+.slick-arrow-btn:focus-visible {
+    background: #000;
+} /* keep black on focus */
+.slick-arrow-btn:active {
+    background: #4b5563;
+} /* slightly darker gray */
+
+.slick-arrow-btn .icon {
+    width: 18px;
+    height: 18px;
+    background: url("https://pointonenav.com/wp-content/uploads/2025/06/chevron-right.svg") center/contain no-repeat;
+    filter: invert(1) brightness(2); /* white glyph */
+}
+.slick-prev .icon {
+    transform: rotate(180deg);
+}
+
+/* ====== Dots as Dashes ====== */
+.slick-controls .sc-dots .slick-dots {
+    position: static !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    width: auto !important;
+    flex: 0 0 auto !important;
+    list-style: none;
+}
+.slick-dots li {
+    margin: 0;
+}
+.slick-dots li button {
+    padding: 0;
+    width: 16px;
+    height: 6px;
+    background: none;
+    border: none;
+}
+.slick-dots li button:before {
+    content: "";
+    display: block;
+    width: 12px;
+    height: 3px;
+    background: #9ca3af; /* inactive dash */
+    border-radius: 2px;
+    opacity: 1;
+    transition: width 0.25s ease, background-color 0.25s ease;
+}
+.slick-dots li.slick-active button:before {
+    width: 16px;
+    background: #111827; /* active dash */
+}
+.slick-dots li button:hover:before {
+    background: #6b7280;
+} /* hover medium gray */
+
+/* Compact on narrower screens */
+@media (max-width: 1024px) {
+    .slick-controls {
+        gap: 8px;
+    }
+    .slick-arrow-btn {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        min-height: 28px;
+    }
+    .slick-arrow-btn .icon {
+        width: 16px;
+        height: 16px;
+    }
+}
