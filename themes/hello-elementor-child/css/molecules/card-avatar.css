@@ -151,10 +151,10 @@
 
 /* Default (desktop and larger): chevron shown, button container hidden */
 .card-avatar .chevron {
-    display: block;
+    display: block !important;
 }
 .card-avatar .btn-container {
-    display: none;
+    display: none !important;
 }
 
 /* Tablet & below (≤1024px): swap visibility */
@@ -163,10 +163,10 @@
         max-width: 100%;
     }
     .card-avatar .chevron {
-        display: none;
+        display: none !important;
     }
     .card-avatar .btn-container {
-        display: block;
+        display: block !important;
     }
 }
 
