@@ -84,8 +84,8 @@
 }
 
 .hs-button:hover {
-    color: #218241;
-    border: 1px solid #218241;
+    color: #218241 !important;
+    border: 1px solid #218241 !important;
 }
 
 .form-columns-1 .hs-input {
