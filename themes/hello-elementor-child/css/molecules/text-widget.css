@@ -108,8 +108,8 @@
 
 .elementor .text-widget.tw-small .headline h2 {
     font-size: 16px !important;
-    font-family: var(--typography-font-primary);
-    font-weight: var(--weight-bold);
+    font-family: var(--typography-font-primary) !important;
+    font-weight: var(--weight-bold) !important;
     line-height: var(--lh-relaxed) !important;
     letter-spacing: var(--ls-neg-32) !important;
 }
