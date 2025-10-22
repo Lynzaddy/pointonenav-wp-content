@@ -1,5 +1,5 @@
 $(function () {
-    // Debounce utility
+    /* ---------------------- utilities ---------------------- */
     function debounce(fn, wait = 120) {
         let t;
         return function () {
@@ -10,64 +10,63 @@ $(function () {
         };
     }
 
-    // Equalize slide heights so .link aligns bottom
+    function minPadForViewport() {
+        const w = window.innerWidth || document.documentElement.clientWidth;
+        if (w >= 1025) return 160; // desktop
+        if (w >= 768) return 100; // tablet
+        return 60; // mobile
+    }
+
+    /* ------------- equal heights (keeps links aligned) ------------- */
     function equalizeHeights($slider) {
         if (!$slider.hasClass("slick-initialized")) return;
         const $slides = $slider.find(".slick-slide");
         $slides.css("min-height", "");
-
         const $visible = $slider.find(".slick-slide.slick-active");
         if ($visible.length === 0) return;
-
         let maxH = 0;
         $visible.each(function () {
             const h = $(this).outerHeight();
             if (h > maxH) maxH = h;
         });
-
         if (maxH > 0) $slides.css("min-height", maxH + "px");
     }
 
     function bindEqualizer($slider) {
-        $slider.on("init reInit setPosition afterChange breakpoint", function () {
+        $slider.on("init reInit afterChange breakpoint", function () {
             setTimeout(() => equalizeHeights($slider), 0);
         });
-        $slider.find("img").each(function () {
+        $slider.find("img, video").each(function () {
             if (!this.complete) $(this).one("load", () => equalizeHeights($slider));
+            $(this).on("loadedmetadata", () => equalizeHeights($slider));
         });
         $(window).on(
             "resize",
             debounce(() => {
-                try {
-                    $slider.slick("setPosition");
-                } catch (_) {}
                 equalizeHeights($slider);
-            }, 140)
+            }, 120)
         );
     }
 
-    // Play video only on active slide
+    /* ---------------- video: only play on active ---------------- */
     function handleVideoPlayback($slider) {
         const $videos = $slider.find("video");
+        $videos.attr("preload", "metadata");
         $videos.each(function () {
             this.pause();
         });
         $slider.find(".slick-active video").each(function () {
-            this.currentTime = 0;
-            this.play().catch(() => {});
+            try {
+                this.currentTime = 0;
+                this.play().catch(() => {});
+            } catch (_) {}
         });
     }
 
-    $(".slider").on("init afterChange", function (event, slick) {
-        const $slider = $(slick.$slider);
-        handleVideoPlayback($slider);
-    });
-
-    // Build controls [Prev][Dots][Next]
+    /* -------------- controls: [Prev][Dots][Next] -------------- */
     function buildControlsBar($slider) {
         let $bar = $slider.next(".slick-controls");
         if ($bar.length) return $bar;
-
         $bar = $(`
       <div class="slick-controls" aria-label="carousel controls">
         <button type="button" class="slick-prev slick-arrow-btn" aria-label="Previous"><span class="icon"></span></button>
@@ -79,9 +78,7 @@ $(function () {
         return $bar;
     }
 
-    // ==============================================================
-    // CENTER MODE — consistent 40px gap + peek via centerPadding
-    // ==============================================================
+    /* --------------------------- CENTER --------------------------- */
     $(".center").each(function () {
         const $el = $(this);
         if ($el.hasClass("slick-initialized")) return;
@@ -93,9 +90,18 @@ $(function () {
 
         bindEqualizer($el);
 
+        // With variableWidth, slide width equals content width (CSS).
+        // We only need the MIN peek padding by breakpoint.
+        const seedPad = minPadForViewport();
+
+        $el.on("init reInit afterChange breakpoint", function () {
+            handleVideoPlayback($el);
+        });
+
         $el.slick({
+            variableWidth: true, // <= critical so slide = media width
             centerMode: true,
-            centerPadding: "160px", // desktop peek
+            centerPadding: seedPad + "px", // guarantees peek
             slidesToShow: 1,
             slidesToScroll: 1,
             infinite: true,
@@ -106,21 +112,29 @@ $(function () {
             nextArrow: $next,
             appendDots: $dots,
             responsive: [
-                { breakpoint: 1024, settings: { centerMode: true, centerPadding: "100px" } }, // tablet
-                { breakpoint: 768, settings: { centerMode: true, centerPadding: "60px" } }, // mobile
+                { breakpoint: 1024, settings: { centerMode: true, centerPadding: "100px", variableWidth: true } },
+                { breakpoint: 768, settings: { centerMode: true, centerPadding: "60px", variableWidth: true } },
             ],
         });
 
-        // Apply consistent 40px total gap (20px each side)
-        $el.on("setPosition", function () {
-            $el.find(".slick-slide").css("margin", "0 20px");
-            $el.find(".slick-list").css("margin", "0 -20px");
+        // Keep peek consistent on resize/breakpoint
+        $(window).on(
+            "resize",
+            debounce(() => {
+                try {
+                    $el.slick("slickSetOption", "centerPadding", minPadForViewport() + "px", false);
+                    $el.slick("setPosition");
+                } catch (_) {}
+            }, 120)
+        );
+        $el.on("breakpoint", function () {
+            try {
+                $el.slick("slickSetOption", "centerPadding", minPadForViewport() + "px", false);
+            } catch (_) {}
         });
     });
 
-    // ==============================================================
-    // RESPONSIVE MODE — consistent 40px gap
-    // ==============================================================
+    /* ------------------------ RESPONSIVE ------------------------- */
     $(".responsive").each(function () {
         const $el = $(this);
         if ($el.hasClass("slick-initialized")) return;
@@ -134,7 +148,7 @@ $(function () {
 
         $el.slick({
             slidesToShow: 4,
-            slidesToScroll: 1,
+            slidesToScroll: 1, // move one card at a time
             infinite: true,
             speed: 300,
             arrows: true,
@@ -148,11 +162,14 @@ $(function () {
                 { breakpoint: 768, settings: { slidesToShow: 1 } },
             ],
         });
+    });
 
-        // Apply same 40px total gap
-        $el.on("setPosition", function () {
-            $el.find(".slick-slide").css("margin", "0 20px");
-            $el.find(".slick-list").css("margin", "0 -20px");
+    // Ensure a stable first paint (esp. with hot reload/live server)
+    requestAnimationFrame(() => {
+        $(".slider.slick-initialized").each(function () {
+            try {
+                $(this).slick("setPosition");
+            } catch (_) {}
         });
     });
 });

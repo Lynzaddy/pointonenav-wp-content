@@ -1,3 +1,13 @@
+/* =========================================================
+   Slick Carousel – Full CSS
+   - Fixed visual gap: 40px (20px per side) at all sizes
+   - Center variant uses fixed media sizes via CSS vars
+   - Image/Video rounded 8px
+   - Controls row: [Prev] [Dots] [Next], centered
+   - Dots shown as dashes (active 16px, inactive 12px)
+   - Typography per design tokens for overline/heading/body/link
+   ========================================================= */
+
 /* ====== Base Page ====== */
 body {
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
@@ -7,80 +17,171 @@ h1 {
     margin-bottom: 16px;
 }
 
-/* Let JS control spacing; avoid default margins that fight peek */
-.slick-slide {
-    margin: 0;
-    height: auto;
-}
-.slick-list {
-    margin: 0;
-}
-
-/* Slider container leaves space for controls; no vertical scroll surprises */
+/* ====== Slider container ====== */
 .slider {
     display: block;
     overflow-x: hidden;
-    padding-bottom: 16px;
+    padding-bottom: 16px; /* leaves breathing room for controls */
+    box-sizing: border-box;
 }
 
-/* ====== Card (same element is also .slick-slide) ====== */
+/* ====== SOLID, ALWAYS-ON GAP (40px total) ======
+   20px margin left/right on every slide; counter with -20px on list */
+.slick-slide {
+    margin: 0 20px !important;
+    padding: 0 !important;
+}
+.slick-list {
+    margin: 0 -20px !important;
+}
+
+/* Allow slides to auto-height; JS equalizes visible ones */
+.slick-slide {
+    height: auto;
+    box-sizing: border-box;
+}
+
+/* ====== Card base ====== */
 .slider .slide {
     display: flex;
     flex-direction: column;
     background: #fff;
     border-radius: 0;
     overflow: hidden;
-    width: 100%;
     height: 100%;
     box-sizing: border-box;
 }
 
-/* ====== Image & Video Styling ====== */
+/* ====== Media defaults (responsive variant) ====== */
 .slider .slide .image,
 .slider .slide video {
     width: 100%;
     aspect-ratio: 16 / 9;
     object-fit: cover;
     object-position: center;
-    border-radius: 8px; /* rounded corners just on media */
+    border-radius: 8px;
     display: block;
 }
 
-/* ====== Slide Text Elements ====== */
-.slider .slide .overline {
-    margin: 12px 16px 0;
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #6b7280;
+/* ====== Fixed media sizes for .center via CSS vars ====== */
+/* Mobile defaults */
+.center {
+    --center-media-w: 280px;
+    --center-media-h: 186.5px; /* 16:9 */
 }
+/* Tablet */
+@media (min-width: 768px) {
+    .center {
+        --center-media-w: 400px;
+        --center-media-h: 225px;
+    }
+}
+/* Desktop */
+@media (min-width: 1025px) {
+    .center {
+        --center-media-w: 680px;
+        --center-media-h: 382.5px;
+    }
+}
+
+/* Make .center slides exactly the media width (pairs with variableWidth in JS) */
+.center .slide {
+    width: var(--center-media-w) !important;
+    max-width: 100%;
+    align-items: stretch;
+}
+
+/* Fixed media sizes for .center */
+.center .slide .image,
+.center .slide video {
+    width: 100% !important;
+    height: var(--center-media-h) !important;
+    border-radius: 8px;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+/* ====== Slide Text & Spacing (shared by .center and .responsive) ====== */
+/* Horizontal padding for non-media blocks */
+.slider .slide > *:not(img):not(video) {
+    margin-left: 16px;
+    margin-right: 16px;
+}
+
+/* 20px gap from media (image/video) to overline */
+.slider .slide .overline {
+    margin-top: 20px;
+}
+
+/* 8px gaps between text items */
 .slider .slide .heading {
-    margin: 4px 16px 0;
-    font-size: 18px;
-    font-weight: 700;
-    color: #111827;
+    margin-top: 8px;
 }
 .slider .slide .body {
-    margin: 6px 16px 0;
+    margin-top: 8px;
+}
+
+/* ====== Overline / o14 ====== */
+.slider .slide .overline {
+    color: var(--content-primary, #141413);
+    font-family: var(--typography-font-secondary, "Azeret Mono");
     font-size: 14px;
-    line-height: 1.5;
-    color: #374151;
-    flex: 1 1 auto; /* pushes link to the bottom */
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100%; /* 14px */
+    letter-spacing: 0.14px;
+    text-transform: uppercase;
+}
+
+/* ====== Heading / h20 ====== */
+.slider .slide .heading {
+    color: var(--content-primary, #141413);
+    font-family: var(--typography-font-primary, "Instrument Sans");
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 120%; /* 24px */
+    letter-spacing: -0.4px;
+}
+
+/* ====== Body / b16 ====== */
+.slider .slide .body {
+    color: var(--content-secondary, rgba(0, 0, 0, 0.6));
+    font-family: var(--typography-font-primary, "Instrument Sans");
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 148%; /* 23.68px */
+    letter-spacing: -0.16px;
+    flex: 1 1 auto; /* keeps link bottom-aligned */
     min-height: 0;
 }
+
+/* ====== Link / b16-link ====== */
 .slider .slide .link {
-    margin: 16px;
+    margin-top: 8px;
+    margin-bottom: 16px;
 }
 .slider .slide .link a {
-    font-size: 14px;
-    font-weight: 600;
-    color: #2563eb;
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
+    color: var(--content-primary, #141413);
+    font-family: var(--typography-font-primary, "Instrument Sans");
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 148%; /* 23.68px */
+    letter-spacing: -0.16px;
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: none;
+    text-decoration-thickness: auto;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
+    transition: color 0.2s ease;
 }
 .slider .slide .link a:hover,
 .slider .slide .link a:focus-visible {
-    border-bottom-color: currentColor;
+    color: var(--content-secondary, rgba(0, 0, 0, 0.6));
 }
 
 /* ====== Controls Row: [Prev] [Dots] [Next] ====== */
@@ -93,10 +194,10 @@ h1 {
     margin-top: 10px;
     padding: 0 8px;
     box-sizing: border-box;
-    min-height: 30px;
+    min-height: 30px; /* prevent vertical jumping */
 }
 
-/* Place arrows inside the controls row (not on slide edges) */
+/* Place arrows inside the controls row */
 .slick-controls .slick-prev,
 .slick-controls .slick-next {
     position: static !important;
@@ -111,7 +212,7 @@ h1 {
     content: none !important;
 }
 
-/* ====== Arrow Buttons ====== */
+/* Arrow buttons (black → gray hover; white chevron; no focus ring) */
 .slick-arrow-btn {
     border: 0;
     background: #000;
@@ -134,15 +235,16 @@ h1 {
 }
 .slick-arrow-btn:hover {
     background: #6b7280;
-} /* medium gray */
+}
 .slick-arrow-btn:focus,
 .slick-arrow-btn:focus-visible {
     background: #000;
-} /* keep black on focus */
+}
 .slick-arrow-btn:active {
     background: #4b5563;
-} /* slightly darker gray */
+}
 
+/* Arrow glyph (white chevron) */
 .slick-arrow-btn .icon {
     width: 18px;
     height: 18px;
@@ -180,21 +282,21 @@ h1 {
     content: "";
     display: block;
     width: 12px;
-    height: 3px;
-    background: #9ca3af; /* inactive dash */
+    height: 3px; /* inactive dash */
+    background: #9ca3af;
     border-radius: 2px;
     opacity: 1;
     transition: width 0.25s ease, background-color 0.25s ease;
 }
 .slick-dots li.slick-active button:before {
-    width: 16px;
-    background: #111827; /* active dash */
+    width: 16px; /* active dash */
+    background: #111827;
 }
 .slick-dots li button:hover:before {
     background: #6b7280;
-} /* hover medium gray */
+}
 
-/* Compact on narrower screens */
+/* Compact controls on tablet+mobile */
 @media (max-width: 1024px) {
     .slick-controls {
         gap: 8px;
