@@ -4,8 +4,9 @@
    - Center variant uses fixed media sizes via CSS vars
    - Image/Video rounded 8px
    - Controls row: [Prev] [Dots] [Next], centered
-   - Dots shown as dashes (active 16px, inactive 12px)
+   - Dots: active 36x8, inactive 20x4, gap 8px, arrows↔dots gap 32px
    - Typography per design tokens for overline/heading/body/link
+   - Arrow buttons: 40x40 black circle, 24x24 white stroked chevron (1.5px)
    ========================================================= */
 
 /* ====== Base Page ====== */
@@ -21,7 +22,7 @@ h1 {
 .slider {
     display: block;
     overflow-x: hidden;
-    padding-bottom: 16px; /* leaves breathing room for controls */
+    padding-bottom: 16px; /* room for controls */
     box-sizing: border-box;
 }
 
@@ -103,17 +104,10 @@ h1 {
 }
 
 /* ====== Slide Text & Spacing (shared by .center and .responsive) ====== */
-/* Horizontal padding for non-media blocks */
-.slider .slide > *:not(img):not(video) {
-    margin-left: 16px;
-    margin-right: 16px;
-}
-
 /* 20px gap from media (image/video) to overline */
 .slider .slide .overline {
     margin-top: 20px;
 }
-
 /* 8px gaps between text items */
 .slider .slide .heading {
     margin-top: 8px;
@@ -169,7 +163,7 @@ h1 {
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
-    line-height: 148%; /* 23.68px */
+    line-height: 148%;
     letter-spacing: -0.16px;
     text-decoration-line: underline;
     text-decoration-style: solid;
@@ -189,12 +183,12 @@ h1 {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 32px; /* arrows ↔ dots spacing */
     width: 100%;
     margin-top: 10px;
     padding: 0 8px;
     box-sizing: border-box;
-    min-height: 30px; /* prevent vertical jumping */
+    min-height: 40px; /* prevent vertical jumping */
 }
 
 /* Place arrows inside the controls row */
@@ -212,16 +206,15 @@ h1 {
     content: none !important;
 }
 
-/* Arrow buttons (black → gray hover; white chevron; no focus ring) */
+/* ====== 40x40 Figma Arrows + 24x24 SVG with 1.5 stroke ====== */
 .slick-arrow-btn {
-    border: 0;
-    background: #000;
+    border: none;
+    background-color: #000;
     border-radius: 50%;
-    padding: 6px;
-    width: 30px;
-    height: 30px;
-    min-width: 30px;
-    min-height: 30px;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -244,24 +237,24 @@ h1 {
     background: #4b5563;
 }
 
-/* Arrow glyph (white chevron) */
+/* Crisp white chevron, 1.5px stroke (stroked polyline) */
 .slick-arrow-btn .icon {
-    width: 18px;
-    height: 18px;
-    background: url("https://pointonenav.com/wp-content/uploads/2025/06/chevron-right.svg") center/contain no-repeat;
-    filter: invert(1) brightness(2); /* white glyph */
+    width: 24px;
+    height: 24px;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='9 6 15 12 9 18'/></svg>")
+        center / 24px 24px no-repeat;
 }
 .slick-prev .icon {
     transform: rotate(180deg);
 }
 
-/* ====== Dots as Dashes ====== */
+/* ====== Dots as Dashes (active wider & taller) ====== */
 .slick-controls .sc-dots .slick-dots {
     position: static !important;
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 8px; /* doubled from 4px per client */
     margin: 0;
     padding: 0;
     width: auto !important;
@@ -271,44 +264,51 @@ h1 {
 .slick-dots li {
     margin: 0;
 }
+
+/* Hide the numeric labels but keep them accessible */
 .slick-dots li button {
+    position: relative;
+    overflow: hidden;
+    text-indent: -9999px;
+    white-space: nowrap;
     padding: 0;
-    width: 16px;
-    height: 6px;
-    background: none;
     border: none;
+    background: transparent;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+    width: 20px; /* inactive width */
+    height: 4px; /* inactive height */
+    border-radius: 100px;
+    background-color: #929285; /* inactive color */
+    transition: width 0.25s ease, height 0.25s ease, background-color 0.2s ease;
 }
-.slick-dots li button:before {
-    content: "";
-    display: block;
-    width: 12px;
-    height: 3px; /* inactive dash */
-    background: #9ca3af;
-    border-radius: 2px;
-    opacity: 1;
-    transition: width 0.25s ease, background-color 0.25s ease;
+
+/* Active state: wider & taller + primary color */
+.slick-dots li.slick-active button {
+    width: 36px; /* active width */
+    height: 8px; /* active height */
+    background-color: #141413;
 }
-.slick-dots li.slick-active button:before {
-    width: 16px; /* active dash */
-    background: #111827;
-}
-.slick-dots li button:hover:before {
-    background: #6b7280;
+
+/* Hover state for visibility parity */
+.slick-dots li button:hover {
+    background-color: #6b7280;
 }
 
 /* Compact controls on tablet+mobile */
 @media (max-width: 1024px) {
     .slick-controls {
-        gap: 8px;
+        gap: 28px;
     }
     .slick-arrow-btn {
-        width: 28px;
-        height: 28px;
-        min-width: 28px;
-        min-height: 28px;
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        min-height: 36px;
     }
     .slick-arrow-btn .icon {
-        width: 16px;
-        height: 16px;
+        width: 22px;
+        height: 22px;
     }
 }
