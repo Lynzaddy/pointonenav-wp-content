@@ -51,11 +51,16 @@
     width: 100%;
     max-width: var(--inner-content-max-width);
     margin: var(--vertical-padding-desktop) auto; /* Center horizontally */
-    padding: 0; /* Default side spacing */
-    display: block; /* Use block for more flexibility inside */
-    gap: 0;
-    background-color: #ffd6d6; /* Light red for testing */
+    padding: 0; /* Default padding, editable per device */
+    background-color: #ffd6d6; /* Testing only */
     box-sizing: border-box;
+
+    /* Flexibility Settings */
+    display: inherit; /* Let Elementor define flex or block */
+    flex-direction: inherit; /* Inherit Elementor’s direction */
+    justify-content: inherit;
+    align-items: inherit;
+    gap: inherit;
 }
 
 /* ===== SMALL DESKTOP (≤1366px) ===== */
