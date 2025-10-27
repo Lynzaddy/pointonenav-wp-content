@@ -57,7 +57,7 @@
     width: 100%;
     max-width: 1160px;
     margin: 100px auto; /* Center horizontally */
-    padding: 0 12px; /* Side spacing for desktop */
+    padding: 0; /* Side spacing for desktop */
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -65,6 +65,15 @@
     gap: 0;
     background-color: #ffd6d6; /* Light red for testing */
     box-sizing: border-box;
+}
+
+/* ===== SMALL DESKTOP (≤1366px) ===== */
+@media (max-width: 1366px) {
+    .section-container-inner {
+        margin: 100px auto;
+        padding: 0 12px;
+        background-color: #f90; /* Light green for testing */
+    }
 }
 
 /* ===== TABLET (≤1024px) ===== */
