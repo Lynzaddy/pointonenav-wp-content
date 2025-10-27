@@ -32,12 +32,6 @@
 
 /* ==== 02. STANDARD SECTION LAYOUT ======== */
 
-/* ==================================================
-   SECTION CONTAINER FRAMEWORK
-   Description: Creates a responsive section system with outer (full-width) 
-   and inner (content-width) containers for Elementor sections.
-================================================== */
-
 /* ===== OUTER CONTAINER ===== */
 .section-container-outer {
     width: 100%;
@@ -55,8 +49,8 @@
 /* ===== INNER CONTAINER ===== */
 .section-container-inner {
     width: 100%;
-    max-width: 1160px;
-    margin: 100px auto; /* Center horizontally */
+    max-width: var(--inner-content-max-width);
+    margin: var(--vertical-padding-desktop) auto; /* Center horizontally */
     padding: 0; /* Side spacing for desktop */
     display: flex;
     flex-direction: row;
@@ -70,8 +64,8 @@
 /* ===== SMALL DESKTOP (≤1366px) ===== */
 @media (max-width: 1366px) {
     .section-container-inner {
-        margin: 100px 12px;
-        padding: 0 12px;
+        margin: var(--vertical-padding-desktop) auto;
+        padding: 0 var(--side-padding-narrow);
         background-color: #f90; /* Light green for testing */
     }
 }
@@ -79,8 +73,8 @@
 /* ===== TABLET (≤1024px) ===== */
 @media (max-width: 1024px) {
     .section-container-inner {
-        margin: 60px 20px;
-        padding: 0 20px;
+        margin: var(--vertical-padding-tablet) auto;
+        padding: 0 var(--side-padding-standard);
         background-color: #d6ffd6; /* Light green for testing */
     }
 }
@@ -88,13 +82,49 @@
 /* ===== MOBILE (≤767px) ===== */
 @media (max-width: 767px) {
     .section-container-inner {
-        margin: 40px 12px;
+        margin: var(--vertical-padding-mobile) auto;
         padding: 0 12px;
         background-color: #d6e8ff; /* Light blue for testing */
     }
 }
 
-/* === DELETE ME === */
+/* ==================================================
+   BACKGROUND VARIANTS
+   Description: Utility classes that can be applied to either 
+   .section-container-outer or .section-container-inner
+================================================== */
+
+/* ===== PRIMARY INVERSE ===== */
+.section-container-outer.inverse,
+.section-container-inner.inverse {
+    background-color: var(--background-primary-inverse);
+}
+
+/* ===== SECONDARY ===== */
+.section-container-outer.secondary,
+.section-container-inner.secondary {
+    background-color: var(--background-secondary);
+}
+
+/* ===== SECONDARY + INVERSE ===== */
+.section-container-outer.secondary.inverse,
+.section-container-inner.secondary.inverse {
+    background-color: var(--background-secondary-inverse);
+}
+
+/* ===== TERTIARY ===== */
+.section-container-outer.tertiary,
+.section-container-inner.tertiary {
+    background-color: var(--background-tertiary);
+}
+
+/* ===== TERTIARY + INVERSE ===== */
+.section-container-outer.tertiary.inverse,
+.section-container-inner.tertiary.inverse {
+    background-color: var(--background-tertiary-inverse);
+}
+
+/* === DELETE ME ONCE CORRECTED === */
 
 /* Section Outer - Full Width Base */
 .section-outer {
