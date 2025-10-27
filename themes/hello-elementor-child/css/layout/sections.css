@@ -45,7 +45,7 @@
     padding: 0;
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: center; /* Centers the inner container */
     align-items: stretch;
     gap: 0;
     background-color: yellow; /* Testing only */
@@ -56,8 +56,8 @@
 .section-container-inner {
     width: 100%;
     max-width: 1160px;
-    margin: 100px 12px; /* Top/Bottom 100px, Left/Right 12px (desktop) */
-    padding: 0;
+    margin: 100px auto; /* Center horizontally */
+    padding: 0 12px; /* Side spacing for desktop */
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -70,7 +70,8 @@
 /* ===== TABLET (≤1024px) ===== */
 @media (max-width: 1024px) {
     .section-container-inner {
-        margin: 60px 20px;
+        margin: 60px auto;
+        padding: 0 20px;
         background-color: #d6ffd6; /* Light green for testing */
     }
 }
@@ -78,10 +79,13 @@
 /* ===== MOBILE (≤767px) ===== */
 @media (max-width: 767px) {
     .section-container-inner {
-        margin: 40px 12px;
+        margin: 40px auto;
+        padding: 0 12px;
         background-color: #d6e8ff; /* Light blue for testing */
     }
 }
+
+/* === DELETE ME === */
 
 /* Section Outer - Full Width Base */
 .section-outer {
