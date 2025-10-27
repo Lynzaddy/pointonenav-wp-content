@@ -14,3 +14,7 @@
 -   Check the sections in Solutions (padding)
 -   Check padding on slider when built
 -   Transparent header, add class to new component hero image (it's always white, never transparent)
+
+## Questions
+
+-   On Figma, the inactive carousel on the homepage looks like dots now in Figma. We had dashes before.
