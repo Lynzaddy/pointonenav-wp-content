@@ -315,11 +315,6 @@
 
 /* === 04. Text Hero === */
 
-.text-hero {
-    background-color: var(--content-primary-inverse);
-    padding: 40px 0;
-}
-
 /* When inside .text-hero */
 .elementor .text-hero .text-widget {
     max-width: 760px !important;
