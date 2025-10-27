@@ -60,7 +60,7 @@
     flex-direction: inherit; /* Inherit Elementor’s direction */
     justify-content: inherit;
     align-items: inherit;
-    gap: inherit;
+    /* gap: inherit; */
 }
 
 /* ===== SMALL DESKTOP (≤1366px) ===== */
