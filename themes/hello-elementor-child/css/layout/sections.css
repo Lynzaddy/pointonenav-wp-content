@@ -51,11 +51,8 @@
     width: 100%;
     max-width: var(--inner-content-max-width);
     margin: var(--vertical-padding-desktop) auto; /* Center horizontally */
-    padding: 0; /* Side spacing for desktop */
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: stretch;
+    padding: 0; /* Default side spacing */
+    display: block; /* Use block for more flexibility inside */
     gap: 0;
     background-color: #ffd6d6; /* Light red for testing */
     box-sizing: border-box;
