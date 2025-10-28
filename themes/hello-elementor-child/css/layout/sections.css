@@ -70,7 +70,7 @@
 
 /* Apply narrow vertical margin, stay horizontally centered */
 .section-container-inner.margin-narrow {
-    margin: 20px auto !important;
+    margin: 16px auto !important;
 }
 
 /* ===== SMALL DESKTOP (≤1366px) ===== */
