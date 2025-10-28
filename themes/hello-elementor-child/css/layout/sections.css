@@ -63,6 +63,16 @@
     /* gap: inherit; */
 }
 
+/* Remove all vertical margin, stay horizontally centered */
+.section-container-inner.margin-zero {
+    margin: 0 auto !important;
+}
+
+/* Apply narrow vertical margin, stay horizontally centered */
+.section-container-inner.margin-narrow {
+    margin: 20px auto !important;
+}
+
 /* ===== SMALL DESKTOP (≤1366px) ===== */
 @media (max-width: 1366px) {
     .section-container-inner {
