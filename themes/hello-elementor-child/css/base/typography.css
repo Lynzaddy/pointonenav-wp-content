@@ -186,7 +186,7 @@
 
 /* Headlines */
 .h48,
-.elementor .text-widget.tw-large .headline .elementor-heading-title h2,
+.elementor .text-widget.tw-large .headline h2,
 .elementor .stat-widget.sw-large .headline {
     font-family: var(--typography-font-brand);
     font-weight: var(--weight-bold);
@@ -196,7 +196,6 @@
 }
 
 .h40,
-.elementor .text-widget.tw-large .headline h2,
 .elementor .stat-widget .headline {
     font-family: var(--typography-font-brand);
     font-weight: var(--weight-bold);
@@ -205,7 +204,8 @@
     letter-spacing: var(--ls-neg-02);
 }
 
-.h32 {
+.h32,
+.elementor .text-widget .headline h2 {
     font-family: var(--typography-font-brand);
     font-weight: var(--weight-bold);
     font-size: var(--font-size-32);
@@ -469,7 +469,7 @@ span.elementor-heading-title {
     font-size: var(--font-size-48);
     letter-spacing: var(--ls-neg-192);
     line-height: var(--lh-tight);
-    margin-bottom: 12px;
+    /* margin-bottom: 12px; */
 }
 
 .elementor h2 {
@@ -477,7 +477,7 @@ span.elementor-heading-title {
     font-size: var(--font-size-32);
     letter-spacing: var(--ls-neg-160);
     line-height: var(--lh-tight);
-    margin-bottom: 12px !important;
+    /* margin-bottom: 12px !important; */
     padding-bottom: 0 !important;
 }
 
@@ -486,7 +486,7 @@ span.elementor-heading-title {
     font-size: var(--font-size-20);
     letter-spacing: var(--ls-neg-60);
     line-height: var(--lh-tight);
-    margin-bottom: 8px !important;
+    /* margin-bottom: 8px !important; */
     padding-bottom: 0 !important;
 }
 
@@ -495,7 +495,7 @@ span.elementor-heading-title {
     font-size: var(--font-size-18);
     letter-spacing: var(--ls-neg-120);
     line-height: var(--lh-tight);
-    margin-bottom: 12px;
+    /* margin-bottom: 12px; */
 }
 
 .elementor h5 {
@@ -504,7 +504,7 @@ span.elementor-heading-title {
     font-weight: var(--weight-regular0);
     letter-spacing: var(--ls-neg-120);
     line-height: var(--lh-tight);
-    margin-bottom: 12px;
+    /* margin-bottom: 12px; */
 }
 
 .elementor h6 {
@@ -512,7 +512,7 @@ span.elementor-heading-title {
     font-size: var(--font-size-14);
     letter-spacing: var(--ls-neg-120);
     line-height: var(--lh-tight);
-    margin-bottom: 12px;
+    /* margin-bottom: 12px; */
 }
 
 /* ==== 04. TEXT-BLOCK ======== */
