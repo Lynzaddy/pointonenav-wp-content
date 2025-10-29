@@ -132,12 +132,12 @@
 .elementor .inverse .text-widget .overline,
 .elementor .text-widget.inverse .headline,
 .elementor .inverse .text-widget .headline {
-    color: var(--content-primary-inverse);
+    color: var(--content-primary-inverse) !important;
 }
 
 .elementor .text-widget.inverse .body,
 .elementor .inverse .text-widget .body {
-    color: var(--content-secondary-inverse);
+    color: var(--content-secondary-inverse) !important;
 }
 
 /* Buttons area */
