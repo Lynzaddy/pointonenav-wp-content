@@ -258,11 +258,12 @@
 
 .b20,
 .elementor .text-widget.tw-large .body {
+    color: var(--content-secondary);
     font-family: var(--typography-font-primary);
     font-weight: var(--weight-regular);
     font-size: var(--font-size-20);
     line-height: var(--lh-relaxed);
-    letter-spacing: var(--ls-normal);
+    letter-spacing: var(--ls-neg-02);
 }
 
 .b20-bold {
@@ -270,7 +271,7 @@
     font-weight: var(--weight-bold);
     font-size: var(--font-size-20);
     line-height: var(--lh-relaxed);
-    letter-spacing: var(--ls-normal);
+    letter-spacing: var(--ls-neg-02);
 }
 
 .b20-link {
@@ -278,13 +279,14 @@
     font-weight: var(--weight-regular);
     font-size: var(--font-size-20);
     line-height: var(--lh-relaxed);
-    letter-spacing: var(--ls-normal);
+    letter-spacing: var(--ls-neg-02);
 }
 
 .b16,
 .elementor .text-widget .body,
 .elementor .text-widget.tw-small .body,
 .elementor .stat-widget .body {
+    color: var(--content-secondary);
     font-family: var(--typography-font-primary);
     font-weight: var(--weight-regular);
     font-size: var(--font-size-16);
