@@ -386,7 +386,7 @@
 
 .o14,
 .elementor .text-widget .overline .elementor-heading-title {
-    color: var(--content-primary);
+    /* color: var(--content-primary); */
     font-family: var(--typography-font-secondary);
     font-weight: var(--weight-regular);
     font-size: var(--font-size-14);
