@@ -57,7 +57,7 @@
     max-width: 540px; /* >1024px = 540px */
     padding: 16px;
     align-items: flex-start;
-    gap: 24px; /* your normal card spacing */
+    gap: 32px; /* your normal card spacing */
     position: relative; /* positioning context for overlay */
     overflow: hidden; /* keeps overlay inside rounded corners */
     cursor: pointer;
