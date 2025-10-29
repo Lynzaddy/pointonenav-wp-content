@@ -283,8 +283,8 @@
 }
 
 .b16,
-.elementor .text-widget .body,
-.elementor .text-widget.tw-small .body,
+.elementor .text-widget .body .elementor-heading-title,
+.elementor .text-widget.tw-small .body .elementor-heading-title,
 .elementor .stat-widget .body {
     color: var(--content-secondary);
     font-family: var(--typography-font-primary);
