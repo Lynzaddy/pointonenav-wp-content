@@ -150,11 +150,18 @@
 
 /* === Inverse (text-widget) === */
 /* Works when .inverse is on the widget itself OR any ancestor container */
-.elementor .text-widget.inverse .overline,
-.elementor .inverse .text-widget .overline,
 .elementor .text-widget.inverse .headline,
 .elementor .inverse .text-widget .headline {
     color: var(--content-primary-inverse) !important;
+}
+
+/* Invert color when .inverse is on .overline itself */
+.elementor .text-widget .overline.inverse .elementor-heading-title,  
+/* Invert when .inverse is on the .text-widget container */
+.elementor .text-widget.inverse .overline .elementor-heading-title,  
+/* Invert when any ancestor has .inverse */
+.elementor .inverse .text-widget .overline .elementor-heading-title {
+    color: var(--content-primary-inverse);
 }
 
 .elementor .text-widget.inverse .body,
