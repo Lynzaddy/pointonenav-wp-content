@@ -6,7 +6,7 @@
 */
 
 .sec-img-split-feature {
-    padding: 100px 0;
+    /* padding: 100px 0; */
 }
 
 .sec-img-split-feature .text-side {
@@ -35,7 +35,7 @@
 /* Responsive Margins for Outer */
 @media (max-width: 1024px) {
     .sec-img-split-feature {
-        padding: 60px 0;
+        /* padding: 60px 0; */
     }
 
     .sec-img-split-feature .image-side {
@@ -54,7 +54,7 @@
 /* Responsive Margins for Outer */
 @media (max-width: 767px) {
     .sec-img-split-feature {
-        padding: 60px 0;
+        /* padding: 60px 0; */
     }
 
     .sec-img-split-feature .image-side {
