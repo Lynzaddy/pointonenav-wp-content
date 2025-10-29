@@ -186,13 +186,13 @@
 
 /* Headlines */
 .h48,
-.elementor .text-widget.tw-large .headline h2,
+.elementor .text-widget.tw-large .headline .elementor-heading-title h2,
 .elementor .stat-widget.sw-large .headline {
     font-family: var(--typography-font-brand);
     font-weight: var(--weight-bold);
     font-size: var(--font-size-48);
     line-height: var(--lh-tight);
-    letter-spacing: var(--ls-neg-02);
+    letter-spacing: var(--ls-neg-96);
 }
 
 .h40,
@@ -391,7 +391,7 @@
     font-weight: var(--weight-regular);
     font-size: var(--font-size-14);
     line-height: var(--lh-none);
-    letter-spacing: var(--ls-pos-01);
+    letter-spacing: var(--ls-pos-14);
     text-transform: uppercase;
 }
 
