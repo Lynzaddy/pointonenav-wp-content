@@ -292,9 +292,7 @@
     letter-spacing: var(--ls-normal);
 }
 
-.b16-bold,
-.elementor .text-widget .headline .elementor-widget-container > h2,
-.elementor .text-widget .headline h2 {
+.b16-bold {
     font-family: var(--typography-font-primary);
     font-weight: var(--weight-bold);
     font-size: var(--font-size-16);
