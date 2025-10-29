@@ -101,7 +101,7 @@ a.card-image .body .elementor-heading-title {
 /* Default: btn-link underlined */
 a.card-image .btn-link .elementor-heading-title {
     text-decoration: underline !important;
-    font-size: var(--font-size-14) !important;
+    font-size: var(--font-size-16) !important;
 }
 
 /* On hover anywhere in the card, remove underline */
