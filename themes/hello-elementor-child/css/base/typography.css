@@ -262,7 +262,7 @@
     font-family: var(--typography-font-primary);
     font-weight: var(--weight-regular);
     font-size: var(--font-size-20);
-    line-height: var(--lh-relaxed);
+    line-height: var(--lh-relaxed) !important;
     letter-spacing: var(--ls-neg-02);
 }
 
@@ -290,7 +290,7 @@
     font-family: var(--typography-font-primary);
     font-weight: var(--weight-regular);
     font-size: var(--font-size-16);
-    line-height: var(--lh-relaxed);
+    line-height: var(--lh-relaxed) !important;
     letter-spacing: var(--ls-neg-16);
 }
 
