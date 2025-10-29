@@ -386,11 +386,13 @@
 
 .o14,
 .elementor .text-widget .overline .elementor-heading-title {
+    color: var(--content-primary);
     font-family: var(--typography-font-secondary);
     font-weight: var(--weight-regular);
     font-size: var(--font-size-14);
     line-height: var(--lh-none);
     letter-spacing: var(--ls-pos-01);
+    text-transform: uppercase;
 }
 
 /* Numbers */
