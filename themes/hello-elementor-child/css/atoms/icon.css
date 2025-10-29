@@ -307,6 +307,14 @@
     width: var(--icon-density-small);
     padding: var(--icon-padding-xsmall);
 }
+
+.elementor .enc-icon.enc-icon-large .elementor-icon svg {
+    width: 32px;
+    height: 32px;
+    display: block;
+    fill: none !important;
+}
+
 .elementor .enc-icon .elementor-icon svg {
     width: var(--svg-icon-width);
     height: var(--svg-icon-height);
