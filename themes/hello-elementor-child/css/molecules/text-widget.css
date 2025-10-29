@@ -22,7 +22,7 @@
 
 /* Normalize inner heading nodes */
 /* (*) WORK TO REMOVE */
-.elementor .text-widget .overline .elementor-widget-container > .elementor-heading-title,
+/* .elementor .text-widget .overline .elementor-widget-container > .elementor-heading-title,
 .elementor .text-widget .overline .elementor-widget-container > h1,
 .elementor .text-widget .overline .elementor-widget-container > h2,
 .elementor .text-widget .overline .elementor-widget-container > h3,
@@ -43,7 +43,7 @@
     line-height: inherit;
     text-transform: inherit;
     margin: 0;
-}
+} */
 
 /* .elementor .text-widget .overline {
     color: var(--content-primary);
