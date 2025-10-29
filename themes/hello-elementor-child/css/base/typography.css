@@ -274,7 +274,8 @@
     letter-spacing: var(--ls-normal);
 }
 
-.b16 {
+.b16,
+.elementor .text-widget .body {
     font-family: var(--typography-font-primary);
     font-weight: var(--weight-regular);
     font-size: var(--font-size-16);
@@ -282,7 +283,9 @@
     letter-spacing: var(--ls-normal);
 }
 
-.b16-bold {
+.b16-bold,
+.elementor .text-widget .headline .elementor-widget-container > h2,
+.elementor .text-widget .headline h2 {
     font-family: var(--typography-font-primary);
     font-weight: var(--weight-bold);
     font-size: var(--font-size-16);
@@ -290,12 +293,19 @@
     letter-spacing: var(--ls-normal);
 }
 
-.b16-link {
+.b16-link,
+.elementor .text-widget .btn-link .elementor-heading-title a {
     font-family: var(--typography-font-primary);
     font-weight: var(--weight-regular);
     font-size: var(--font-size-16);
     line-height: var(--lh-relaxed);
     letter-spacing: var(--ls-normal);
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: none;
+    text-decoration-thickness: auto;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
 }
 
 .b14 {

@@ -21,6 +21,7 @@
 }
 
 /* Normalize inner heading nodes */
+/* (*) WORK TO REMOVE */
 .elementor .text-widget .overline .elementor-widget-container > .elementor-heading-title,
 .elementor .text-widget .overline .elementor-widget-container > h1,
 .elementor .text-widget .overline .elementor-widget-container > h2,
@@ -55,7 +56,8 @@
     text-transform: uppercase;
 }
 
-.elementor .text-widget .headline h2 {
+/* (*) WORK TO REMOVE */
+/* .elementor .text-widget .headline h2 {
     color: var(--content-primary);
     font-family: var(--typography-font-brand) !important;
     font-size: var(--font-size-32) !important;
@@ -65,9 +67,10 @@
     letter-spacing: var(--ls-neg-64);
     margin: 0 !important;
     padding: 0 !important;
-}
+} */
 
-.elementor .text-widget .body {
+/* (*) WORK TO REMOVE */
+/* .elementor .text-widget .body {
     color: var(--content-secondary);
     font-family: var(--typography-font-primary);
     font-size: var(--font-size-16);
@@ -75,9 +78,10 @@
     font-weight: var(--weight-regular);
     line-height: var(--lh-relaxed);
     letter-spacing: var(--ls-neg-16);
-}
+} */
 
 .elementor .text-widget .btn-link .elementor-heading-title a {
+    /* (*) CREATE A REFERENCE TO b16-Link */
     font-family: var(--typography-font-primary);
     font-size: var(--font-size-14);
     line-height: var(--lh-relaxed);
