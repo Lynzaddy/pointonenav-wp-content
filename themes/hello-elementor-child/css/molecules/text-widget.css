@@ -20,6 +20,36 @@
     max-width: 660px;
 }
 
+/* Size variants */
+.elementor .text-widget.tw-large {
+    gap: var(--gap-20) !important;
+}
+
+.elementor .text-widget.tw-small {
+    gap: var(--gap-8) !important;
+}
+
+.elementor .text-widget.tw-large .btn-container {
+    /* Was 20px, but changed to zero, widget controls gap */
+    margin-top: 0px;
+    padding-top: 20px;
+}
+
+.elementor .text-widget.tw-small .btn-container {
+    /* Was 8px, but changed to zero, widget controls gap */
+    margin-top: 0px;
+    padding-top: 8px;
+}
+
+/* Buttons area */
+.elementor .text-widget .btn-container {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-20);
+    padding: 12px 0 0 0;
+    margin: 0;
+}
+
 /* Normalize inner heading nodes */
 /* (*) WORK TO REMOVE */
 /* .elementor .text-widget .overline .elementor-widget-container > .elementor-heading-title,
@@ -88,10 +118,6 @@
     letter-spacing: var(--ls-neg-14);
 } */
 
-/* Size variants */
-.elementor .text-widget.tw-large {
-    gap: var(--gap-20) !important;
-}
 /* (*) WORK TO REMOVE */
 /* .elementor .text-widget.tw-large .btn-link .elementor-heading-title a {
     font-size: var(--font-size-16);
@@ -107,10 +133,6 @@
 /* .elementor .text-widget.tw-large .body {
     font-size: var(--font-size-20);
 } */
-
-.elementor .text-widget.tw-small {
-    gap: var(--gap-8) !important;
-}
 
 /* .elementor .text-widget.tw-small .headline h2 {
     font-size: 16px !important;
@@ -138,27 +160,6 @@
 .elementor .text-widget.inverse .body,
 .elementor .inverse .text-widget .body {
     color: var(--content-secondary-inverse) !important;
-}
-
-/* Buttons area */
-.elementor .text-widget .btn-container {
-    display: flex;
-    align-items: center;
-    gap: var(--gap-20);
-    padding: 0;
-    margin: 0;
-    /* Was 14px, but changed to zero, widget controls gap */
-    margin-top: 0px;
-}
-
-.elementor .text-widget.tw-large .btn-container {
-    /* Was 20px, but changed to zero, widget controls gap */
-    margin-top: 0px;
-}
-
-.elementor .text-widget.tw-small .btn-container {
-    /* Was 8px, but changed to zero, widget controls gap */
-    margin-top: 0px;
 }
 
 /* === 02. Stat Widget === */
