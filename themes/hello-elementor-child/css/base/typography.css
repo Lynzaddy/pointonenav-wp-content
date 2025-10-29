@@ -257,7 +257,7 @@
 }
 
 .b20,
-.elementor .text-widget.tw-large .body {
+.elementor .text-widget.tw-large .body .elementor-heading-title {
     color: var(--content-secondary);
     font-family: var(--typography-font-primary);
     font-weight: var(--weight-regular);
