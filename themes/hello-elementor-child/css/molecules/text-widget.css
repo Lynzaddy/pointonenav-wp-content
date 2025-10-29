@@ -168,7 +168,7 @@
 .elementor .text-widget .body.inverse .elementor-heading-title,
 .elementor .text-widget.inverse .body .elementor-heading-title,
 .elementor .inverse .text-widget .body .elementor-heading-title {
-    color: var(--content-primary-inverse);
+    color: var(--content-secondary-inverse);
 }
 
 /* === 02. Stat Widget === */
