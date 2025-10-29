@@ -164,9 +164,11 @@
     color: var(--content-primary-inverse);
 }
 
-.elementor .text-widget.inverse .body,
-.elementor .inverse .text-widget .body {
-    color: var(--content-secondary-inverse) !important;
+/* Inverse: when .inverse is on .body, .text-widget, or any parent */
+.elementor .text-widget .body.inverse .elementor-heading-title,
+.elementor .text-widget.inverse .body .elementor-heading-title,
+.elementor .inverse .text-widget .body .elementor-heading-title {
+    color: var(--content-primary-inverse);
 }
 
 /* === 02. Stat Widget === */
