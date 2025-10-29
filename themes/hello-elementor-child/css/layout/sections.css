@@ -52,7 +52,7 @@
     max-width: var(--inner-content-max-width);
     margin: var(--vertical-padding-desktop) auto; /* Center horizontally */
     padding: 0; /* Default padding, editable per device */
-    background-color: #ffd6d6; /* Testing only */
+    /*background-color: #ffd6d6;  Testing only */
     box-sizing: border-box;
 
     /* Flexibility Settings */
@@ -82,7 +82,7 @@
     .section-container-inner {
         margin: var(--vertical-padding-desktop) auto;
         padding: 0 var(--side-padding-narrow);
-        background-color: #f90; /* Light green for testing */
+        /* background-color: #f90;  Light green for testing */
     }
 }
 
@@ -91,7 +91,7 @@
     .section-container-inner {
         margin: var(--vertical-padding-tablet) auto;
         padding: 0 var(--side-padding-standard);
-        background-color: #d6ffd6; /* Light green for testing */
+        /* background-color: #d6ffd6;  Light green for testing */
     }
 }
 
@@ -100,7 +100,7 @@
     .section-container-inner {
         margin: var(--vertical-padding-mobile) auto;
         padding: 0 12px;
-        background-color: #d6e8ff; /* Light blue for testing */
+        /* background-color: #d6e8ff;  Light blue for testing */
     }
 }
 
