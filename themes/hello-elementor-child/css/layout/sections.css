@@ -68,6 +68,10 @@
     margin: 0 auto !important;
 }
 
+.section-container-inner.margin-medium {
+    margin: 40px auto !important;
+}
+
 /* Apply narrow vertical margin, stay horizontally centered */
 .section-container-inner.margin-narrow {
     margin: 16px auto !important;
