@@ -185,7 +185,9 @@
 }
 
 /* Headlines */
-.h48 {
+.h48,
+.elementor .text-widget.tw-large .headline h2,
+.elementor .stat-widget.sw-large .headline {
     font-family: var(--typography-font-brand);
     font-weight: var(--weight-bold);
     font-size: var(--font-size-48);
@@ -193,7 +195,9 @@
     letter-spacing: var(--ls-neg-02);
 }
 
-.h40 {
+.h40,
+.elementor .text-widget.tw-large .headline h2,
+.elementor .stat-widget .headline {
     font-family: var(--typography-font-brand);
     font-weight: var(--weight-bold);
     font-size: var(--font-size-40);
@@ -217,7 +221,8 @@
     letter-spacing: var(--ls-neg-02);
 }
 
-.h20 {
+.h20,
+.elementor .stat-widget.sw-small .headline {
     font-family: var(--typography-font-primary);
     font-weight: var(--weight-bold);
     font-size: var(--font-size-20);
@@ -225,7 +230,8 @@
     letter-spacing: var(--ls-neg-02);
 }
 
-.h16 {
+.h16,
+.elementor .text-widget.tw-small .headline h2 {
     font-family: var(--typography-font-primary);
     font-weight: var(--weight-bold);
     font-size: var(--font-size-16);
@@ -250,7 +256,8 @@
     letter-spacing: var(--ls-normal);
 }
 
-.b20 {
+.b20,
+.elementor .text-widget.tw-large .body {
     font-family: var(--typography-font-primary);
     font-weight: var(--weight-regular);
     font-size: var(--font-size-20);
@@ -275,7 +282,9 @@
 }
 
 .b16,
-.elementor .text-widget .body {
+.elementor .text-widget .body,
+.elementor .text-widget.tw-small .body,
+.elementor .stat-widget .body {
     font-family: var(--typography-font-primary);
     font-weight: var(--weight-regular);
     font-size: var(--font-size-16);
@@ -294,7 +303,8 @@
 }
 
 .b16-link,
-.elementor .text-widget .btn-link .elementor-heading-title a {
+.elementor .text-widget .btn-link .elementor-heading-title a,
+.elementor .text-widget.tw-large .btn-link .elementor-heading-title a {
     font-family: var(--typography-font-primary);
     font-weight: var(--weight-regular);
     font-size: var(--font-size-16);
@@ -308,7 +318,8 @@
     text-underline-position: from-font;
 }
 
-.b14 {
+.b14,
+.elementor .stat-widget.sw-small .body {
     font-family: var(--typography-font-primary);
     font-weight: var(--weight-regular);
     font-size: var(--font-size-14);
@@ -373,7 +384,8 @@
     letter-spacing: var(--ls-pos-01);
 }
 
-.o14 {
+.o14,
+.elementor .text-widget .overline {
     font-family: var(--typography-font-secondary);
     font-weight: var(--weight-regular);
     font-size: var(--font-size-14);
