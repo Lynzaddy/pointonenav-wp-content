@@ -15,6 +15,7 @@
 -   Check spacing between text elements
 -   Check spacing between buttons (Even on hover)
 -   Just in the large size 2nd button needs to be secondary
+-   Add
 
 ## Header
 
