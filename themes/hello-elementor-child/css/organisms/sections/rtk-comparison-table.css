@@ -1,0 +1,136 @@
+/* 
+==================================================
+    RTK-COMPARISON-TABLE.CSS
+    Description: Styles specific to the RTK Comparison Table component.
+==================================================  
+*/
+
+/* ========== RTK Comparison Table (v2) ========== */
+
+/* 1) OUTER SCROLL CONTAINER */
+.competitor-table-outer {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+    overscroll-behavior-x: contain;
+    -webkit-transform: translateZ(0);
+    max-width: 100%;
+    margin-top: 20px;
+}
+
+/* 2) INNER WIDTH WRAPPER */
+.competitor-table-wrapper {
+    min-width: 1000px;
+}
+
+/* 3) BASE TABLE */
+.competitor-table {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: auto;
+}
+
+/* 4) ALL CELLS */
+.competitor-table th,
+.competitor-table td {
+    padding: 10px 15px;
+    text-align: left;
+    white-space: normal;
+    border: 1px solid #ccc;
+    background: transparent;
+    box-sizing: border-box;
+    vertical-align: top;
+}
+
+/* 5) BRAND COLUMN (1st) */
+.competitor-table th.sticky-col:first-child,
+.competitor-table td.sticky-col:first-child {
+    position: -webkit-sticky;
+    position: sticky;
+    left: 0;
+    min-width: 180px;
+    max-width: 180px; /* ↓ 20 px narrower */
+    background: #f2f2f0 !important;
+    z-index: 5;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+.competitor-table th.sticky-col:first-child::before,
+.competitor-table td.sticky-col:first-child::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 1px;
+    background: rgba(0, 0, 0, 0.1);
+    z-index: 6;
+}
+
+/* 6) POLARIS COLUMN (2nd) */
+.competitor-table th.sticky-col:nth-child(2),
+.competitor-table td.sticky-col:nth-child(2) {
+    position: -webkit-sticky;
+    position: sticky;
+    left: 180px; /* matches new col-1 width */
+    min-width: 160px;
+    max-width: 160px; /* ↓ 20 px narrower */
+    background: var(--color-white-a100) !important;
+    z-index: 10;
+    box-shadow: 6px 0 10px rgba(0, 0, 0, 0.15);
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+.competitor-table th.sticky-col:nth-child(2) {
+    background: var(--color-brand-60) !important;
+    color: var(--color-white-a100) !important;
+}
+.competitor-table th.sticky-col:nth-child(2)::after,
+.competitor-table td.sticky-col:nth-child(2)::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -1px;
+    width: 6px;
+    height: 100%;
+    box-shadow: 6px 0 10px rgba(0, 0, 0, 0.15);
+    pointer-events: none;
+}
+
+/* 7) REMAINING COLUMNS */
+.competitor-table th:not(.sticky-col),
+.competitor-table td:not(.sticky-col) {
+    min-width: 150px;
+    max-width: 190px; /* tightened a bit */
+    word-break: break-word;
+}
+
+/* 8) SLIMMER SCROLLBAR */
+.competitor-table-outer::-webkit-scrollbar {
+    height: 6px;
+}
+.competitor-table-outer::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+}
+
+/* 9) MOBILE OVERRIDES  (under 768 px) */
+@media (max-width: 767px) {
+    /* first column */
+    .competitor-table th.sticky-col:first-child,
+    .competitor-table td.sticky-col:first-child {
+        min-width: 120px;
+        max-width: 120px;
+    }
+    /* second column */
+    .competitor-table th.sticky-col:nth-child(2),
+    .competitor-table td.sticky-col:nth-child(2) {
+        left: 120px; /* align after col-1 */
+        min-width: 120px;
+        max-width: 120px;
+    }
+    /* all other columns */
+    .competitor-table th:not(.sticky-col),
+    .competitor-table td:not(.sticky-col) {
+        min-width: 120px;
+        max-width: 160px;
+    }
+}

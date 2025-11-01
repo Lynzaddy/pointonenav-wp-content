@@ -210,3 +210,49 @@
 .elementor-toc__body {
     padding-top: 0 !important;
 }
+
+.elementor-toc__header-title {
+    color: var(--content-primary);
+    font-size: 16px;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-medium);
+    padding-bottom: 0px !important;
+}
+
+/* Style the entire TOC row (bullet + text) */
+.elementor-widget-table-of-contents .elementor-toc__list-item-text-wrapper {
+    display: flex;
+    align-items: flex-start; /* Align items to top */
+    gap: 0.5em;
+    padding: 12px 0 8px 8px;
+    border-top: 1px solid var(--color-line-primary);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Make the bullets uniform size and color */
+.elementor-widget-table-of-contents .elementor-toc__list-wrapper svg.e-font-icon-svg {
+    width: 8px;
+    height: 8px;
+    fill: var(--color-brand-60);
+    flex-shrink: 0;
+    margin-top: 3px; /* adjust this value to fine tune vertical alignment */
+}
+
+/* Style the link inside the item */
+.elementor-widget-table-of-contents .elementor-toc__list-item-text {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--content-primary);
+    line-height: var(--lh-tight);
+    text-decoration: none;
+    flex-grow: 1;
+    font-weight: var(--font-weight-500);
+    font-family: var(--typography-font-primary);
+}
+
+/* Override active item color in TOC */
+.elementor-widget-table-of-contents .elementor-toc__list-item-text.elementor-item-active {
+    color: var(--content-primary) !important;
+}

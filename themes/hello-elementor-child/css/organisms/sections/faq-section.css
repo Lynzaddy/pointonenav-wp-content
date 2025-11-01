@@ -1,0 +1,68 @@
+/* 
+==================================================
+    FAQ-SECTION.CSS
+    Description: Styles for the FAQ section.
+==================================================  
+*/
+
+/* FAQ Section */
+.faq-accordion {
+    border-top: 1px solid #d9d9d6;
+    border-bottom: 1px solid #d9d9d6;
+}
+
+.faq-item {
+    border-bottom: 1px solid #d9d9d6;
+}
+
+.faq-question {
+    all: unset;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    cursor: pointer;
+    padding: 16px 0;
+    font-family: var(--typography-font-brand);
+    font-size: 20px;
+    font-weight: var(--weight-regular);
+    line-height: 24px;
+    color: #222222 !important;
+    background: none;
+}
+
+.faq-question:hover,
+.faq-question:focus {
+    color: #222222 !important;
+    background: none;
+}
+
+.faq-toggle-indicator {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-image: url("/wp-content/uploads/2025/06/chevron-right.svg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    transition: transform 0.3s ease;
+    margin-right: 12px;
+    flex-shrink: 0;
+    transform: rotate(0deg); /* Default right-facing */
+}
+
+.faq-question[aria-expanded="true"] .faq-toggle-indicator {
+    transform: rotate(90deg); /* Down when open */
+}
+
+.faq-question-text {
+    color: #222222;
+    display: inline-block;
+}
+
+.faq-answer {
+    padding: 8px 0 24px 32px;
+    font-size: 16px;
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-medium);
+    color: #4d4d47;
+}

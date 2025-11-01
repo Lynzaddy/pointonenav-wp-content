@@ -23,3 +23,6 @@
 
 @import "organisms/sections/section-banner-cta.css";
 @import "organisms/sections/section-image-split-feature.css";
+@import "organisms/sections/homepage-hero.css";
+@import "organisms/sections/rtk-comparison-table.css";
+@import "organisms/sections/faq-section.css";
