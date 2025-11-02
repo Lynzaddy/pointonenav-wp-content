@@ -71,6 +71,11 @@
     border-radius: var(--image-border-radius);
 }
 
+/* Wide hero/video container */
+.section-container-inner.embedded {
+    margin: 0 0 var(--vertical-padding-desktop) 0;
+}
+
 /* THIS HAS NO MARGIN, IN CASE THIS IS PREFERRED */
 /* 56.25vw = 9/16 of viewport width */
 .section-container-inner.wide {
