@@ -64,7 +64,7 @@
 }
 
 .section-content-inner.wide {
-    max-width: var(--inner-content-wide-max-width);
+    max-width: var(--inner-content-wide-max-width) !important;
 }
 
 /* Remove all vertical margin, stay horizontally centered */
