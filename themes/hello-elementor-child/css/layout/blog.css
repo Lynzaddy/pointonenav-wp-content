@@ -52,6 +52,10 @@
     padding-top: 16px;
 }
 
+.elementor .blog-section .elementor-post__read-more a:hover {
+    text-decoration: none;
+}
+
 /* Post item container layout */
 .elementor .blog-section .elementor-post {
     display: flex;
