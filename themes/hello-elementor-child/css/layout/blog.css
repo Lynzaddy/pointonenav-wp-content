@@ -20,25 +20,25 @@
 }
 
 /* Post date styling */
-.elementor .blog-section .elementor-post-date {
+/* .elementor .blog-section .elementor-post-date {
     font-family: var(--typography-font-secondary);
     font-size: var(--font-size-14);
     font-weight: var(--weight-regular);
-    line-height: var(--lh-none); /* 14px */
+    line-height: var(--lh-none);
     letter-spacing: var(--letter-spacing-14);
     text-transform: uppercase;
-}
+} */
 
 /* Post title styling */
-.elementor .blog-section .elementor-post__title {
+/* .elementor .blog-section .elementor-post__title {
     font-family: var(--typography-font-primary);
     font-size: var(--font-size-20);
     font-weight: var(--weight-bold);
-    line-height: var(--lh-tight); /* 23.68px */
+    line-height: var(--lh-tight);
     letter-spacing: var(--ls-neg-40);
-    margin: 0 0 0 0; /* merged margin-top: 0; */
+    margin: 0 0 0 0; 
     padding-bottom: 50px;
-}
+} */
 
 /* Title link styling */
 .elementor .blog-section .elementor-post__title a {
@@ -46,16 +46,16 @@
 }
 
 /* Read more styling */
-.elementor .blog-section .elementor-post__read-more {
+/* .elementor .blog-section .elementor-post__read-more {
     font-family: var(--typography-font-primary);
     font-size: var(--font-size-16);
     font-weight: var(--weight-regular);
-    line-height: var(--lh-relaxed); /* 23.68px */
+    line-height: var(--lh-relaxed);
     letter-spacing: var(--ls-neg-16);
     text-decoration: underline;
     margin-top: auto;
     padding-top: 16px;
-}
+} */
 
 /* Post item container layout */
 .elementor .blog-section .elementor-post {
@@ -83,7 +83,7 @@
 
 /* Thumbnail spacing */
 .elementor .blog-section .elementor-post__thumbnail__link {
-    margin-bottom: 32px !important;
+    margin-bottom: 20px !important;
 }
 
 /* ==== 02. Search Box on Blog pages ======== */

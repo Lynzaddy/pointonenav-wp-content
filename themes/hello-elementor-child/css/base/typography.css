@@ -223,7 +223,8 @@
 
 .h20,
 .elementor .text-widget.tw-small .headline h2,
-.elementor .stat-widget.sw-small .headline {
+.elementor .stat-widget.sw-small .headline,
+.elementor .blog-section .elementor-post__title {
     font-family: var(--typography-font-primary);
     font-weight: var(--weight-bold);
     font-size: var(--font-size-20);
@@ -304,6 +305,7 @@
 
 .b16-link,
 .elementor .text-widget .btn-link .elementor-heading-title a,
+.elementor .blog-section .elementor-post__read-more,
 .elementor .text-widget.tw-large .btn-link .elementor-heading-title a {
     font-family: var(--typography-font-primary);
     font-weight: var(--weight-regular);
@@ -385,7 +387,8 @@
 }
 
 .o14,
-.elementor .text-widget .overline .elementor-heading-title {
+.elementor .text-widget .overline .elementor-heading-title,
+.elementor .blog-section .elementor-post-date {
     color: var(--content-primary);
     font-family: var(--typography-font-secondary);
     font-weight: var(--weight-regular);
