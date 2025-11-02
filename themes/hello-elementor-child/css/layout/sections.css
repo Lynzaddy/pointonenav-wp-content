@@ -14,6 +14,7 @@
 :root {
     /* Inner Content Max Width */
     --inner-content-max-width: 1160px;
+    --inner-content-wide-max-width: 1920px;
 
     /* Section Top Padding */
     --vertical-padding-desktop: 100px;
@@ -54,13 +55,16 @@
     padding: 0; /* Default padding, editable per device */
     /*background-color: #ffd6d6;  Testing only */
     box-sizing: border-box;
-
     /* Flexibility Settings */
     display: inherit; /* Let Elementor define flex or block */
     flex-direction: inherit; /* Inherit Elementor’s direction */
     justify-content: inherit;
     align-items: inherit;
     /* gap: inherit; */
+}
+
+.section-content-inner.wide {
+    max-width: var(--inner-content-wide-max-width);
 }
 
 /* Remove all vertical margin, stay horizontally centered */
