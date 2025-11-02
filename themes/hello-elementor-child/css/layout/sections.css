@@ -63,12 +63,70 @@
     /* gap: inherit; */
 }
 
+/* Wide hero/video container */
 .section-container-inner.wide {
+    position: relative; /* so the bg video can anchor */
+    overflow: hidden;
+    max-width: var(--inner-content-wide-max-width);
+}
+
+/* Desktop and larger: lock to 788px */
+@media (min-width: 1161px) {
+    .section-container-inner.wide {
+        min-height: 788px;
+        max-height: 788px;
+    }
+}
+
+/* Small desktop, tablet, mobile: scale by aspect ratio (16:9) */
+@media (max-width: 1160px) {
+    .section-container-inner.wide {
+        aspect-ratio: 16 / 9; /* height auto-calculated from width */
+        min-height: auto; /* let aspect-ratio drive height */
+        max-height: none;
+    }
+}
+
+/* Make sure Elementor's background <video> fully covers */
+.section-container-inner.wide .elementor-background-video-container,
+.section-container-inner.wide .elementor-background-video-embed {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* Native <video> backgrounds */
+.section-container-inner.wide .elementor-background-video-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* crop edges, no letterboxing */
+    object-position: center;
+    pointer-events: none;
+}
+
+/* (Optional) YouTube/Vimeo embeds Elementor uses for bg video */
+.section-container-inner.wide .elementor-background-video-embed iframe {
+    /* This sizing mimics a “cover” fit for 16:9 iframes */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 177.78%; /* 100 / 56.25% */
+    height: 100%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+/* THIS HAS NO MARGIN, IN CASE THIS IS PREFERRED */
+/* 56.25vw = 9/16 of viewport width */
+/* .section-container-inner.wide {
     position: relative;
     overflow: hidden;
     max-width: var(--inner-content-wide-max-width);
-    min-height: clamp(360px, 56.25vw, 788px); /* 56.25vw = 9/16 of viewport width */
-}
+    min-height: clamp(360px, 56.25vw, 788px); 
+} 
+*/
 
 /* Remove all vertical margin, stay horizontally centered */
 .section-container-inner.margin-zero {
