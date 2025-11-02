@@ -65,6 +65,7 @@
 
 .section-container-inner.wide {
     max-width: var(--inner-content-wide-max-width);
+    max-height: 788px;
 }
 
 /* Remove all vertical margin, stay horizontally centered */
