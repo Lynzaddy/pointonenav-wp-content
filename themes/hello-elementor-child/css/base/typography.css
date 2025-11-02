@@ -222,7 +222,7 @@
 }
 
 .h20,
-.elementor .stat-widget.sw-small .headline {
+.elementor .text-widget.tw-small .headline h2 .elementor .stat-widget.sw-small .headline {
     font-family: var(--typography-font-primary);
     font-weight: var(--weight-bold);
     font-size: var(--font-size-20);
@@ -230,8 +230,7 @@
     letter-spacing: var(--ls-neg-02);
 }
 
-.h16,
-.elementor .text-widget.tw-small .headline h2 {
+.h16 {
     font-family: var(--typography-font-primary);
     font-weight: var(--weight-bold);
     font-size: var(--font-size-16);
