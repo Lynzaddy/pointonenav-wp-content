@@ -53,7 +53,7 @@
 }
 
 .elementor .blog-section .elementor-post__read-more a:hover {
-    text-decoration: none;
+    text-decoration: none !important;
 }
 
 /* Post item container layout */
