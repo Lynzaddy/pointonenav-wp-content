@@ -42,7 +42,7 @@
     justify-content: center; /* Centers the inner container */
     align-items: stretch;
     gap: 0;
-    background-color: yellow; /* Testing only */
+    /* background-color: yellow; Testing only */
     box-sizing: border-box;
 }
 
