@@ -64,8 +64,10 @@
 }
 
 .section-container-inner.wide {
+    position: relative;
+    overflow: hidden;
     max-width: var(--inner-content-wide-max-width);
-    min-height: 788px;
+    min-height: clamp(360px, 56.25vw, 788px); /* 56.25vw = 9/16 of viewport width */
 }
 
 /* Remove all vertical margin, stay horizontally centered */
