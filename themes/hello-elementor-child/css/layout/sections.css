@@ -63,8 +63,8 @@
     /* gap: inherit; */
 }
 
-.section-content-inner.wide {
-    max-width: var(--inner-content-wide-max-width) !important;
+.section-container-inner.wide {
+    max-width: var(--inner-content-wide-max-width);
 }
 
 /* Remove all vertical margin, stay horizontally centered */
