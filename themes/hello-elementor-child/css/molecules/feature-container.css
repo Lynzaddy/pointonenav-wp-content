@@ -12,7 +12,7 @@
 .feature-container {
     margin: 0;
     padding: 20px 0;
-    border-top: 1px solid var(--line-alpha);
+    /* border-top: 1px solid var(--line-alpha); */
     gap: 20px;
     display: flex; /* row layout */
     flex-direction: row; /* make sure it's horizontal */
@@ -43,5 +43,5 @@
 
 /* Inverse variant (triggered by ancestor with .inverse) */
 .inverse .feature-container {
-    border-top-color: var(--line-alpha-inverse);
+    /* border-top-color: var(--line-alpha-inverse); */
 }
