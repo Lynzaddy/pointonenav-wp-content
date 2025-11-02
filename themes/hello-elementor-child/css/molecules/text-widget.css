@@ -261,7 +261,7 @@
 .elementor .icon-widget {
     margin: 0;
     padding: 20px 0;
-    border-top: 1px solid var(--line-alpha);
+    /* border-top: 1px solid var(--line-alpha); */
     max-width: 460px;
     display: grid;
     grid-template-columns: auto 1fr; /* left = icon’s rendered width (incl. padding), right fills */
@@ -319,7 +319,7 @@
 
 /* Inverse (widget text/border only) */
 .elementor .icon-widget.inverse {
-    border-top-color: var(--line-alpha-inverse);
+    /* border-top-color: var(--line-alpha-inverse); */
 }
 
 .elementor .icon-widget.inverse .headline .elementor-heading-title {

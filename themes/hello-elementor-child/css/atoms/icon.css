@@ -285,7 +285,7 @@
 .elementor .enc-icon .elementor-icon:hover {
     height: var(--icon-density-medium);
     width: var(--icon-density-medium);
-    background-color: var(--background-quaternary) !important;
+    background-color: var(--background-brand-neon) !important;
     border-radius: var(--containers-card-radius);
     padding: var(--icon-padding);
     display: flex;
@@ -331,12 +331,12 @@
 .elementor .inverse .enc-icon .elementor-icon,
 .elementor .inverse.enc-icon .elementor-icon:hover,
 .elementor .inverse .enc-icon .elementor-icon:hover {
-    background-color: var(--background-quaternary-inverse) !important;
+    background-color: var(--background-brand-neon) !important;
 }
 
 .elementor .inverse.enc-icon .elementor-icon svg path,
 .elementor .inverse .enc-icon .elementor-icon svg path {
-    stroke: var(--content-primary-inverse);
+    stroke: var(--content-primary);
 }
 
 /* === 13. HOVER OFF SCOPES ============================================= */
@@ -344,7 +344,7 @@
 .elementor .enc-icon .elementor-icon:hover,
 .elementor .enc-icon .elementor-icon:focus,
 .elementor .enc-icon .elementor-icon:active {
-    background: var(--background-quaternary) !important;
+    background: var(--background-brand-neon) !important;
     background-image: none !important;
     box-shadow: none !important;
     transform: none !important;
@@ -354,7 +354,7 @@
 .elementor .inverse.enc-icon .elementor-icon:hover,
 .elementor .inverse.enc-icon .elementor-icon:focus,
 .elementor .inverse.enc-icon .elementor-icon:active {
-    background: var(--background-quaternary-inverse) !important;
+    background: var(--background-brand-neon) !important;
 }
 .elementor .enc-icon .elementor-icon:hover svg,
 .elementor .enc-icon .elementor-icon:hover svg * {
