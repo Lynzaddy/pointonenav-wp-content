@@ -85,7 +85,7 @@
     margin-top: 20px;
 }
 .slider .slide .heading {
-    margin-top: 8px;
+    margin-top: 20px;
 }
 .slider .slide .body {
     margin-top: 8px;
@@ -107,7 +107,7 @@
 .slider .slide .heading {
     color: var(--content-primary, #141413);
     font-family: var(--typography-font-primary, "Instrument Sans");
-    font-size: 20px;
+    font-size: 24px;
     font-style: normal;
     font-weight: 500;
     line-height: 120%;
