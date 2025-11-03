@@ -245,3 +245,21 @@
         });
     });
 })(jQuery);
+
+// --- Bulletproof arrow hover/focus/active states via classes ---
+(function ($) {
+    $(document)
+        .on("mouseenter focusin", ".slick-arrow-btn", function () {
+            this.classList.add("is-hover");
+        })
+        .on("mouseleave focusout", ".slick-arrow-btn", function () {
+            this.classList.remove("is-hover");
+            this.classList.remove("is-active");
+        })
+        .on("mousedown", ".slick-arrow-btn", function () {
+            this.classList.add("is-active");
+        })
+        .on("mouseup", ".slick-arrow-btn", function () {
+            this.classList.remove("is-active");
+        });
+})(jQuery);
