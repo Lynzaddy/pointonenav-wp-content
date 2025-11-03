@@ -20,14 +20,15 @@
 */
 
 /* (*) Carry-over before components; check if needed once live */
-[type="button"]:focus,
+/* [type="button"]:focus,
 [type="button"]:hover,
 [type="submit"]:focus,
 [type="submit"]:hover,
 button:focus,
 button:hover {
     background-color: transparent !important;
-}
+    
+} */
 
 /* === 01. Base (Brand) Button Styles === */
 .elementor .elementor-button,
