@@ -178,43 +178,45 @@
     content: none !important;
 }
 
-/* ====== 40x40 arrows (simple hover) ====== */
+/* ====== Arrow Buttons (BULLETPROOF VERSION) ====== */
+.slick-controls button.slick-arrow-btn,
+.slick-slider button.slick-arrow-btn,
 .slick-controls .slick-arrow-btn,
 .slick-slider .slick-arrow-btn {
-    border: none;
-    background-color: #141413; /* base dark */
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
-    min-height: 40px;
-    max-width: 40px;
-    max-height: 40px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    line-height: 0;
-    flex: 0 0 auto;
-    transition: background-color 0.2s ease;
-    outline: none;
-    box-shadow: none;
-    -webkit-tap-highlight-color: transparent;
+    border: none !important;
+    background-color: #141413 !important; /* base dark */
+    border-radius: 50% !important;
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    max-width: 40px !important;
+    max-height: 40px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    line-height: 0 !important;
+    flex: 0 0 auto !important;
+    transition: background-color 0.2s ease !important;
+    outline: none !important;
+    box-shadow: none !important;
+    -webkit-tap-highlight-color: transparent !important;
 }
 
 /* Hover / Focus / Focus-visible */
-.slick-controls .slick-arrow-btn:hover,
-.slick-slider .slick-arrow-btn:hover,
-.slick-controls .slick-arrow-btn:focus,
-.slick-slider .slick-arrow-btn:focus,
-.slick-controls .slick-arrow-btn:focus-visible,
-.slick-slider .slick-arrow-btn:focus-visible {
+.slick-controls button.slick-arrow-btn:hover,
+.slick-slider button.slick-arrow-btn:hover,
+.slick-controls button.slick-arrow-btn:focus,
+.slick-slider button.slick-arrow-btn:focus,
+.slick-controls button.slick-arrow-btn:focus-visible,
+.slick-slider button.slick-arrow-btn:focus-visible {
     background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
 /* Active press */
-.slick-controls .slick-arrow-btn:active,
-.slick-slider .slick-arrow-btn:active {
+.slick-controls button.slick-arrow-btn:active,
+.slick-slider button.slick-arrow-btn:active {
     background-color: #4b5563 !important;
 }
 
@@ -223,7 +225,7 @@
     width: 24px;
     height: 24px;
     background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' vector-effect='non-scaling-stroke' stroke-linecap='round' stroke-linejoin='round'><polyline points='9 6 15 12 9 18'/></svg>")
-        center / 24px 24px no-repeat;
+        center / 24px 24px no-repeat !important;
 }
 .slick-prev .icon {
     transform: rotate(180deg);
@@ -234,10 +236,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 40px; /* match arrow button height */
+    height: 40px;
 }
-
-/* Inner <ul> of dots */
 .slick-controls .sc-dots .slick-dots {
     position: static !important;
     display: inline-flex !important;
@@ -251,8 +251,6 @@
     list-style: none;
     line-height: 0;
 }
-
-/* Neutralize Slick theme defaults */
 .slick-dots {
     position: static !important;
 }
@@ -281,7 +279,7 @@
     justify-content: center;
     cursor: pointer;
     line-height: 0;
-    font-size: 0; /* hide numeric label */
+    font-size: 0;
     width: auto;
     height: auto;
     overflow: visible;
@@ -310,7 +308,7 @@
     margin-bottom: 4px !important;
 }
 
-/* ====== Hide navigation when .hide-nav class is present ====== */
+/* ====== Hide navigation when .hide-nav is present ====== */
 .slider.hide-nav + .slick-controls {
     display: none !important;
 }
@@ -324,12 +322,12 @@
         height: 36px;
     }
     .slick-arrow-btn {
-        width: 36px;
-        height: 36px;
-        min-width: 36px;
-        min-height: 36px;
-        max-width: 36px;
-        max-height: 36px;
+        width: 36px !important;
+        height: 36px !important;
+        min-width: 36px !important;
+        min-height: 36px !important;
+        max-width: 36px !important;
+        max-height: 36px !important;
     }
     .slick-arrow-btn .icon {
         width: 22px;
