@@ -178,10 +178,9 @@
     content: none !important;
 }
 
-/* ====== Hardened 40x40 Arrows (overlay-based hover) ====== */
+/* ====== 40x40 arrows (simple hover) ====== */
 .slick-controls .slick-arrow-btn,
 .slick-slider .slick-arrow-btn {
-    position: relative; /* for overlay */
     border: none;
     background-color: #141413; /* base dark */
     border-radius: 50%;
@@ -203,37 +202,24 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-/* Overlay that we tint on hover/focus (immune to button bg rules) */
-.slick-controls .slick-arrow-btn::before,
-.slick-slider .slick-arrow-btn::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: transparent;
-    pointer-events: none; /* don't block clicks */
-    transition: background 0.2s ease;
+/* Hover / Focus / Focus-visible */
+.slick-controls .slick-arrow-btn:hover,
+.slick-slider .slick-arrow-btn:hover,
+.slick-controls .slick-arrow-btn:focus,
+.slick-slider .slick-arrow-btn:focus,
+.slick-controls .slick-arrow-btn:focus-visible,
+.slick-slider .slick-arrow-btn:focus-visible {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* HOVER / FOCUS / FOCUS-VISIBLE => overlay tint */
-.slick-controls .slick-arrow-btn:hover::before,
-.slick-slider .slick-arrow-btn:hover::before,
-.slick-controls .slick-arrow-btn:focus::before,
-.slick-slider .slick-arrow-btn:focus::before,
-.slick-controls .slick-arrow-btn:focus-visible::before,
-.slick-slider .slick-arrow-btn:focus-visible::before {
-    background: rgba(255, 255, 255, 0.1);
-}
-
-/* ACTIVE PRESS => slightly stronger base color (keep overlay) */
-.slick-controls .slick-arrow-btn:active {
+/* Active press */
+.slick-controls .slick-arrow-btn:active,
+.slick-slider .slick-arrow-btn:active {
     background-color: #4b5563;
 }
 
-/* Chevron icon sits above overlay */
+/* Chevron icon */
 .slick-arrow-btn .icon {
-    position: relative;
-    z-index: 1;
     width: 24px;
     height: 24px;
     background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' vector-effect='non-scaling-stroke' stroke-linecap='round' stroke-linejoin='round'><polyline points='9 6 15 12 9 18'/></svg>")
