@@ -184,32 +184,34 @@
 /* ====== 40x40 arrows + thicker 24x24 chevron ====== */
 .slick-arrow-btn {
     border: none;
-    background-color: #000;
+    background-color: #141413; /* default dark */
     border-radius: 50%;
     width: 40px;
     height: 40px;
     min-width: 40px;
     min-height: 40px;
+    max-width: 40px;
+    max-height: 40px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     line-height: 0;
     flex: 0 0 auto;
-    transition: background-color 0.15s ease;
+    transition: background-color 0.2s ease;
     outline: none;
     box-shadow: none;
     -webkit-tap-highlight-color: transparent;
 }
 .slick-arrow-btn:hover {
-    background: #6b7280;
+    background-color: #6b7280; /* hover color */
 }
 .slick-arrow-btn:focus,
 .slick-arrow-btn:focus-visible {
-    background: #000;
+    background-color: #6b7280; /* keep consistent focus color */
 }
 .slick-arrow-btn:active {
-    background: #4b5563;
+    background-color: #4b5563;
 }
 
 /* Stroked chevron (thicker), centered at 24x24 */
@@ -285,10 +287,10 @@
 .slick-controls .sc-dots .slick-dots li button::after {
     content: "";
     display: block;
-    width: 4px; /* smaller circle */
+    width: 4px;
     height: 4px;
-    border-radius: 50%; /* circle */
-    background-color: #929285; /* inactive color */
+    border-radius: 50%;
+    background-color: #929285;
     transition: width 0.25s ease, height 0.25s ease, background-color 0.2s ease, border-radius 0.2s ease;
 }
 
@@ -296,7 +298,7 @@
 .slick-controls .sc-dots .slick-dots li.slick-active button::after {
     width: 20px;
     height: 4px;
-    border-radius: 100px; /* pill shape */
+    border-radius: 100px;
     background-color: #141413;
 }
 
@@ -318,6 +320,8 @@
         height: 36px;
         min-width: 36px;
         min-height: 36px;
+        max-width: 36px;
+        max-height: 36px;
     }
     .slick-arrow-btn .icon {
         width: 22px;
