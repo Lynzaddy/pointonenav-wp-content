@@ -1,19 +1,19 @@
 <?php
 /**
  * Plugin Name: Point One - Card Carousel
- * Description: Auto-detects slider HTML in page content and enqueues Slick + custom JS/CSS. No shortcode required. Back-compat shortcode is available.
- * Version:     0.4.1
+ * Description: Loads Slick + carousel assets on all front-end pages. No shortcode required.
+ * Version:     0.4.3
  * Author:      Point One Navigation
  * License:     GPL-2.0+
  */
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
-define( 'PON_CC_VER',  '0.4.1' );
+define( 'PON_CC_VER',  '0.4.3' );
 define( 'PON_CC_URL',  plugin_dir_url( __FILE__ ) );
 define( 'PON_CC_PATH', plugin_dir_path( __FILE__ ) );
 
-/* ---------- Assets: register (do not enqueue yet) ---------- */
+/* Register assets */
 function pon_cc_register_assets() {
 	// Slick CSS
 	wp_register_style(
@@ -53,81 +53,22 @@ function pon_cc_register_assets() {
 		true
 	);
 }
-add_action( 'wp_enqueue_scripts', 'pon_cc_register_assets' );
+add_action( 'wp_enqueue_scripts', 'pon_cc_register_assets', 5 );
 
-/* ---------- Helper: enqueue now ---------- */
-function pon_cc_enqueue_assets_now() {
-	wp_enqueue_style( 'pon-cc' );   // pulls slick + theme via deps
-	wp_enqueue_script( 'pon-cc' );  // pulls slick via dep
+/* Enqueue globally on the front end */
+function pon_cc_enqueue_everywhere() {
+	if ( is_admin() ) return;
+
+	wp_enqueue_style( 'pon-cc' );   // pulls slick + theme via dependencies
+	wp_enqueue_script( 'pon-cc' );  // pulls slick via dependency
 }
+add_action( 'wp_enqueue_scripts', 'pon_cc_enqueue_everywhere', 50 );
 
-/* ---------- Detect slider markup in HTML ---------- */
-function pon_cc_contains_slider( $html ) {
-	if ( empty( $html ) || ! is_string( $html ) ) {
-		return false;
-	}
-	// Look for class="... slider ... center|responsive ..."
-	$pattern = '/class\s*=\s*["\'][^"\']*\bslider\b[^"\']*\b(center|responsive)\b[^"\']*["\']/i';
-	return (bool) preg_match( $pattern, $html );
-}
-
-/* ---------- Auto-enqueue on /components/carousel/ ---------- */
-function pon_cc_auto_enqueue_test_route() {
-	if ( is_admin() ) {
-		return;
-	}
-	$req = isset( $_SERVER['REQUEST_URI'] ) ? strtolower( $_SERVER['REQUEST_URI'] ) : '';
-	if ( $req === '' ) {
-		return;
-	}
-	$pos = strpos( $req, '?' );
-	if ( $pos !== false ) {
-		$req = substr( $req, 0, $pos );
-	}
-	if ( preg_match( '#/components/carousel/?$#', $req ) ) {
-		add_action( 'wp_enqueue_scripts', 'pon_cc_enqueue_assets_now', 99 );
-	}
-}
-add_action( 'wp', 'pon_cc_auto_enqueue_test_route' );
-
-/* ---------- Scan classic content (the_content) ---------- */
-function pon_cc_scan_the_content( $content ) {
-	if ( is_admin() ) {
-		return $content;
-	}
-	if ( is_singular() && pon_cc_contains_slider( $content ) ) {
-		add_action( 'wp_enqueue_scripts', 'pon_cc_enqueue_assets_now', 99 );
-	}
-	return $content;
-}
-add_filter( 'the_content', 'pon_cc_scan_the_content', 1 );
-
-/* ---------- Elementor: scan each widget render ---------- */
-function pon_cc_elementor_bootstrap() {
-	if ( ! did_action( 'elementor/loaded' ) ) {
-		return;
-	}
-
-	if ( ! function_exists( 'pon_cc_elementor_render_content' ) ) {
-		function pon_cc_elementor_render_content( $content, $widget ) {
-			if ( is_admin() ) {
-				return $content;
-			}
-			if ( pon_cc_contains_slider( $content ) ) {
-				add_action( 'wp_enqueue_scripts', 'pon_cc_enqueue_assets_now', 99 );
-			}
-			return $content;
-		}
-	}
-
-	add_filter( 'elementor/widget/render_content', 'pon_cc_elementor_render_content', 10, 2 );
-}
-add_action( 'plugins_loaded', 'pon_cc_elementor_bootstrap' );
-
-/* ---------- Optional shortcode (not required) ---------- */
+/* Optional shortcode kept for compatibility (not required) */
 function pon_cc_shortcode_assets() {
 	if ( ! is_admin() ) {
-		pon_cc_enqueue_assets_now();
+		wp_enqueue_style( 'pon-cc' );
+		wp_enqueue_script( 'pon-cc' );
 	}
 	return '';
 }
