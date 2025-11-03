@@ -223,13 +223,15 @@
     transform: rotate(180deg);
 }
 
-/* ====== Dots as Dashes (no overlap, perfectly centered) ====== */
+/* ====== Dots row ====== */
 .slick-controls .sc-dots {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 40px; /* match arrow button height */
 }
+
+/* Inner <ul> of dots */
 .slick-controls .sc-dots .slick-dots {
     position: static !important;
     display: inline-flex !important;
@@ -243,7 +245,8 @@
     list-style: none;
     line-height: 0;
 }
-/* Neutralize theme defaults */
+
+/* Neutralize Slick theme defaults */
 .slick-dots {
     position: static !important;
 }
@@ -260,7 +263,7 @@
     content: none !important;
 }
 
-/* Our dash buttons */
+/* Our dot buttons (inactive: circle; active: 20x4 pill) */
 .slick-controls .sc-dots .slick-dots li button {
     position: relative;
     padding: 0;
@@ -272,25 +275,32 @@
     justify-content: center;
     cursor: pointer;
     line-height: 0;
-    font-size: 0;
+    font-size: 0; /* hide numeric label */
     width: auto;
     height: auto;
     overflow: visible;
 }
+
+/* INACTIVE = circle dot */
 .slick-controls .sc-dots .slick-dots li button::after {
     content: "";
     display: block;
-    width: 20px; /* inactive width */
-    height: 4px; /* inactive height */
-    border-radius: 100px;
+    width: 10px; /* circle size */
+    height: 10px; /* circle size */
+    border-radius: 50%; /* circle */
     background-color: #929285; /* inactive color */
-    transition: width 0.25s ease, height 0.25s ease, background-color 0.2s ease;
+    transition: width 0.25s ease, height 0.25s ease, background-color 0.2s ease, border-radius 0.2s ease;
 }
+
+/* ACTIVE = 20x4 pill (dash) */
 .slick-controls .sc-dots .slick-dots li.slick-active button::after {
-    width: 36px; /* active width */
-    height: 8px; /* active height */
+    width: 20px; /* requested active width */
+    height: 4px; /* requested active height */
+    border-radius: 100px; /* pill */
     background-color: #141413; /* active color */
 }
+
+/* Optional hover feedback for inactive dot */
 .slick-controls .sc-dots .slick-dots li button:hover::after {
     background-color: #6b7280;
 }
