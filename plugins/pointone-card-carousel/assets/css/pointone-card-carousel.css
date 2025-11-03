@@ -182,19 +182,20 @@
 }
 
 /* ====== 40x40 arrows + thicker 24x24 chevron ====== */
+/* Base button */
 .slick-arrow-btn {
-    border: none;
-    background-color: #141413; /* default dark */
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
-    min-height: 40px;
-    max-width: 40px;
-    max-height: 40px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    border: none !important;
+    background-color: #141413 !important; /* default dark */
+    border-radius: 50% !important;
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    max-width: 40px !important;
+    max-height: 40px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     cursor: pointer;
     line-height: 0;
     flex: 0 0 auto;
@@ -203,18 +204,31 @@
     box-shadow: none;
     -webkit-tap-highlight-color: transparent;
 }
-.slick-arrow-btn:hover {
-    background-color: #6b7280; /* hover color */
-}
-.slick-arrow-btn:focus,
-.slick-arrow-btn:focus-visible {
-    background-color: #6b7280; /* keep consistent focus color */
-}
-.slick-arrow-btn:active {
-    background-color: #4b5563;
+
+/* Hover / focus / focus-visible — now uses rgba(255,255,255,0.10) */
+.slick-controls .slick-prev.slick-arrow-btn:hover,
+.slick-controls .slick-next.slick-arrow-btn:hover,
+.slick-controls .slick-prev.slick-arrow-btn:focus,
+.slick-controls .slick-next.slick-arrow-btn:focus,
+.slick-controls .slick-prev.slick-arrow-btn:focus-visible,
+.slick-controls .slick-next.slick-arrow-btn:focus-visible {
+    background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
-/* Stroked chevron (thicker), centered at 24x24 */
+/* Active press */
+.slick-controls .slick-prev.slick-arrow-btn:active,
+.slick-controls .slick-next.slick-arrow-btn:active {
+    background-color: #4b5563 !important;
+}
+
+/* Optional visible focus ring */
+.slick-controls .slick-prev.slick-arrow-btn:focus-visible,
+.slick-controls .slick-next.slick-arrow-btn:focus-visible {
+    outline: 2px solid #141413;
+    outline-offset: 2px;
+}
+
+/* Chevron icon */
 .slick-arrow-btn .icon {
     width: 24px;
     height: 24px;
@@ -277,7 +291,7 @@
     justify-content: center;
     cursor: pointer;
     line-height: 0;
-    font-size: 0; /* hide numeric label */
+    font-size: 0;
     width: auto;
     height: auto;
     overflow: visible;
@@ -316,12 +330,12 @@
         height: 36px;
     }
     .slick-arrow-btn {
-        width: 36px;
-        height: 36px;
-        min-width: 36px;
-        min-height: 36px;
-        max-width: 36px;
-        max-height: 36px;
+        width: 36px !important;
+        height: 36px !important;
+        min-width: 36px !important;
+        min-height: 36px !important;
+        max-width: 36px !important;
+        max-height: 36px !important;
     }
     .slick-arrow-btn .icon {
         width: 22px;
