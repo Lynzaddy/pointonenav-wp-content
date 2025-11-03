@@ -178,65 +178,62 @@
     content: none !important;
 }
 
-/* ====== Hardened 40x40 Arrows ====== */
+/* ====== Hardened 40x40 Arrows (overlay-based hover) ====== */
 .slick-controls .slick-arrow-btn,
 .slick-slider .slick-arrow-btn {
-    border: none !important;
-    background-color: #141413 !important;
-    border-radius: 50% !important;
-    width: 40px !important;
-    height: 40px !important;
-    min-width: 40px !important;
-    min-height: 40px !important;
-    max-width: 40px !important;
-    max-height: 40px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
+    position: relative; /* for overlay */
+    border: none;
+    background-color: #141413; /* base dark */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    max-width: 40px;
+    max-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
     line-height: 0;
     flex: 0 0 auto;
     transition: background-color 0.2s ease;
-    outline: none !important;
-    box-shadow: none !important;
+    outline: none;
+    box-shadow: none;
     -webkit-tap-highlight-color: transparent;
 }
 
-/* HOVER / FOCUS / FOCUS-VISIBLE */
-.slick-controls .slick-arrow-btn:hover,
-.slick-slider .slick-arrow-btn:hover,
-.slick-controls .slick-arrow-btn:focus,
-.slick-slider .slick-arrow-btn:focus,
-.slick-controls .slick-arrow-btn:focus-visible,
-.slick-slider .slick-arrow-btn:focus-visible {
-    background-color: rgba(255, 255, 255, 0.1) !important;
+/* Overlay that we tint on hover/focus (immune to button bg rules) */
+.slick-controls .slick-arrow-btn::before,
+.slick-slider .slick-arrow-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: transparent;
+    pointer-events: none; /* don't block clicks */
+    transition: background 0.2s ease;
 }
 
-/* ACTIVE PRESS */
-.slick-controls .slick-arrow-btn:active,
-.slick-slider .slick-arrow-btn:active {
-    background-color: #4b5563 !important;
+/* HOVER / FOCUS / FOCUS-VISIBLE => overlay tint */
+.slick-controls .slick-arrow-btn:hover::before,
+.slick-slider .slick-arrow-btn:hover::before,
+.slick-controls .slick-arrow-btn:focus::before,
+.slick-slider .slick-arrow-btn:focus::before,
+.slick-controls .slick-arrow-btn:focus-visible::before,
+.slick-slider .slick-arrow-btn:focus-visible::before {
+    background: rgba(255, 255, 255, 0.1);
 }
 
-/* Redundant rule to beat global [type="button"]:hover */
-.slick-controls button.slick-arrow-btn:hover,
-.slick-controls button.slick-arrow-btn:focus,
-.slick-controls button.slick-arrow-btn:focus-visible,
-.slick-slider button.slick-arrow-btn:hover,
-.slick-slider button.slick-arrow-btn:focus,
-.slick-slider button.slick-arrow-btn:focus-visible {
-    background-color: rgba(255, 255, 255, 0.1) !important;
+/* ACTIVE PRESS => slightly stronger base color (keep overlay) */
+.slick-controls .slick-arrow-btn:active {
+    background-color: #4b5563;
 }
 
-/* Optional visible focus ring */
-.slick-controls .slick-arrow-btn:focus-visible,
-.slick-slider .slick-arrow-btn:focus-visible {
-    outline: 2px solid #141413;
-    outline-offset: 2px;
-}
-
-/* Chevron icon */
+/* Chevron icon sits above overlay */
 .slick-arrow-btn .icon {
+    position: relative;
+    z-index: 1;
     width: 24px;
     height: 24px;
     background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' vector-effect='non-scaling-stroke' stroke-linecap='round' stroke-linejoin='round'><polyline points='9 6 15 12 9 18'/></svg>")
@@ -251,8 +248,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 40px;
+    height: 40px; /* match arrow button height */
 }
+
+/* Inner <ul> of dots */
 .slick-controls .sc-dots .slick-dots {
     position: static !important;
     display: inline-flex !important;
@@ -266,6 +265,8 @@
     list-style: none;
     line-height: 0;
 }
+
+/* Neutralize Slick theme defaults */
 .slick-dots {
     position: static !important;
 }
@@ -294,7 +295,7 @@
     justify-content: center;
     cursor: pointer;
     line-height: 0;
-    font-size: 0;
+    font-size: 0; /* hide numeric label */
     width: auto;
     height: auto;
     overflow: visible;
@@ -327,12 +328,12 @@
         height: 36px;
     }
     .slick-arrow-btn {
-        width: 36px !important;
-        height: 36px !important;
-        min-width: 36px !important;
-        min-height: 36px !important;
-        max-width: 36px !important;
-        max-height: 36px !important;
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        min-height: 36px;
+        max-width: 36px;
+        max-height: 36px;
     }
     .slick-arrow-btn .icon {
         width: 22px;
