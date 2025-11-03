@@ -209,7 +209,7 @@
 .slick-slider .slick-arrow-btn:focus,
 .slick-controls .slick-arrow-btn:focus-visible,
 .slick-slider .slick-arrow-btn:focus-visible {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
 /* Active press */
