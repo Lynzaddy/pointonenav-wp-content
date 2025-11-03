@@ -263,7 +263,7 @@
     content: none !important;
 }
 
-/* Our dot buttons (inactive: circle; active: 20x4 pill) */
+/* Our dot buttons (inactive: 4x4 circle; active: 20x4 pill) */
 .slick-controls .sc-dots .slick-dots li button {
     position: relative;
     padding: 0;
@@ -281,26 +281,26 @@
     overflow: visible;
 }
 
-/* INACTIVE = circle dot */
+/* INACTIVE = 4x4 circle */
 .slick-controls .sc-dots .slick-dots li button::after {
     content: "";
     display: block;
-    width: 10px; /* circle size */
-    height: 10px; /* circle size */
+    width: 4px; /* smaller circle */
+    height: 4px;
     border-radius: 50%; /* circle */
     background-color: #929285; /* inactive color */
     transition: width 0.25s ease, height 0.25s ease, background-color 0.2s ease, border-radius 0.2s ease;
 }
 
-/* ACTIVE = 20x4 pill (dash) */
+/* ACTIVE = 20x4 pill */
 .slick-controls .sc-dots .slick-dots li.slick-active button::after {
-    width: 20px; /* requested active width */
-    height: 4px; /* requested active height */
-    border-radius: 100px; /* pill */
-    background-color: #141413; /* active color */
+    width: 20px;
+    height: 4px;
+    border-radius: 100px; /* pill shape */
+    background-color: #141413;
 }
 
-/* Optional hover feedback for inactive dot */
+/* Hover feedback */
 .slick-controls .sc-dots .slick-dots li button:hover::after {
     background-color: #6b7280;
 }
