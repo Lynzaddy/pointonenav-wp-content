@@ -26,7 +26,7 @@
 .slider .slide {
     display: flex;
     flex-direction: column;
-    background: #fff;
+    background: transparent;
     border-radius: 0;
     overflow: hidden;
     height: 100%;
