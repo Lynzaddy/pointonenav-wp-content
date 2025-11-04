@@ -1,4 +1,4 @@
-/* Elementor HTML widget safety */
+/* Elementor HTML widget safety (not padding-related) */
 .elementor-widget-html .elementor-widget-container:has(> .slider) {
     overflow: visible;
 }
@@ -7,38 +7,17 @@
 .slider {
     display: flow-root;
     overflow-x: hidden;
-    padding-bottom: 0;
+    padding-bottom: 0; /* spacing handled by Elementor container */
     box-sizing: border-box;
 }
 
-/* Spacing: with nav or without */
-.slider + .slick-controls {
-    margin-bottom: 100px;
-}
-.slider.hide-nav {
-    margin-bottom: 100px;
-}
-@media (max-width: 1024px) {
-    .slider + .slick-controls {
-        margin-bottom: 60px;
-    }
-    .slider.hide-nav {
-        margin-bottom: 60px;
-    }
-}
-
-/* Also hide controls if .hide-nav is present (adjacent OR any following sibling) */
-.slider.hide-nav + .slick-controls,
-.slider.hide-nav ~ .slick-controls {
-    display: none !important;
-}
-
-/* Kill Slick theme's bottom margin; we control spacing above */
+/* Kill Slick theme's bottom margin so your container controls spacing */
 .slick-dotted.slick-slider {
     margin-bottom: 0 !important;
 }
 
-/* ====== SOLID, ALWAYS-ON GAP (40px total) ====== */
+/* ====== SOLID, ALWAYS-ON GAP (40px total) ======
+   20px margin left/right on every slide; counter with -20px on list */
 .slick-slide {
     margin: 0 20px !important;
     padding: 0 !important;
@@ -181,7 +160,7 @@
     justify-content: center;
     gap: 32px;
     width: 100%;
-    margin-top: 10px;
+    margin-top: 10px; /* tiny gap from slides only */
     padding: 0 8px;
     box-sizing: border-box;
     min-height: 40px;
@@ -333,6 +312,13 @@
 }
 .slick-controls .sc-dots .slick-dots li button:hover::after {
     background-color: #6b7280;
+}
+
+/* ====== Hide navigation when .hide-nav is present ======
+   (JS already avoids building controls, this is just extra safety) */
+.slider.hide-nav + .slick-controls,
+.slider.hide-nav ~ .slick-controls {
+    display: none !important;
 }
 
 /* Mobile tweaks */
