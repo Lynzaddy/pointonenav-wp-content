@@ -1,16 +1,40 @@
-/* ====== Make Elementor HTML widget respect its own bottom padding ======
-   Applies only when a .slider is inside the HTML widget */
+/* ====== Elementor HTML widget container helper (safe) ====== */
 .elementor-widget-html .elementor-widget-container:has(> .slider) {
-    display: flow-root; /* BFC: prevents inner layout from collapsing bottom padding */
-    overflow: visible; /* be generous; avoids clipping */
+    overflow: visible;
 }
 
 /* ====== Slider container ====== */
 .slider {
-    display: flow-root; /* safe on its own, too */
+    display: flow-root; /* BFC so internals don't collapse spacing */
     overflow-x: hidden;
-    padding-bottom: 0; /* let the OUTER Elementor container own the bottom spacing */
+    padding-bottom: 0; /* we control spacing via margin rules below */
     box-sizing: border-box;
+}
+
+/* ====== Spacing rules (works with and without nav) ======
+   - With nav: space is on the controls row (.slider + .slick-controls)
+   - Without nav (.hide-nav): space is on the slider itself
+   Desktop >1024px: 100px; Tablet & smaller ≤1024px: 60px
+*/
+.slider + .slick-controls {
+    margin-bottom: 100px;
+}
+.slider.hide-nav {
+    margin-bottom: 100px;
+}
+
+@media (max-width: 1024px) {
+    .slider + .slick-controls {
+        margin-bottom: 60px;
+    }
+    .slider.hide-nav {
+        margin-bottom: 60px;
+    }
+}
+
+/* Kill Slick theme's own bottom margin; we manage spacing above */
+.slick-dotted.slick-slider {
+    margin-bottom: 0 !important;
 }
 
 /* ====== SOLID, ALWAYS-ON GAP (40px total) ======
@@ -164,7 +188,7 @@
     justify-content: center;
     gap: 32px;
     width: 100%;
-    margin-top: 10px; /* tiny gap from slides */
+    margin-top: 10px;
     padding: 0 8px;
     box-sizing: border-box;
     min-height: 40px;
@@ -190,9 +214,9 @@
 .slick-slider button.slick-arrow-btn,
 .slick-controls .slick-arrow-btn,
 .slick-slider .slick-arrow-btn {
-    position: relative; /* for overlay */
+    position: relative;
     border: none !important;
-    background-color: #141413 !important; /* base stays black */
+    background-color: #141413 !important;
     border-radius: 50% !important;
     width: 40px !important;
     height: 40px !important;
@@ -211,7 +235,7 @@
     -webkit-tap-highlight-color: transparent !important;
 }
 
-/* The hover/focus tint lives on an overlay, not background-color */
+/* Hover/focus tint via overlay—not background-color—to avoid globals */
 .slick-controls .slick-arrow-btn::before,
 .slick-slider .slick-arrow-btn::before {
     content: "";
@@ -222,8 +246,6 @@
     pointer-events: none;
     transition: background 0.2s ease;
 }
-
-/* Hover / Focus / Focus-visible => add semi-white overlay */
 .slick-controls .slick-arrow-btn:hover::before,
 .slick-slider .slick-arrow-btn:hover::before,
 .slick-controls .slick-arrow-btn:focus::before,
@@ -233,13 +255,13 @@
     background: rgba(255, 255, 255, 0.1);
 }
 
-/* Active press darkens the base a bit (overlay still applies) */
+/* Active press */
 .slick-controls .slick-arrow-btn:active,
 .slick-slider .slick-arrow-btn:active {
     background-color: #4b5563 !important;
 }
 
-/* Chevron icon sits above overlay */
+/* Chevron icon */
 .slick-arrow-btn .icon {
     position: relative;
     z-index: 1;
@@ -290,7 +312,7 @@
     content: none !important;
 }
 
-/* Dot buttons (inactive: 4x4 circle; active: 20x4 pill) */
+/* Dots (inactive: 4x4 circle; active: 20x4 pill) */
 .slick-controls .sc-dots .slick-dots li button {
     position: relative;
     padding: 0;
@@ -302,7 +324,7 @@
     justify-content: center;
     cursor: pointer;
     line-height: 0;
-    font-size: 0; /* hide numeric label */
+    font-size: 0;
     width: auto;
     height: auto;
     overflow: visible;
@@ -324,36 +346,4 @@
 }
 .slick-controls .sc-dots .slick-dots li button:hover::after {
     background-color: #6b7280;
-}
-
-/* ====== Override Slick Theme default margin ====== */
-.slick-dotted.slick-slider {
-    margin-bottom: 0 !important; /* OUTER container padding handles spacing */
-}
-
-/* ====== Hide navigation when .hide-nav is present ====== */
-.slider.hide-nav + .slick-controls {
-    display: none !important;
-}
-
-/* Compact controls on tablet+mobile */
-@media (max-width: 1024px) {
-    .slick-controls {
-        gap: 28px;
-    }
-    .slick-controls .sc-dots {
-        height: 36px;
-    }
-    .slick-arrow-btn {
-        width: 36px !important;
-        height: 36px !important;
-        min-width: 36px !important;
-        min-height: 36px !important;
-        max-width: 36px !important;
-        max-height: 36px !important;
-    }
-    .slick-arrow-btn .icon {
-        width: 22px;
-        height: 22px;
-    }
 }
