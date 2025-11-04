@@ -113,8 +113,8 @@ jQuery(function ($) {
         return $bar;
     }
 
-    /* ---------- shared first-paint + wrap stabilizer ---------- */
-    function stabilizeLayoutOnLoadAndWrap($el, calcPadFn) {
+    /* ---------- gentle stabilizer (no refresh / no goTo) ---------- */
+    function stabilizeOnWrap($el, calcPadFn) {
         const updatePad = () => {
             try {
                 $el.slick("slickSetOption", "centerPadding", calcPadFn() + "px", false);
@@ -122,39 +122,33 @@ jQuery(function ($) {
             } catch (_) {}
         };
 
+        // On init: set padding twice and settle track
         $el.on("init", function () {
-            // Desktop-only round-trip jump so left peek exists on first paint
-            if (isDesktop()) {
-                try {
-                    $el.slick("slickGoTo", 1, true);
-                    $el.slick("slickGoTo", 0, true);
-                } catch (_) {}
-            }
-            // Double-set after paint
             requestAnimationFrame(() => {
                 updatePad();
                 requestAnimationFrame(updatePad);
             });
         });
 
-        // Fix for “first slide blank on wrap” at desktop
+        // When we land at slide 0 on desktop, force a safe reflow + double setPosition
         $el.on("afterChange", function (_e, _slick, current) {
             if (!isDesktop()) return;
             if (current === 0) {
-                requestAnimationFrame(() => {
+                const track = $el.find(".slick-track")[0];
+                try {
+                    // force a layout read to nudge the browser
+                    void track.offsetHeight; // reflow
+                } catch (_) {}
+                // run a tiny settle cycle, without refresh or goTo (won't kill autoplay)
+                setTimeout(() => {
                     try {
-                        // Force a refresh cycle that recalculates clones/layout
-                        $el.slick("refresh");
+                        $el.slick("setPosition");
                         $el.slick("slickSetOption", "centerPadding", calcPadFn() + "px", false);
                         $el.slick("setPosition");
                     } catch (_) {}
-                    requestAnimationFrame(() => {
-                        try {
-                            $el.slick("setPosition");
-                            $el.slick("slickSetOption", "centerPadding", calcPadFn() + "px", false);
-                        } catch (_) {}
-                    });
-                });
+                    // also re-equalize heights in case clones changed
+                    equalizeHeights($el);
+                }, 0);
             }
         });
 
@@ -176,7 +170,6 @@ jQuery(function ($) {
 
         const isAuto = $el.hasClass("autoplay");
         const seedPad = minPadForViewport();
-        const initialSlide = isDesktop() ? 1 : 0;
 
         $el.slick({
             variableWidth: true,
@@ -193,22 +186,18 @@ jQuery(function ($) {
             prevArrow: $prev.length ? $prev : undefined,
             nextArrow: $next.length ? $next : undefined,
             appendDots: $dots.length ? $dots : undefined,
-            // IMPORTANT: prevent GPU transform glitches that blank the left peek on wrap
-            useTransform: !isDesktop() ? true : false,
-            // Ensure clones are ready when we wrap
-            lazyLoad: "ondemand",
+            lazyLoad: "progressive",
             autoplay: isAuto,
-            autoplaySpeed: 3000,
+            autoplaySpeed: 3000, // ✅ 3s
             pauseOnHover: true,
             pauseOnFocus: true,
-            initialSlide: initialSlide,
             responsive: [
-                { breakpoint: 1024, settings: { centerMode: true, centerPadding: "100px", variableWidth: true, initialSlide: 0, useTransform: true } },
-                { breakpoint: 768, settings: { centerMode: true, centerPadding: "60px", variableWidth: true, initialSlide: 0, useTransform: true } },
+                { breakpoint: 1024, settings: { centerMode: true, centerPadding: "100px", variableWidth: true } },
+                { breakpoint: 768, settings: { centerMode: true, centerPadding: "60px", variableWidth: true } },
             ],
         });
 
-        stabilizeLayoutOnLoadAndWrap($el, minPadForViewport);
+        stabilizeOnWrap($el, minPadForViewport);
 
         requestAnimationFrame(() => {
             try {
@@ -230,7 +219,6 @@ jQuery(function ($) {
 
         const isAuto = $el.hasClass("autoplay");
         const seedPad = tallPadForViewport();
-        const initialSlide = isDesktop() ? 1 : 0;
 
         $el.slick({
             variableWidth: true, // width from CSS (.tall .slide)
@@ -247,16 +235,14 @@ jQuery(function ($) {
             prevArrow: $prev.length ? $prev : undefined,
             nextArrow: $next.length ? $next : undefined,
             appendDots: $dots.length ? $dots : undefined,
-            useTransform: !isDesktop() ? true : false,
-            lazyLoad: "ondemand",
+            lazyLoad: "progressive",
             autoplay: isAuto,
-            autoplaySpeed: 3000,
+            autoplaySpeed: 3000, // ✅ 3s
             pauseOnHover: true,
             pauseOnFocus: true,
-            initialSlide: initialSlide,
         });
 
-        stabilizeLayoutOnLoadAndWrap($el, tallPadForViewport);
+        stabilizeOnWrap($el, tallPadForViewport);
 
         requestAnimationFrame(() => {
             try {
