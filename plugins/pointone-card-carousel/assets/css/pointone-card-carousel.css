@@ -87,7 +87,7 @@
     display: block;
 }
 
-/* ====== NEW: TALL VARIANT ======
+/* ====== TALL VARIANT ======
    - Base media footprint: 260w x 325h
    - Scales down responsively while keeping aspect
    - Maintains the 40px gap via global .slick-slide margins
@@ -117,10 +117,6 @@
     object-position: center;
     display: block;
 }
-/* Smaller headings for tall cards */
-.tall .slide .heading {
-    font-size: 20px;
-}
 
 /* ====== Slide Text & Spacing ====== */
 .slider .slide .overline {
@@ -133,7 +129,7 @@
     margin-top: 8px;
 }
 
-/* Typography */
+/* Typography (base) */
 .slider .slide .overline {
     color: var(--content-primary, #141413);
     font-family: var(--typography-font-secondary, "Azeret Mono");
@@ -376,4 +372,9 @@
         width: 22px;
         height: 22px;
     }
+}
+
+/* ====== TALL overrides that must beat base heading size ====== */
+.slider.tall .slide .heading {
+    font-size: 20px !important;
 }

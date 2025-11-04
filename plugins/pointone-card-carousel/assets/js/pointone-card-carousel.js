@@ -22,7 +22,7 @@ jQuery(function ($) {
         return 60; // mobile
     }
 
-    /* NEW: padding calculator for .tall to target 4/3/2 visible slides (with peeks) */
+    /* padding calculator for .tall to target 4/3/2 visible slides (with peeks) */
     function tallPadForViewport() {
         const w = window.innerWidth || document.documentElement.clientWidth;
         // mirrors CSS clamp(200px, 24vw, 260px)
@@ -113,8 +113,8 @@ jQuery(function ($) {
         return $bar;
     }
 
-    /* ---------- shared first-paint + first-loop stabilizer ---------- */
-    function stabilizeFirstPaint($el, calcPadFn) {
+    /* ---------- shared first-paint + wrap stabilizer ---------- */
+    function stabilizeLayoutOnLoadAndWrap($el, calcPadFn) {
         const updatePad = () => {
             try {
                 $el.slick("slickSetOption", "centerPadding", calcPadFn() + "px", false);
@@ -123,39 +123,33 @@ jQuery(function ($) {
         };
 
         $el.on("init", function () {
-            // Recompute padding immediately
-            updatePad();
-
-            // Desktop-only “jump” fix to ensure left peek exists on first paint:
-            // start at slide 1 then snap back to 0 without animation (if needed).
+            // Desktop-only “jump” fix so left peek exists on first paint
             if (isDesktop()) {
                 try {
-                    const cur = $el.slick("slickCurrentSlide");
-                    if (cur === 1) {
-                        $el.slick("slickGoTo", 0, true);
-                    } else {
-                        $el.slick("slickGoTo", 1, true);
-                        $el.slick("slickGoTo", 0, true);
-                    }
+                    // round-trip jump without animation ensures clones are fully realized
+                    $el.slick("slickGoTo", 1, true);
+                    $el.slick("slickGoTo", 0, true);
                 } catch (_) {}
             }
-
-            // Double-set after paint to fully settle track/clones
+            // Double-set after paint
             requestAnimationFrame(() => {
                 updatePad();
                 requestAnimationFrame(updatePad);
             });
         });
 
-        // **Fix for the “first slide blank on wrap” at desktop**
-        // When we wrap back to slide 0, force a double setPosition + pad recompute.
+        // Fix for “first slide blank on wrap” at desktop:
+        // when we land on slide 0, force a quick refresh that rebuilds clones + layout.
         $el.on("afterChange", function (_e, _slick, current) {
             if (!isDesktop()) return;
             if (current === 0) {
                 requestAnimationFrame(() => {
                     try {
-                        $el.slick("setPosition");
+                        // Full refresh path: change an option with refresh=true
+                        $el.slick("slickSetOption", "waitForAnimate", false, true);
+                        // Re-apply padding and position twice to fully settle
                         $el.slick("slickSetOption", "centerPadding", calcPadFn() + "px", false);
+                        $el.slick("setPosition");
                     } catch (_) {}
                     requestAnimationFrame(() => {
                         try {
@@ -185,8 +179,6 @@ jQuery(function ($) {
 
         const isAuto = $el.hasClass("autoplay");
         const seedPad = minPadForViewport();
-
-        // Desktop boot at slide 1 (we snap back in stabilizeFirstPaint)
         const initialSlide = isDesktop() ? 1 : 0;
 
         $el.slick({
@@ -206,7 +198,7 @@ jQuery(function ($) {
             appendDots: $dots.length ? $dots : undefined,
             lazyLoad: "progressive",
             autoplay: isAuto,
-            autoplaySpeed: 3000, // ⏩ 1s faster than before (was 4000)
+            autoplaySpeed: 3000, // 1s faster
             pauseOnHover: true,
             pauseOnFocus: true,
             initialSlide: initialSlide,
@@ -216,7 +208,7 @@ jQuery(function ($) {
             ],
         });
 
-        stabilizeFirstPaint($el, minPadForViewport);
+        stabilizeLayoutOnLoadAndWrap($el, minPadForViewport);
 
         requestAnimationFrame(() => {
             try {
@@ -225,7 +217,6 @@ jQuery(function ($) {
         });
     }
 
-    /* ====== TALL VARIANT ====== */
     function initTall($el) {
         if ($el.hasClass("slick-initialized")) return;
         const hideNav = $el.hasClass("hide-nav");
@@ -239,8 +230,6 @@ jQuery(function ($) {
 
         const isAuto = $el.hasClass("autoplay");
         const seedPad = tallPadForViewport();
-
-        // Desktop boot at slide 1 (we snap back in stabilizeFirstPaint)
         const initialSlide = isDesktop() ? 1 : 0;
 
         $el.slick({
@@ -260,13 +249,13 @@ jQuery(function ($) {
             appendDots: $dots.length ? $dots : undefined,
             lazyLoad: "progressive",
             autoplay: isAuto,
-            autoplaySpeed: 3000, // ⏩ 1s faster than before (was 4000)
+            autoplaySpeed: 3000, // 1s faster
             pauseOnHover: true,
             pauseOnFocus: true,
             initialSlide: initialSlide,
         });
 
-        stabilizeFirstPaint($el, tallPadForViewport);
+        stabilizeLayoutOnLoadAndWrap($el, tallPadForViewport);
 
         requestAnimationFrame(() => {
             try {
@@ -276,7 +265,6 @@ jQuery(function ($) {
     }
 
     /* --------------------------- INIT --------------------------- */
-    // Initialize by variant
     $(".slider.center")
         .not(".tall")
         .each(function () {
