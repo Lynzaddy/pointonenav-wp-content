@@ -17,6 +17,24 @@ jQuery(function ($) {
         return 60; // mobile
     }
 
+    /* NEW: padding calculator for .tall to target 4/3/2 visible slides (with peeks) */
+    function tallPadForViewport() {
+        const w = window.innerWidth || document.documentElement.clientWidth;
+
+        // Slide footprint = slide width (≈260) + 40px gap (20px each side)
+        // We allow a little flex since CSS clamp can reduce width on small screens.
+        const slideW = Math.min(260, Math.max(200, Math.round(w * 0.24))); // mirrors CSS clamp(200px, 24vw, 260px)
+        const footprint = slideW + 40;
+
+        let targetCount = 2;
+        if (w >= 768 && w < 1025) targetCount = 3; // tablet
+        else if (w >= 1025) targetCount = 4; // desktop
+
+        const contentWidth = targetCount * footprint;
+        const pad = Math.max(Math.round((w - contentWidth) / 2), 40); // keep some peek even if tight
+        return pad;
+    }
+
     /* ------------- equal heights (keeps links aligned) ------------- */
     function equalizeHeights($slider) {
         if (!$slider.hasClass("slick-initialized")) return;
@@ -80,8 +98,7 @@ jQuery(function ($) {
 
     /* -------------- controls: [Prev][Dots][Next] -------------- */
     function buildControlsBar($slider) {
-        // If nav is hidden, do not create a bar at all
-        if ($slider.hasClass("hide-nav")) return null;
+        if ($slider.hasClass("hide-nav")) return null; // do not create nav at all
         let $bar = $slider.next(".slick-controls");
         if ($bar.length) return $bar;
         $bar = $(`
@@ -97,9 +114,8 @@ jQuery(function ($) {
 
     function initCenter($el) {
         if ($el.hasClass("slick-initialized")) return;
-
         const hideNav = $el.hasClass("hide-nav");
-        const $bar = buildControlsBar($el); // will be null if hideNav
+        const $bar = buildControlsBar($el);
         const $prev = $bar ? $bar.find(".slick-prev") : $();
         const $next = $bar ? $bar.find(".slick-next") : $();
         const $dots = $bar ? $bar.find(".sc-dots") : $();
@@ -107,8 +123,8 @@ jQuery(function ($) {
         bindEqualizer($el);
         bindVideoHandlers($el);
 
-        const seedPad = minPadForViewport();
         const isAuto = $el.hasClass("autoplay");
+        const seedPad = minPadForViewport();
 
         $el.slick({
             variableWidth: true,
@@ -120,7 +136,6 @@ jQuery(function ($) {
             speed: 300,
             waitForAnimate: false,
             swipeToSlide: true,
-            // nav options driven by hideNav
             arrows: !hideNav,
             dots: !hideNav,
             prevArrow: $prev.length ? $prev : undefined,
@@ -153,11 +168,11 @@ jQuery(function ($) {
         });
     }
 
-    function initResponsive($el) {
+    /* ====== NEW: TALL VARIANT ====== */
+    function initTall($el) {
         if ($el.hasClass("slick-initialized")) return;
-
         const hideNav = $el.hasClass("hide-nav");
-        const $bar = buildControlsBar($el); // will be null if hideNav
+        const $bar = buildControlsBar($el);
         const $prev = $bar ? $bar.find(".slick-prev") : $();
         const $next = $bar ? $bar.find(".slick-next") : $();
         const $dots = $bar ? $bar.find(".sc-dots") : $();
@@ -166,9 +181,13 @@ jQuery(function ($) {
         bindVideoHandlers($el);
 
         const isAuto = $el.hasClass("autoplay");
+        const seedPad = tallPadForViewport();
 
         $el.slick({
-            slidesToShow: 4,
+            variableWidth: true, // width comes from CSS (.tall .slide)
+            centerMode: true, // for peeking on both sides
+            centerPadding: seedPad + "px", // dynamic padding => roughly 4/3/2 visible
+            slidesToShow: 1, // ignored with variableWidth but harmless
             slidesToScroll: 1,
             infinite: true,
             speed: 300,
@@ -184,12 +203,17 @@ jQuery(function ($) {
             autoplaySpeed: 4000,
             pauseOnHover: true,
             pauseOnFocus: true,
-            responsive: [
-                { breakpoint: 1280, settings: { slidesToShow: 3 } },
-                { breakpoint: 1024, settings: { slidesToShow: 2 } },
-                { breakpoint: 768, settings: { slidesToShow: 1 } },
-            ],
         });
+
+        // Recompute center padding on resize to keep ~4/3/2 behavior
+        const updatePad = () => {
+            try {
+                $el.slick("slickSetOption", "centerPadding", tallPadForViewport() + "px", false);
+                $el.slick("setPosition");
+            } catch (_) {}
+        };
+        $(window).on("resize", debounce(updatePad, 120));
+        $el.on("breakpoint", updatePad);
 
         requestAnimationFrame(() => {
             try {
@@ -198,12 +222,17 @@ jQuery(function ($) {
         });
     }
 
+    /* (Optional) responsive variant was previously here; we leave it unchanged or omit if unused */
+
     /* --------------------------- INIT --------------------------- */
-    $(".slider.center").each(function () {
-        initCenter($(this));
-    });
-    $(".slider.responsive").each(function () {
-        initResponsive($(this));
+    // Initialize by variant
+    $(".slider.center")
+        .not(".tall")
+        .each(function () {
+            initCenter($(this));
+        });
+    $(".slider.tall").each(function () {
+        initTall($(this));
     });
 
     // Global settle pass

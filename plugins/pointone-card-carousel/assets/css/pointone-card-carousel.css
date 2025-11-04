@@ -1,4 +1,4 @@
-/* Elementor HTML widget safety (not padding-related) */
+/* Elementor HTML widget safety (not spacing-related) */
 .elementor-widget-html .elementor-widget-container:has(> .slider) {
     overflow: visible;
 }
@@ -43,7 +43,7 @@
     box-sizing: border-box;
 }
 
-/* Media defaults */
+/* ====== DEFAULT MEDIA (center/responsive) ====== */
 .slider .slide .image,
 .slider .slide video {
     width: 100%;
@@ -54,7 +54,7 @@
     display: block;
 }
 
-/* Fixed media sizes for .center */
+/* ====== CENTER VARIANT (existing) ====== */
 .center {
     --center-media-w: 280px;
     --center-media-h: 186.5px;
@@ -87,7 +87,41 @@
     display: block;
 }
 
-/* Text spacing */
+/* ====== NEW: TALL VARIANT ======
+   - Base media footprint: 260w x 325h
+   - Scales down responsively while keeping aspect
+   - Maintains the 40px gap via global .slick-slide margins
+*/
+.tall {
+    /* Let width flex a bit on small screens but cap at 260px */
+    --tall-media-w: clamp(200px, 24vw, 260px);
+    /* Maintain exact aspect ratio 260:325 => 52:65 */
+    --tall-aspect-w: 52;
+    --tall-aspect-h: 65;
+}
+@media (min-width: 1025px) {
+    .tall {
+        --tall-media-w: 260px;
+    } /* lock to spec at desktop */
+}
+.tall .slide {
+    width: var(--tall-media-w) !important; /* used by Slick (variableWidth) */
+    max-width: 100%;
+    align-items: stretch;
+}
+.tall .slide .image,
+.tall .slide video {
+    width: 100% !important;
+    /* Preserve aspect rather than hard-coding height so it scales down smoothly */
+    aspect-ratio: var(--tall-aspect-w) / var(--tall-aspect-h);
+    height: auto !important;
+    border-radius: 8px;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+/* ====== Slide Text & Spacing ====== */
 .slider .slide .overline {
     margin-top: 20px;
 }
