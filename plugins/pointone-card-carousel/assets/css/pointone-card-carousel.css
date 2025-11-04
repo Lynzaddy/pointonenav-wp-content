@@ -1,8 +1,15 @@
+/* ====== Make Elementor HTML widget respect its own bottom padding ======
+   Applies only when a .slider is inside the HTML widget */
+.elementor-widget-html .elementor-widget-container:has(> .slider) {
+    display: flow-root; /* BFC: prevents inner layout from collapsing bottom padding */
+    overflow: visible; /* be generous; avoids clipping */
+}
+
 /* ====== Slider container ====== */
 .slider {
-    display: flow-root; /* establish BFC so parent padding is respected */
+    display: flow-root; /* safe on its own, too */
     overflow-x: hidden;
-    padding-bottom: 16px; /* room for controls if needed (can be 0 if you prefer) */
+    padding-bottom: 0; /* let the OUTER Elementor container own the bottom spacing */
     box-sizing: border-box;
 }
 
@@ -157,7 +164,7 @@
     justify-content: center;
     gap: 32px;
     width: 100%;
-    margin-top: 10px;
+    margin-top: 10px; /* tiny gap from slides */
     padding: 0 8px;
     box-sizing: border-box;
     min-height: 40px;
@@ -252,7 +259,6 @@
     justify-content: center;
     height: 40px; /* match arrow button height */
 }
-
 .slick-controls .sc-dots .slick-dots {
     position: static !important;
     display: inline-flex !important;
@@ -322,7 +328,7 @@
 
 /* ====== Override Slick Theme default margin ====== */
 .slick-dotted.slick-slider {
-    margin-bottom: 0 !important; /* let the Elementor container padding show */
+    margin-bottom: 0 !important; /* OUTER container padding handles spacing */
 }
 
 /* ====== Hide navigation when .hide-nav is present ====== */
