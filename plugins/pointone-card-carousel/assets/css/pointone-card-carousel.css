@@ -330,6 +330,16 @@
     display: none !important;
 }
 
+/* ====== END CAP ======
+   Creates a tiny block after controls so parent section/column padding
+   is always respected (prevents bottom margin/padding collapse quirks). */
+.slider + .slick-controls::after {
+    content: "";
+    display: block;
+    height: 1px; /* invisible; just ends the flow cleanly */
+    width: 100%;
+}
+
 /* Compact controls on tablet+mobile */
 @media (max-width: 1024px) {
     .slick-controls {
