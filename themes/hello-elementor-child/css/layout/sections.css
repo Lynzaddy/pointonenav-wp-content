@@ -71,6 +71,15 @@
     border-radius: var(--image-border-radius);
 }
 
+/* Wide hero/carousel container */
+.section-container-inner.carousel {
+    position: relative; /* so the bg video can anchor */
+    overflow: hidden;
+    max-width: var(--inner-content-wide-max-width);
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
 /* Wide hero/video container */
 .section-container-inner.embedded {
     margin: 0 auto var(--vertical-padding-desktop) auto;
