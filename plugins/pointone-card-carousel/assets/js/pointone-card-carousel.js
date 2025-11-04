@@ -123,10 +123,9 @@ jQuery(function ($) {
         };
 
         $el.on("init", function () {
-            // Desktop-only “jump” fix so left peek exists on first paint
+            // Desktop-only round-trip jump so left peek exists on first paint
             if (isDesktop()) {
                 try {
-                    // round-trip jump without animation ensures clones are fully realized
                     $el.slick("slickGoTo", 1, true);
                     $el.slick("slickGoTo", 0, true);
                 } catch (_) {}
@@ -138,16 +137,14 @@ jQuery(function ($) {
             });
         });
 
-        // Fix for “first slide blank on wrap” at desktop:
-        // when we land on slide 0, force a quick refresh that rebuilds clones + layout.
+        // Fix for “first slide blank on wrap” at desktop
         $el.on("afterChange", function (_e, _slick, current) {
             if (!isDesktop()) return;
             if (current === 0) {
                 requestAnimationFrame(() => {
                     try {
-                        // Full refresh path: change an option with refresh=true
-                        $el.slick("slickSetOption", "waitForAnimate", false, true);
-                        // Re-apply padding and position twice to fully settle
+                        // Force a refresh cycle that recalculates clones/layout
+                        $el.slick("refresh");
                         $el.slick("slickSetOption", "centerPadding", calcPadFn() + "px", false);
                         $el.slick("setPosition");
                     } catch (_) {}
@@ -196,15 +193,18 @@ jQuery(function ($) {
             prevArrow: $prev.length ? $prev : undefined,
             nextArrow: $next.length ? $next : undefined,
             appendDots: $dots.length ? $dots : undefined,
-            lazyLoad: "progressive",
+            // IMPORTANT: prevent GPU transform glitches that blank the left peek on wrap
+            useTransform: !isDesktop() ? true : false,
+            // Ensure clones are ready when we wrap
+            lazyLoad: "ondemand",
             autoplay: isAuto,
-            autoplaySpeed: 3000, // 1s faster
+            autoplaySpeed: 3000,
             pauseOnHover: true,
             pauseOnFocus: true,
             initialSlide: initialSlide,
             responsive: [
-                { breakpoint: 1024, settings: { centerMode: true, centerPadding: "100px", variableWidth: true, initialSlide: 0 } },
-                { breakpoint: 768, settings: { centerMode: true, centerPadding: "60px", variableWidth: true, initialSlide: 0 } },
+                { breakpoint: 1024, settings: { centerMode: true, centerPadding: "100px", variableWidth: true, initialSlide: 0, useTransform: true } },
+                { breakpoint: 768, settings: { centerMode: true, centerPadding: "60px", variableWidth: true, initialSlide: 0, useTransform: true } },
             ],
         });
 
@@ -247,9 +247,10 @@ jQuery(function ($) {
             prevArrow: $prev.length ? $prev : undefined,
             nextArrow: $next.length ? $next : undefined,
             appendDots: $dots.length ? $dots : undefined,
-            lazyLoad: "progressive",
+            useTransform: !isDesktop() ? true : false,
+            lazyLoad: "ondemand",
             autoplay: isAuto,
-            autoplaySpeed: 3000, // 1s faster
+            autoplaySpeed: 3000,
             pauseOnHover: true,
             pauseOnFocus: true,
             initialSlide: initialSlide,
