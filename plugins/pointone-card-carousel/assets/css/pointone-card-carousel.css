@@ -93,10 +93,8 @@
    - Maintains the 40px gap via global .slick-slide margins
 */
 .tall {
-    /* Let width flex a bit on small screens but cap at 260px */
     --tall-media-w: clamp(200px, 24vw, 260px);
-    /* Maintain exact aspect ratio 260:325 => 52:65 */
-    --tall-aspect-w: 52;
+    --tall-aspect-w: 52; /* 260:325 -> 52:65 ratio */
     --tall-aspect-h: 65;
 }
 @media (min-width: 1025px) {
@@ -112,13 +110,16 @@
 .tall .slide .image,
 .tall .slide video {
     width: 100% !important;
-    /* Preserve aspect rather than hard-coding height so it scales down smoothly */
     aspect-ratio: var(--tall-aspect-w) / var(--tall-aspect-h);
     height: auto !important;
     border-radius: 8px;
     object-fit: cover;
     object-position: center;
     display: block;
+}
+/* Smaller headings for tall cards */
+.tall .slide .heading {
+    font-size: 20px;
 }
 
 /* ====== Slide Text & Spacing ====== */
