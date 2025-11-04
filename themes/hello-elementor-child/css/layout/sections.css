@@ -75,7 +75,7 @@
 .section-container-inner.carousel {
     position: relative; /* so the bg video can anchor */
     overflow: hidden;
-    max-width: var(--inner-content-wide-max-width);
+    max-width: 100%;
     margin: 0 !important;
     padding: 0 !important;
 }
