@@ -20,18 +20,13 @@ jQuery(function ($) {
     /* NEW: padding calculator for .tall to target 4/3/2 visible slides (with peeks) */
     function tallPadForViewport() {
         const w = window.innerWidth || document.documentElement.clientWidth;
-
-        // Slide footprint = slide width (≈260) + 40px gap (20px each side)
-        // We allow a little flex since CSS clamp can reduce width on small screens.
         const slideW = Math.min(260, Math.max(200, Math.round(w * 0.24))); // mirrors CSS clamp(200px, 24vw, 260px)
-        const footprint = slideW + 40;
-
+        const footprint = slideW + 40; // 40px total gap
         let targetCount = 2;
         if (w >= 768 && w < 1025) targetCount = 3; // tablet
         else if (w >= 1025) targetCount = 4; // desktop
-
         const contentWidth = targetCount * footprint;
-        const pad = Math.max(Math.round((w - contentWidth) / 2), 40); // keep some peek even if tight
+        const pad = Math.max(Math.round((w - contentWidth) / 2), 40); // ensure a peek even when tight
         return pad;
     }
 
@@ -112,6 +107,47 @@ jQuery(function ($) {
         return $bar;
     }
 
+    /* ---------- shared first-paint stabilizer for center/variableWidth ---------- */
+    function stabilizeFirstPaint($el, calcPadFn) {
+        const updatePad = () => {
+            try {
+                $el.slick("slickSetOption", "centerPadding", calcPadFn() + "px", false);
+                $el.slick("setPosition");
+            } catch (_) {}
+        };
+
+        $el.on("init", function () {
+            // Recompute padding immediately
+            updatePad();
+
+            // Desktop-only “jump” fix to ensure left peek exists on first paint:
+            // start at slide 1 then snap back to 0 without animation.
+            const w = window.innerWidth || document.documentElement.clientWidth;
+            if (w >= 1025) {
+                try {
+                    // if we started at 1, jump back to 0; if not, do a noop roundtrip
+                    const cur = $el.slick("slickCurrentSlide");
+                    if (cur === 1) {
+                        $el.slick("slickGoTo", 0, true);
+                    } else {
+                        $el.slick("slickGoTo", 1, true);
+                        $el.slick("slickGoTo", 0, true);
+                    }
+                } catch (_) {}
+            }
+
+            // Double-set after paint to fully settle track/clones
+            requestAnimationFrame(() => {
+                updatePad();
+                requestAnimationFrame(updatePad);
+            });
+        });
+
+        // Keep peek consistent on resize/breakpoint
+        $(window).on("resize", debounce(updatePad, 120));
+        $el.on("breakpoint", updatePad);
+    }
+
     function initCenter($el) {
         if ($el.hasClass("slick-initialized")) return;
         const hideNav = $el.hasClass("hide-nav");
@@ -125,6 +161,9 @@ jQuery(function ($) {
 
         const isAuto = $el.hasClass("autoplay");
         const seedPad = minPadForViewport();
+
+        // Desktop boot at slide 1 to ensure left clone exists, we’ll snap back in stabilizeFirstPaint
+        const initialSlide = (window.innerWidth || document.documentElement.clientWidth) >= 1025 ? 1 : 0;
 
         $el.slick({
             variableWidth: true,
@@ -146,21 +185,16 @@ jQuery(function ($) {
             autoplaySpeed: 4000,
             pauseOnHover: true,
             pauseOnFocus: true,
+            initialSlide: initialSlide,
             responsive: [
-                { breakpoint: 1024, settings: { centerMode: true, centerPadding: "100px", variableWidth: true } },
-                { breakpoint: 768, settings: { centerMode: true, centerPadding: "60px", variableWidth: true } },
+                { breakpoint: 1024, settings: { centerMode: true, centerPadding: "100px", variableWidth: true, initialSlide: 0 } },
+                { breakpoint: 768, settings: { centerMode: true, centerPadding: "60px", variableWidth: true, initialSlide: 0 } },
             ],
         });
 
-        const updatePad = () => {
-            try {
-                $el.slick("slickSetOption", "centerPadding", minPadForViewport() + "px", false);
-                $el.slick("setPosition");
-            } catch (_) {}
-        };
-        $(window).on("resize", debounce(updatePad, 120));
-        $el.on("breakpoint", updatePad);
+        stabilizeFirstPaint($el, minPadForViewport);
 
+        // extra settle
         requestAnimationFrame(() => {
             try {
                 $el.slick("setPosition");
@@ -183,11 +217,14 @@ jQuery(function ($) {
         const isAuto = $el.hasClass("autoplay");
         const seedPad = tallPadForViewport();
 
+        // Desktop boot at slide 1 to guarantee left peek on first paint
+        const initialSlide = (window.innerWidth || document.documentElement.clientWidth) >= 1025 ? 1 : 0;
+
         $el.slick({
-            variableWidth: true, // width comes from CSS (.tall .slide)
-            centerMode: true, // for peeking on both sides
-            centerPadding: seedPad + "px", // dynamic padding => roughly 4/3/2 visible
-            slidesToShow: 1, // ignored with variableWidth but harmless
+            variableWidth: true, // width from CSS (.tall .slide)
+            centerMode: true, // enable peeking edges
+            centerPadding: seedPad + "px", // dynamic padding for ~4/3/2 visible
+            slidesToShow: 1,
             slidesToScroll: 1,
             infinite: true,
             speed: 300,
@@ -203,26 +240,18 @@ jQuery(function ($) {
             autoplaySpeed: 4000,
             pauseOnHover: true,
             pauseOnFocus: true,
+            initialSlide: initialSlide,
         });
 
-        // Recompute center padding on resize to keep ~4/3/2 behavior
-        const updatePad = () => {
-            try {
-                $el.slick("slickSetOption", "centerPadding", tallPadForViewport() + "px", false);
-                $el.slick("setPosition");
-            } catch (_) {}
-        };
-        $(window).on("resize", debounce(updatePad, 120));
-        $el.on("breakpoint", updatePad);
+        stabilizeFirstPaint($el, tallPadForViewport);
 
+        // extra settle
         requestAnimationFrame(() => {
             try {
                 $el.slick("setPosition");
             } catch (_) {}
         });
     }
-
-    /* (Optional) responsive variant was previously here; we leave it unchanged or omit if unused */
 
     /* --------------------------- INIT --------------------------- */
     // Initialize by variant
