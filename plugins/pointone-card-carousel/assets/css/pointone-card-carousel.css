@@ -1,8 +1,8 @@
 /* ====== Slider container ====== */
 .slider {
-    display: block;
+    display: flow-root; /* establish BFC so parent padding is respected */
     overflow-x: hidden;
-    padding-bottom: 16px; /* room for controls if needed */
+    padding-bottom: 16px; /* room for controls if needed (can be 0 if you prefer) */
     box-sizing: border-box;
 }
 
@@ -161,8 +161,6 @@
     padding: 0 8px;
     box-sizing: border-box;
     min-height: 40px;
-    /* Give the whole widget a bottom breathing room inside Elementor containers */
-    margin-bottom: var(--carousel-bottom-gap, 16px);
 }
 
 /* Keep arrows inside the controls row */
@@ -254,6 +252,7 @@
     justify-content: center;
     height: 40px; /* match arrow button height */
 }
+
 .slick-controls .sc-dots .slick-dots {
     position: static !important;
     display: inline-flex !important;
@@ -323,7 +322,7 @@
 
 /* ====== Override Slick Theme default margin ====== */
 .slick-dotted.slick-slider {
-    margin-bottom: 0 !important; /* let our controls margin handle spacing */
+    margin-bottom: 0 !important; /* let the Elementor container padding show */
 }
 
 /* ====== Hide navigation when .hide-nav is present ====== */
