@@ -2,7 +2,7 @@
 .slider {
     display: block;
     overflow-x: hidden;
-    padding-bottom: 16px; /* room for controls */
+    padding-bottom: 16px; /* room for controls if needed */
     box-sizing: border-box;
 }
 
@@ -103,7 +103,7 @@
     text-transform: uppercase;
 }
 
-/* Heading / h20 */
+/* Heading */
 .slider .slide .heading {
     color: var(--content-primary, #141413);
     font-family: var(--typography-font-primary, "Instrument Sans");
@@ -161,6 +161,8 @@
     padding: 0 8px;
     box-sizing: border-box;
     min-height: 40px;
+    /* Give the whole widget a bottom breathing room inside Elementor containers */
+    margin-bottom: var(--carousel-bottom-gap, 16px);
 }
 
 /* Keep arrows inside the controls row */
@@ -252,7 +254,6 @@
     justify-content: center;
     height: 40px; /* match arrow button height */
 }
-
 .slick-controls .sc-dots .slick-dots {
     position: static !important;
     display: inline-flex !important;
@@ -322,22 +323,12 @@
 
 /* ====== Override Slick Theme default margin ====== */
 .slick-dotted.slick-slider {
-    margin-bottom: 4px !important;
+    margin-bottom: 0 !important; /* let our controls margin handle spacing */
 }
 
 /* ====== Hide navigation when .hide-nav is present ====== */
 .slider.hide-nav + .slick-controls {
     display: none !important;
-}
-
-/* ====== END CAP ======
-   Creates a tiny block after controls so parent section/column padding
-   is always respected (prevents bottom margin/padding collapse quirks). */
-.slider + .slick-controls::after {
-    content: "";
-    display: block;
-    height: 1px; /* invisible; just ends the flow cleanly */
-    width: 100%;
 }
 
 /* Compact controls on tablet+mobile */
