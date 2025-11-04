@@ -80,6 +80,8 @@ jQuery(function ($) {
 
     /* -------------- controls: [Prev][Dots][Next] -------------- */
     function buildControlsBar($slider) {
+        // If nav is hidden, do not create a bar at all
+        if ($slider.hasClass("hide-nav")) return null;
         let $bar = $slider.next(".slick-controls");
         if ($bar.length) return $bar;
         $bar = $(`
@@ -93,22 +95,19 @@ jQuery(function ($) {
         return $bar;
     }
 
-    /* --------------------------- CENTER --------------------------- */
-    $(".slider.center").each(function () {
-        const $el = $(this);
+    function initCenter($el) {
         if ($el.hasClass("slick-initialized")) return;
 
-        const $bar = buildControlsBar($el);
-        const $prev = $bar.find(".slick-prev");
-        const $next = $bar.find(".slick-next");
-        const $dots = $bar.find(".sc-dots");
+        const hideNav = $el.hasClass("hide-nav");
+        const $bar = buildControlsBar($el); // will be null if hideNav
+        const $prev = $bar ? $bar.find(".slick-prev") : $();
+        const $next = $bar ? $bar.find(".slick-next") : $();
+        const $dots = $bar ? $bar.find(".sc-dots") : $();
 
         bindEqualizer($el);
         bindVideoHandlers($el);
 
         const seedPad = minPadForViewport();
-
-        // Check for autoplay class
         const isAuto = $el.hasClass("autoplay");
 
         $el.slick({
@@ -121,14 +120,15 @@ jQuery(function ($) {
             speed: 300,
             waitForAnimate: false,
             swipeToSlide: true,
-            arrows: true,
-            dots: true,
-            prevArrow: $prev,
-            nextArrow: $next,
-            appendDots: $dots,
+            // nav options driven by hideNav
+            arrows: !hideNav,
+            dots: !hideNav,
+            prevArrow: $prev.length ? $prev : undefined,
+            nextArrow: $next.length ? $next : undefined,
+            appendDots: $dots.length ? $dots : undefined,
             lazyLoad: "progressive",
-            autoplay: isAuto, // <— enabled if class present
-            autoplaySpeed: 4000, // 4s per slide (adjust as needed)
+            autoplay: isAuto,
+            autoplaySpeed: 4000,
             pauseOnHover: true,
             pauseOnFocus: true,
             responsive: [
@@ -151,22 +151,20 @@ jQuery(function ($) {
                 $el.slick("setPosition");
             } catch (_) {}
         });
-    });
+    }
 
-    /* ------------------------ RESPONSIVE ------------------------- */
-    $(".slider.responsive").each(function () {
-        const $el = $(this);
+    function initResponsive($el) {
         if ($el.hasClass("slick-initialized")) return;
 
-        const $bar = buildControlsBar($el);
-        const $prev = $bar.find(".slick-prev");
-        const $next = $bar.find(".slick-next");
-        const $dots = $bar.find(".sc-dots");
+        const hideNav = $el.hasClass("hide-nav");
+        const $bar = buildControlsBar($el); // will be null if hideNav
+        const $prev = $bar ? $bar.find(".slick-prev") : $();
+        const $next = $bar ? $bar.find(".slick-next") : $();
+        const $dots = $bar ? $bar.find(".sc-dots") : $();
 
         bindEqualizer($el);
         bindVideoHandlers($el);
 
-        // Check for autoplay class
         const isAuto = $el.hasClass("autoplay");
 
         $el.slick({
@@ -176,13 +174,13 @@ jQuery(function ($) {
             speed: 300,
             waitForAnimate: false,
             swipeToSlide: true,
-            arrows: true,
-            dots: true,
-            prevArrow: $prev,
-            nextArrow: $next,
-            appendDots: $dots,
+            arrows: !hideNav,
+            dots: !hideNav,
+            prevArrow: $prev.length ? $prev : undefined,
+            nextArrow: $next.length ? $next : undefined,
+            appendDots: $dots.length ? $dots : undefined,
             lazyLoad: "progressive",
-            autoplay: isAuto, // <— enabled if class present
+            autoplay: isAuto,
             autoplaySpeed: 4000,
             pauseOnHover: true,
             pauseOnFocus: true,
@@ -198,6 +196,14 @@ jQuery(function ($) {
                 $el.slick("setPosition");
             } catch (_) {}
         });
+    }
+
+    /* --------------------------- INIT --------------------------- */
+    $(".slider.center").each(function () {
+        initCenter($(this));
+    });
+    $(".slider.responsive").each(function () {
+        initResponsive($(this));
     });
 
     // Global settle pass
