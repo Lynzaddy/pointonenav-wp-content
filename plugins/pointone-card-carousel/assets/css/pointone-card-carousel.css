@@ -1,34 +1,17 @@
-/* Elementor HTML widget safety (not spacing-related) */
-.elementor-widget-html .elementor-widget-container:has(> .slider) {
-    overflow: visible;
-}
-
 /* ====== Slider container ====== */
 .slider {
-    display: flow-root;
+    display: block;
     overflow-x: hidden;
-    padding-bottom: 0; /* spacing handled by Elementor container */
     box-sizing: border-box;
 }
 
-/* Kill Slick theme's bottom margin so your container controls spacing */
-.slick-dotted.slick-slider {
-    margin-bottom: 0 !important;
-}
-
-/* ====== SOLID, ALWAYS-ON GAP (40px total) ======
-   20px margin left/right on every slide; counter with -20px on list */
+/* ====== SOLID, ALWAYS-ON GAP (40px total) ====== */
 .slick-slide {
     margin: 0 20px !important;
     padding: 0 !important;
 }
 .slick-list {
     margin: 0 -20px !important;
-}
-
-/* Make sure clones are always paintable */
-.slick-slide.slick-cloned {
-    visibility: visible !important;
 }
 
 /* Auto-height; JS equalizes visible ones */
@@ -48,7 +31,7 @@
     box-sizing: border-box;
 }
 
-/* ====== Media defaults (non-tall) ====== */
+/* ====== Media defaults (responsive variant) ====== */
 .slider .slide .image,
 .slider .slide video {
     width: 100%;
@@ -58,14 +41,11 @@
     border-radius: 8px;
     display: block;
 }
-.slider .slide video {
-    background-color: #000;
-}
 
 /* ====== Fixed media sizes for .center via CSS vars ====== */
 .center {
     --center-media-w: 280px;
-    --center-media-h: 186.5px;
+    --center-media-h: 186.5px; /* 16:9 */
 }
 @media (min-width: 768px) {
     .center {
@@ -80,11 +60,14 @@
     }
 }
 
+/* .center slide width matches media (pairs with variableWidth in JS) */
 .center .slide {
     width: var(--center-media-w) !important;
     max-width: 100%;
     align-items: stretch;
 }
+
+/* Fixed media sizes for .center */
 .center .slide .image,
 .center .slide video {
     width: 100% !important;
@@ -95,54 +78,22 @@
     display: block;
 }
 
-/* ====== TALL VARIANT ======
-   - Keep the 40px gap
-   - Desktop image height = 325px
-   - Tablet and mobile scale responsively
-*/
-.tall {
-    --tall-media-w: 260px; /* slide width */
-}
+/* ====== TALL Variant ====== */
 .tall .slide {
-    width: var(--tall-media-w) !important;
+    width: 260px !important;
     max-width: 100%;
     align-items: stretch;
 }
-/* Desktop: 325px tall */
-@media (min-width: 1025px) {
-    .tall .slide .image,
-    .tall .slide video {
-        width: 100% !important;
-        height: 325px !important;
-        border-radius: 8px;
-        object-fit: cover;
-        object-position: center;
-        display: block;
-    }
-}
-/* Tablet: 275px tall */
-@media (min-width: 768px) and (max-width: 1024.98px) {
-    .tall .slide .image,
-    .tall .slide video {
-        width: 100% !important;
-        height: 275px !important;
-        border-radius: 8px;
-        object-fit: cover;
-        object-position: center;
-        display: block;
-    }
-}
-/* Mobile: 220px tall */
-@media (max-width: 767.98px) {
-    .tall .slide .image,
-    .tall .slide video {
-        width: 100% !important;
-        height: 220px !important;
-        border-radius: 8px;
-        object-fit: cover;
-        object-position: center;
-        display: block;
-    }
+
+/* Fixed image size for .tall (stays full height on tablet/mobile) */
+.tall .slide .image,
+.tall .slide video {
+    width: 100% !important;
+    height: 325px !important;
+    border-radius: 8px;
+    object-fit: cover;
+    object-position: center;
+    display: block;
 }
 
 /* ====== Slide Text & Spacing ====== */
@@ -156,7 +107,7 @@
     margin-top: 8px;
 }
 
-/* Typography (base) */
+/* Overline / o14 */
 .slider .slide .overline {
     color: var(--content-primary, #141413);
     font-family: var(--typography-font-secondary, "Azeret Mono");
@@ -167,6 +118,8 @@
     letter-spacing: 0.14px;
     text-transform: uppercase;
 }
+
+/* Heading / h20 */
 .slider .slide .heading {
     color: var(--content-primary, #141413);
     font-family: var(--typography-font-primary, "Instrument Sans");
@@ -176,6 +129,13 @@
     line-height: 120%;
     letter-spacing: -0.4px;
 }
+
+/* When .tall is applied, make heading smaller */
+.tall .slide .heading {
+    font-size: 20px;
+}
+
+/* Body / b16 */
 .slider .slide .body {
     color: var(--content-secondary, rgba(0, 0, 0, 0.6));
     font-family: var(--typography-font-primary, "Instrument Sans");
@@ -188,12 +148,7 @@
     min-height: 0;
 }
 
-/* TALL: heading = 20px */
-.slider.tall .slide .heading {
-    font-size: 20px !important;
-}
-
-/* Link */
+/* Link / b16-link */
 .slider .slide .link {
     margin-top: 8px;
     margin-bottom: 16px;
@@ -244,7 +199,7 @@
     content: none !important;
 }
 
-/* Arrow Buttons (overlay tint on hover) */
+/* ====== Arrow Buttons (overlay tint on hover) ====== */
 .slick-controls button.slick-arrow-btn,
 .slick-slider button.slick-arrow-btn,
 .slick-controls .slick-arrow-btn,
@@ -269,6 +224,7 @@
     box-shadow: none !important;
     -webkit-tap-highlight-color: transparent !important;
 }
+
 .slick-controls .slick-arrow-btn::before,
 .slick-slider .slick-arrow-btn::before {
     content: "";
@@ -279,6 +235,7 @@
     pointer-events: none;
     transition: background 0.2s ease;
 }
+
 .slick-controls .slick-arrow-btn:hover::before,
 .slick-slider .slick-arrow-btn:hover::before,
 .slick-controls .slick-arrow-btn:focus::before,
@@ -287,6 +244,7 @@
 .slick-slider .slick-arrow-btn:focus-visible::before {
     background: rgba(255, 255, 255, 0.1);
 }
+
 .slick-controls .slick-arrow-btn:active,
 .slick-slider .slick-arrow-btn:active {
     background-color: #4b5563 !important;
@@ -304,7 +262,7 @@
     transform: rotate(180deg);
 }
 
-/* Dots row */
+/* ====== Dots row ====== */
 .slick-controls .sc-dots {
     display: flex;
     align-items: center;
@@ -324,7 +282,6 @@
     list-style: none;
     line-height: 0;
 }
-/* Neutralize Slick theme defaults */
 .slick-dots {
     position: static !important;
 }
@@ -340,8 +297,6 @@
 .slick-dots li button:before {
     content: none !important;
 }
-
-/* Dots (inactive: 4x4 circle; active: 20x4 pill) */
 .slick-controls .sc-dots .slick-dots li button {
     position: relative;
     padding: 0;
@@ -377,13 +332,17 @@
     background-color: #6b7280;
 }
 
+/* ====== Override Slick Theme default margin ====== */
+.slick-dotted.slick-slider {
+    margin-bottom: 4px !important;
+}
+
 /* ====== Hide navigation when .hide-nav is present ====== */
-.slider.hide-nav + .slick-controls,
-.slider.hide-nav ~ .slick-controls {
+.slider.hide-nav + .slick-controls {
     display: none !important;
 }
 
-/* Mobile tweaks */
+/* Compact controls on tablet+mobile */
 @media (max-width: 1024px) {
     .slick-controls {
         gap: 28px;
