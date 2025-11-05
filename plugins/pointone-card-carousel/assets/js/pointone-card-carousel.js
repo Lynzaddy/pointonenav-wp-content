@@ -1,4 +1,4 @@
-/* pointone-card-carousel.js — fix blank first card at ≥1600px for .tall */
+/* pointone-card-carousel.js — wide viewport (≥1600px) left-edge blank fix */
 jQuery(function ($) {
     /* ---------------------- utilities ---------------------- */
     function debounce(fn, wait = 120) {
@@ -11,35 +11,43 @@ jQuery(function ($) {
         };
     }
 
+    function vw() {
+        return window.innerWidth || document.documentElement.clientWidth;
+    }
+
     function minPadForViewport() {
-        const w = window.innerWidth || document.documentElement.clientWidth;
+        const w = vw();
         if (w >= 1025) return 160; // desktop peek
         if (w >= 768) return 100; // tablet peek
         return 60; // mobile peek
     }
 
-    // For .tall: compute centerPadding so we show 4/3/2 with peeks
+    // .tall wants 4/3/2 slides visible with 40px total gap (20 each side)
     function tallPadForViewport() {
-        const w = window.innerWidth || document.documentElement.clientWidth;
+        const w = vw();
         const slideW = 260; // fixed slide width for .tall
-        const footprint = slideW + 40; // 40px total gap (20 L/R)
+        const footprint = slideW + 40; // slide + gap
         let target = 2;
-        if (w >= 768 && w < 1025) target = 3; // tablet
-        else if (w >= 1025) target = 4; // desktop
+        if (w >= 768 && w < 1025) target = 3;
+        else if (w >= 1025) target = 4;
         const contentWidth = target * footprint;
-        const pad = Math.max(((w - contentWidth) / 2) | 0, 40); // snap to int
+        let pad = Math.max(Math.round((w - contentWidth) / 2), 40);
+
+        // 🔧 Wide-canvas nudge: keep leftmost peek 1px inside the clip
+        if (w >= 1600) pad = pad + 1;
+
         return pad;
     }
 
-    /* ---------------- equal heights (keeps link rows aligned) ---------------- */
+    /* ---------------- equal heights ---------------- */
     function equalizeHeights($slider) {
         if (!$slider.hasClass("slick-initialized")) return;
         const $slides = $slider.find(".slick-slide");
         $slides.css("min-height", "");
-        const $visible = $slider.find(".slick-slide.slick-active");
-        if ($visible.length === 0) return;
+        const $vis = $slider.find(".slick-slide.slick-active");
+        if ($vis.length === 0) return;
         let maxH = 0;
-        $visible.each(function () {
+        $vis.each(function () {
             const h = $(this).outerHeight();
             if (h > maxH) maxH = h;
         });
@@ -59,7 +67,7 @@ jQuery(function ($) {
         );
     }
 
-    /* ------------------------ video helpers ------------------------ */
+    /* ---------------- video helpers ---------------- */
     function ensureVideoAttrs($slider) {
         $slider.find("video").each(function () {
             this.muted = true;
@@ -69,7 +77,7 @@ jQuery(function ($) {
         });
     }
 
-    // Draw a visible first frame for non-active videos (including clones)
+    // Paint a visible frame for all non-active videos (incl. clones)
     function seedPosterFrames($slider, seek = 0.15) {
         const seedOne = (v, $slide) => {
             try {
@@ -110,14 +118,10 @@ jQuery(function ($) {
         });
     }
     function playActiveVideos($slider) {
-        const $actives = $slider.find(".slick-active video");
-        $actives.each(function () {
-            const v = this;
+        $slider.find(".slick-active video").each(function () {
             try {
-                v.muted = true;
-                v.playsInline = true;
-                v.currentTime = 0;
-                const p = v.play();
+                this.currentTime = 0;
+                const p = this.play();
                 if (p && p.catch) p.catch(() => {});
             } catch (_) {}
         });
@@ -133,7 +137,7 @@ jQuery(function ($) {
         });
 
         $slider.on("beforeChange", function (e, slick, current, next) {
-            // Pre-seed likely-left clones when wrapping to 0
+            // On wrap to 0, pre-seed likely-left clones
             if (next === 0 && current >= 0) {
                 $slider.find(".slick-cloned video").each(function () {
                     try {
@@ -151,7 +155,7 @@ jQuery(function ($) {
         });
     }
 
-    /* ---------------- controls: [Prev][Dots][Next] ---------------- */
+    /* ---------------- controls bar ---------------- */
     function buildControlsBar($slider) {
         if ($slider.hasClass("hide-nav")) return null;
         let $bar = $slider.next(".slick-controls");
@@ -167,7 +171,7 @@ jQuery(function ($) {
         return $bar;
     }
 
-    /* --------------------------- INIT HELPERS --------------------------- */
+    /* ---------------- init: center (non-tall) ---------------- */
     function initCenter($el) {
         if ($el.hasClass("slick-initialized")) return;
         const hideNav = $el.hasClass("hide-nav");
@@ -197,7 +201,7 @@ jQuery(function ($) {
             prevArrow: $prev.length ? $prev : undefined,
             nextArrow: $next.length ? $next : undefined,
             appendDots: $dots.length ? $dots : undefined,
-            useTransform: true, // always use transforms
+            useTransform: true,
             lazyLoad: "progressive",
             autoplay: isAuto,
             autoplaySpeed: 3000,
@@ -221,6 +225,7 @@ jQuery(function ($) {
         });
     }
 
+    /* ---------------- init: tall (peek 4/3/2) ---------------- */
     function initTall($el) {
         if ($el.hasClass("slick-initialized")) return;
         const hideNav = $el.hasClass("hide-nav");
@@ -250,21 +255,13 @@ jQuery(function ($) {
             prevArrow: $prev.length ? $prev : undefined,
             nextArrow: $next.length ? $next : undefined,
             appendDots: $dots.length ? $dots : undefined,
-            useTransform: true, // 🔑 force transforms at all widths
+            useTransform: true, // force transforms at all widths
             lazyLoad: "progressive",
             autoplay: isAuto,
             autoplaySpeed: 3000,
             pauseOnHover: true,
             pauseOnFocus: true,
-            initialSlide: 1, // 🔑 start on 1 to stabilize clones
-        });
-
-        // Immediately snap to 0 without animation so user never sees it
-        $el.on("init", function () {
-            try {
-                $el.slick("slickGoTo", 1, true); // ensure at 1
-                $el.slick("slickGoTo", 0, true); // snap back to 0 (no animation)
-            } catch (_) {}
+            // no initialSlide
         });
 
         const updatePad = () => {
@@ -277,6 +274,7 @@ jQuery(function ($) {
         $(window).on("resize", debounce(updatePad, 120));
         $el.on("breakpoint", updatePad);
 
+        // Extra settle passes + frame seeding
         requestAnimationFrame(() => {
             try {
                 $el.slick("setPosition");
@@ -291,7 +289,7 @@ jQuery(function ($) {
         });
     }
 
-    /* --------------------------- INIT --------------------------- */
+    /* ---------------- run ---------------- */
     $(".slider.center")
         .not(".tall")
         .each(function () {
@@ -301,7 +299,6 @@ jQuery(function ($) {
         initTall($(this));
     });
 
-    // Global settle pass
     requestAnimationFrame(() => {
         $(".slider.slick-initialized").each(function () {
             try {
