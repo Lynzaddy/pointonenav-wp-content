@@ -96,9 +96,9 @@
 }
 
 /* ====== TALL VARIANT ======
-   - Keep the 40px gap (via global .slick-slide margin)
-   - Desktop: explicit 260x500 media box for bulletproof cloning/peeks
-   - Tablet/Mobile: responsive heights with a stable ratio
+   - Keep the 40px gap
+   - Desktop image height = 325px
+   - Tablet and mobile scale responsively
 */
 .tall {
     --tall-media-w: 260px; /* slide width */
@@ -108,36 +108,36 @@
     max-width: 100%;
     align-items: stretch;
 }
-/* Desktop: fixed 260 x 500 */
+/* Desktop: 325px tall */
 @media (min-width: 1025px) {
     .tall .slide .image,
     .tall .slide video {
         width: 100% !important;
-        height: 500px !important;
+        height: 325px !important;
         border-radius: 8px;
         object-fit: cover;
         object-position: center;
         display: block;
     }
 }
-/* Tablet: a bit shorter but stable */
+/* Tablet: 275px tall */
 @media (min-width: 768px) and (max-width: 1024.98px) {
     .tall .slide .image,
     .tall .slide video {
         width: 100% !important;
-        height: 420px !important;
+        height: 275px !important;
         border-radius: 8px;
         object-fit: cover;
         object-position: center;
         display: block;
     }
 }
-/* Mobile: shorter still */
+/* Mobile: 220px tall */
 @media (max-width: 767.98px) {
     .tall .slide .image,
     .tall .slide video {
         width: 100% !important;
-        height: 360px !important;
+        height: 220px !important;
         border-radius: 8px;
         object-fit: cover;
         object-position: center;
