@@ -2,24 +2,26 @@
 
 ## Carousel
 
--   Completed both the standard and what I called the "tall" carousel
--   Placed them with content from Figma on the homepage
--   Placed them with content from Figma on Positioning Engine (discuss tomorrow, Dev I couldn't get the half images and content, but these my be FPO anyway)
+-   (X) Completed both the standard and what I called the "tall" carousel
 
-## Events Listing Page
+## Homepage
 
--   Removed some of the extra spacing added. Made these standardized with the other components
--   Used a branded color to shade past events (discuss tomorrow to change)
+-   (X) Placed them with content from Figma on the homepage
+
+## Events Listing Page (LIVE AND STAGING DONE)
+
+-   (X) Removed some of the extra spacing added on mobile
 
 ## Events Detail Page
 
--   Took down spacing on mobile between the sections to 40px; this can always be edited
+-   (X) Took down spacing on mobile between the sections to 40px; this can always be edited
 
 ## Positioning Engine
 
 -   Replaced all the images from the .zip Dev provided
--   Made the video sections have a border radius of 0 on Mobile
+-   (X) Made the video sections have a border radius of 0 on Mobile
 
 ## Still working on
 
 -   Add in Links Bill provided in Figma for all the sections
+-   I'll work when I can tomorrow before our meeting and look through Slack and Asana

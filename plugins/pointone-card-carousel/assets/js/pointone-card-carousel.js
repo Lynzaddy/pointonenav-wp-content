@@ -58,6 +58,59 @@ jQuery(function ($) {
         );
     }
 
+    /* --------------------- video helpers --------------------- */
+    function ensureVideoAttrs($slider) {
+        $slider.find("video").each(function () {
+            this.muted = true;
+            this.playsInline = true;
+            this.loop = true;
+            this.setAttribute("preload", "metadata");
+        });
+    }
+    function pauseAllVideos($slider) {
+        $slider.find("video").each(function () {
+            try {
+                this.pause();
+            } catch (_) {}
+        });
+    }
+    function playActiveVideos($slider) {
+        const $actives = $slider.find(".slick-active video");
+        $actives.each(function () {
+            try {
+                this.muted = true;
+                this.playsInline = true;
+                // restart for consistent UX
+                this.currentTime = 0;
+                const p = this.play();
+                if (p && p.catch) p.catch(() => {}); // ignore autoplay blocks
+            } catch (_) {}
+        });
+    }
+    function bindVideoHandlers($slider) {
+        ensureVideoAttrs($slider);
+        $slider.on("init reInit", function () {
+            pauseAllVideos($slider);
+            playActiveVideos($slider);
+        });
+        $slider.on("beforeChange", function () {
+            pauseAllVideos($slider);
+        });
+        $slider.on("afterChange breakpoint setPosition", function () {
+            playActiveVideos($slider);
+        });
+        // If metadata loads late, try to play if active
+        $slider.find("video").each(function () {
+            this.addEventListener?.("loadedmetadata", () => {
+                if ($(this).closest(".slick-slide").hasClass("slick-active")) {
+                    try {
+                        this.play();
+                    } catch (_) {}
+                }
+            });
+        });
+    }
+
     /* ---------------- controls: [Prev][Dots][Next] ---------------- */
     function buildControlsBar($slider) {
         if ($slider.hasClass("hide-nav")) return null;
@@ -84,6 +137,7 @@ jQuery(function ($) {
         const $dots = $bar ? $bar.find(".sc-dots") : $();
 
         bindEqualizer($el);
+        bindVideoHandlers($el);
 
         const isAuto = $el.hasClass("autoplay");
         const seedPad = minPadForViewport();
@@ -132,6 +186,7 @@ jQuery(function ($) {
         const $dots = $bar ? $bar.find(".sc-dots") : $();
 
         bindEqualizer($el);
+        bindVideoHandlers($el);
 
         const isAuto = $el.hasClass("autoplay");
         const seedPad = tallPadForViewport();
@@ -139,7 +194,7 @@ jQuery(function ($) {
         $el.slick({
             variableWidth: true, // width from CSS (.tall .slide => 260px)
             centerMode: true, // enables peeks
-            centerPadding: seedPad + "px", // dynamic padding = peeks tuned to 4/3/2
+            centerPadding: seedPad + "px", // tuned to 4/3/2
             slidesToShow: 1,
             slidesToScroll: 1,
             infinite: true,
@@ -151,13 +206,12 @@ jQuery(function ($) {
             prevArrow: $prev.length ? $prev : undefined,
             nextArrow: $next.length ? $next : undefined,
             appendDots: $dots.length ? $dots : undefined,
-            useTransform: false, // avoid GPU rounding on peeks/clones
+            useTransform: false,
             lazyLoad: "progressive",
             autoplay: isAuto,
             autoplaySpeed: 3000,
             pauseOnHover: true,
             pauseOnFocus: true,
-            /* 👇 IMPORTANT: start on a safe index so the left peek is never the fragile original index 0 */
             initialSlide: 2,
         });
 
@@ -170,7 +224,6 @@ jQuery(function ($) {
         $(window).on("resize", debounce(updatePad, 120));
         $el.on("breakpoint", updatePad);
 
-        // settle layout twice post-init (no refresh; won't break autoplay)
         requestAnimationFrame(() => {
             try {
                 $el.slick("setPosition");
