@@ -186,7 +186,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 32px;
+    gap: 32px; /* arrows ↔ dots spacing */
     width: 100%;
     margin-top: 10px;
     padding: 0 8px;
@@ -277,48 +277,52 @@
 }
 
 /* ==================================================
-   DOTS
+   DOTS — pixel-perfect reset
    ================================================== */
 .slick-controls .sc-dots {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 40px;
+    height: 40px; /* matches arrow height */
 }
+
 .slick-controls .sc-dots .slick-dots {
     position: static !important;
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    margin: 0;
-    padding: 0;
+    gap: 8px; /* exact space between indicators */
+    margin: 0 !important;
+    padding: 0 !important;
     width: auto !important;
-    list-style: none;
+    list-style: none !important;
     line-height: 0;
 }
 
-/* Neutralize Slick theme defaults */
+/* Hard reset any theme bleed */
 .slick-dots {
     position: static !important;
 }
 .slick-dots li {
+    margin: 0 !important;
+    padding: 0 !important;
     width: auto !important;
     height: auto !important;
-    margin: 0 !important;
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
+}
+.slick-dots li button {
+    margin: 0 !important;
+    padding: 0 !important;
 }
 .slick-dots li button:before {
     content: none !important;
 }
 
-/* Dot buttons */
+/* Inactive 4x4 dot; active 20x4 pill */
 .slick-controls .sc-dots .slick-dots li button {
     position: relative;
-    padding: 0;
-    margin: 0;
     border: 0;
     background: transparent;
     display: inline-flex;
@@ -326,7 +330,10 @@
     justify-content: center;
     cursor: pointer;
     line-height: 0;
-    font-size: 0;
+    font-size: 0; /* hide numeric label */
+    width: auto;
+    height: auto;
+    overflow: visible;
 }
 .slick-controls .sc-dots .slick-dots li button::after {
     content: "";
@@ -345,6 +352,11 @@
 }
 .slick-controls .sc-dots .slick-dots li button:hover::after {
     background-color: #6b7280;
+}
+
+/* Slick theme default bottom margin on dotted sliders */
+.slick-dotted.slick-slider {
+    margin-bottom: 4px !important;
 }
 
 /* ==================================================
