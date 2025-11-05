@@ -43,7 +43,7 @@
     box-sizing: border-box;
 }
 
-/* ====== DEFAULT MEDIA (center/responsive) ====== */
+/* ====== Media defaults (responsive variant) ====== */
 .slider .slide .image,
 .slider .slide video {
     width: 100%;
@@ -54,7 +54,12 @@
     display: block;
 }
 
-/* ====== CENTER VARIANT (existing) ====== */
+/* Ensure videos never look "white" before a frame paints */
+.slider .slide video {
+    background-color: #000;
+}
+
+/* ====== Fixed media sizes for .center via CSS vars ====== */
 .center {
     --center-media-w: 280px;
     --center-media-h: 186.5px;
@@ -87,11 +92,7 @@
     display: block;
 }
 
-/* ====== TALL VARIANT ======
-   - Base media footprint: 260w x 325h
-   - Scales down responsively while keeping aspect
-   - Maintains the 40px gap via global .slick-slide margins
-*/
+/* ====== TALL VARIANT ====== */
 .tall {
     --tall-media-w: clamp(200px, 24vw, 260px);
     --tall-aspect-w: 52; /* 260:325 -> 52:65 ratio */
@@ -100,10 +101,10 @@
 @media (min-width: 1025px) {
     .tall {
         --tall-media-w: 260px;
-    } /* lock to spec at desktop */
+    }
 }
 .tall .slide {
-    width: var(--tall-media-w) !important; /* used by Slick (variableWidth) */
+    width: var(--tall-media-w) !important;
     max-width: 100%;
     align-items: stretch;
 }
@@ -161,6 +162,11 @@
     min-height: 0;
 }
 
+/* TALL: heading = 20px */
+.slider.tall .slide .heading {
+    font-size: 20px !important;
+}
+
 /* Link */
 .slider .slide .link {
     margin-top: 8px;
@@ -191,7 +197,7 @@
     justify-content: center;
     gap: 32px;
     width: 100%;
-    margin-top: 10px; /* tiny gap from slides only */
+    margin-top: 10px;
     padding: 0 8px;
     box-sizing: border-box;
     min-height: 40px;
@@ -345,8 +351,7 @@
     background-color: #6b7280;
 }
 
-/* ====== Hide navigation when .hide-nav is present ======
-   (JS already avoids building controls, this is just extra safety) */
+/* ====== Hide navigation when .hide-nav is present ====== */
 .slider.hide-nav + .slick-controls,
 .slider.hide-nav ~ .slick-controls {
     display: none !important;
@@ -372,9 +377,4 @@
         width: 22px;
         height: 22px;
     }
-}
-
-/* ====== TALL overrides that must beat base heading size ====== */
-.slider.tall .slide .heading {
-    font-size: 20px !important;
 }

@@ -60,35 +60,96 @@ jQuery(function ($) {
         );
     }
 
-    /* ---------------- video: play only on active ---------------- */
-    function pauseAll($slider) {
-        $slider.find("video").each(function () {
-            try {
-                this.pause();
-            } catch (_) {}
-        });
-    }
-    function playActive($slider) {
-        const $actives = $slider.find(".slick-active video");
-        $actives.each(function () {
-            try {
-                this.currentTime = 0;
-                const p = this.play();
-                if (p && p.catch) p.catch(() => {});
-            } catch (_) {}
-        });
-    }
-    function bindVideoHandlers($slider) {
+    /* ---------------- video handling ---------------- */
+    function markVideoAttrs($slider) {
         $slider.find("video").attr({ preload: "metadata", playsInline: true, muted: true, loop: true });
+    }
+
+    // Force-render a frame for non-active videos (incl. clones) so peeks are never blank.
+    function paintNonActiveVideos($slider) {
+        $slider.find(".slick-slide:not(.slick-active) video").each(function () {
+            const v = this;
+            try {
+                // Ensure ready to paint
+                v.muted = true;
+                v.playsInline = true;
+                // Some browsers won’t paint until play() has been called at least once
+                const p = v.play();
+                if (p && p.then) {
+                    p.then(() => {
+                        // Give the renderer a beat, then pause on frame 0
+                        requestAnimationFrame(() => {
+                            try {
+                                v.pause();
+                                v.currentTime = Math.max(0, v.currentTime || 0);
+                            } catch (_) {}
+                        });
+                    }).catch(() => {
+                        // If blocked, try nudging currentTime to get a thumbnail frame
+                        try {
+                            v.currentTime = 0.01;
+                        } catch (_) {}
+                    });
+                } else {
+                    // Older browsers: nudge a frame then pause
+                    try {
+                        v.currentTime = 0.01;
+                        v.pause();
+                    } catch (_) {}
+                }
+            } catch (_) {}
+        });
+    }
+
+    function bindVideoHandlers($slider) {
+        markVideoAttrs($slider);
+
+        // When slider settles, ensure actives play and non-actives are painted
+        function playActive($slider) {
+            const $actives = $slider.find(".slick-active video");
+            $actives.each(function () {
+                const v = this;
+                try {
+                    v.muted = true;
+                    v.playsInline = true;
+                    v.currentTime = 0;
+                    const p = v.play();
+                    if (p && p.catch) p.catch(() => {});
+                } catch (_) {}
+            });
+        }
+
+        function pauseAll($slider) {
+            $slider.find("video").each(function () {
+                try {
+                    this.pause();
+                } catch (_) {}
+            });
+        }
+
         $slider.on("init reInit", function () {
             pauseAll($slider);
+            paintNonActiveVideos($slider);
             playActive($slider);
         });
+
         $slider.on("beforeChange", function () {
             pauseAll($slider);
         });
-        $slider.on("afterChange breakpoint", function () {
+
+        $slider.on("afterChange breakpoint setPosition", function () {
+            paintNonActiveVideos($slider);
             playActive($slider);
+        });
+
+        // If any video loads metadata later, repaint its thumbnail if it’s non-active
+        $slider.find("video").each(function () {
+            const v = this;
+            v.addEventListener?.("loadedmetadata", function () {
+                if (!$(v).closest(".slick-slide").hasClass("slick-active")) {
+                    paintNonActiveVideos($slider);
+                }
+            });
         });
     }
 
@@ -108,24 +169,9 @@ jQuery(function ($) {
         return $bar;
     }
 
-    /* ---------------------- pre-init DOM rotate ---------------------- */
-    // Move the original first slide node to the end BEFORE initializing Slick.
-    // This removes fragile index 0 as the wrap target but keeps visual behavior intact.
-    function rotateFirstSlideToEnd($el) {
-        const $slides = $el.children(".slide");
-        if ($slides.length > 1) {
-            const $first = $slides.first().detach();
-            $el.append($first);
-        }
-    }
-
     /* --------------------------- INIT HELPERS --------------------------- */
     function initCenter($el) {
         if ($el.hasClass("slick-initialized")) return;
-
-        // 1) Rotate DOM once to avoid index-0 wrap glitches
-        rotateFirstSlideToEnd($el);
-
         const hideNav = $el.hasClass("hide-nav");
         const $bar = buildControlsBar($el);
         const $prev = $bar ? $bar.find(".slick-prev") : $();
@@ -164,7 +210,6 @@ jQuery(function ($) {
             ],
         });
 
-        // keep peek consistent when viewport changes
         const updatePad = () => {
             try {
                 $el.slick("slickSetOption", "centerPadding", minPadForViewport() + "px", false);
@@ -183,10 +228,6 @@ jQuery(function ($) {
 
     function initTall($el) {
         if ($el.hasClass("slick-initialized")) return;
-
-        // 1) Rotate DOM once to avoid index-0 wrap glitches
-        rotateFirstSlideToEnd($el);
-
         const hideNav = $el.hasClass("hide-nav");
         const $bar = buildControlsBar($el);
         const $prev = $bar ? $bar.find(".slick-prev") : $();
