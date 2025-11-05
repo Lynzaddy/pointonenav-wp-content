@@ -108,9 +108,24 @@ jQuery(function ($) {
         return $bar;
     }
 
+    /* ---------------------- pre-init DOM rotate ---------------------- */
+    // Move the original first slide node to the end BEFORE initializing Slick.
+    // This removes fragile index 0 as the wrap target but keeps visual behavior intact.
+    function rotateFirstSlideToEnd($el) {
+        const $slides = $el.children(".slide");
+        if ($slides.length > 1) {
+            const $first = $slides.first().detach();
+            $el.append($first);
+        }
+    }
+
     /* --------------------------- INIT HELPERS --------------------------- */
     function initCenter($el) {
         if ($el.hasClass("slick-initialized")) return;
+
+        // 1) Rotate DOM once to avoid index-0 wrap glitches
+        rotateFirstSlideToEnd($el);
+
         const hideNav = $el.hasClass("hide-nav");
         const $bar = buildControlsBar($el);
         const $prev = $bar ? $bar.find(".slick-prev") : $();
@@ -138,19 +153,26 @@ jQuery(function ($) {
             prevArrow: $prev.length ? $prev : undefined,
             nextArrow: $next.length ? $next : undefined,
             appendDots: $dots.length ? $dots : undefined,
-            // 🔧 Disable GPU transforms to avoid peek blanking on wrap
-            useTransform: false,
-            // Load eagerly so edge clones are ready
             lazyLoad: "progressive",
             autoplay: isAuto,
             autoplaySpeed: 3000, // 3s
             pauseOnHover: true,
             pauseOnFocus: true,
             responsive: [
-                { breakpoint: 1024, settings: { centerMode: true, centerPadding: "100px", variableWidth: true, useTransform: false } },
-                { breakpoint: 768, settings: { centerMode: true, centerPadding: "60px", variableWidth: true, useTransform: false } },
+                { breakpoint: 1024, settings: { centerMode: true, centerPadding: "100px", variableWidth: true } },
+                { breakpoint: 768, settings: { centerMode: true, centerPadding: "60px", variableWidth: true } },
             ],
         });
+
+        // keep peek consistent when viewport changes
+        const updatePad = () => {
+            try {
+                $el.slick("slickSetOption", "centerPadding", minPadForViewport() + "px", false);
+                $el.slick("setPosition");
+            } catch (_) {}
+        };
+        $(window).on("resize", debounce(updatePad, 120));
+        $el.on("breakpoint", updatePad);
 
         requestAnimationFrame(() => {
             try {
@@ -161,6 +183,10 @@ jQuery(function ($) {
 
     function initTall($el) {
         if ($el.hasClass("slick-initialized")) return;
+
+        // 1) Rotate DOM once to avoid index-0 wrap glitches
+        rotateFirstSlideToEnd($el);
+
         const hideNav = $el.hasClass("hide-nav");
         const $bar = buildControlsBar($el);
         const $prev = $bar ? $bar.find(".slick-prev") : $();
@@ -188,7 +214,6 @@ jQuery(function ($) {
             prevArrow: $prev.length ? $prev : undefined,
             nextArrow: $next.length ? $next : undefined,
             appendDots: $dots.length ? $dots : undefined,
-            useTransform: false, // 🔧 same fix for tall
             lazyLoad: "progressive",
             autoplay: isAuto,
             autoplaySpeed: 3000, // 3s
@@ -196,7 +221,6 @@ jQuery(function ($) {
             pauseOnFocus: true,
         });
 
-        // keep peek consistent when viewport changes (no wrap hacks)
         const updatePad = () => {
             try {
                 $el.slick("slickSetOption", "centerPadding", tallPadForViewport() + "px", false);
