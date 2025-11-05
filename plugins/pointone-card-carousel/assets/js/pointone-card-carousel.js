@@ -10,11 +10,6 @@ jQuery(function ($) {
         };
     }
 
-    function isDesktop() {
-        const w = window.innerWidth || document.documentElement.clientWidth;
-        return w >= 1025;
-    }
-
     function minPadForViewport() {
         const w = window.innerWidth || document.documentElement.clientWidth;
         if (w >= 1025) return 160; // desktop
@@ -113,50 +108,7 @@ jQuery(function ($) {
         return $bar;
     }
 
-    /* ---------- gentle stabilizer (no refresh / no goTo) ---------- */
-    function stabilizeOnWrap($el, calcPadFn) {
-        const updatePad = () => {
-            try {
-                $el.slick("slickSetOption", "centerPadding", calcPadFn() + "px", false);
-                $el.slick("setPosition");
-            } catch (_) {}
-        };
-
-        // On init: set padding twice and settle track
-        $el.on("init", function () {
-            requestAnimationFrame(() => {
-                updatePad();
-                requestAnimationFrame(updatePad);
-            });
-        });
-
-        // When we land at slide 0 on desktop, force a safe reflow + double setPosition
-        $el.on("afterChange", function (_e, _slick, current) {
-            if (!isDesktop()) return;
-            if (current === 0) {
-                const track = $el.find(".slick-track")[0];
-                try {
-                    // force a layout read to nudge the browser
-                    void track.offsetHeight; // reflow
-                } catch (_) {}
-                // run a tiny settle cycle, without refresh or goTo (won't kill autoplay)
-                setTimeout(() => {
-                    try {
-                        $el.slick("setPosition");
-                        $el.slick("slickSetOption", "centerPadding", calcPadFn() + "px", false);
-                        $el.slick("setPosition");
-                    } catch (_) {}
-                    // also re-equalize heights in case clones changed
-                    equalizeHeights($el);
-                }, 0);
-            }
-        });
-
-        // Keep peek consistent on resize/breakpoint
-        $(window).on("resize", debounce(updatePad, 120));
-        $el.on("breakpoint", updatePad);
-    }
-
+    /* --------------------------- INIT HELPERS --------------------------- */
     function initCenter($el) {
         if ($el.hasClass("slick-initialized")) return;
         const hideNav = $el.hasClass("hide-nav");
@@ -186,18 +138,19 @@ jQuery(function ($) {
             prevArrow: $prev.length ? $prev : undefined,
             nextArrow: $next.length ? $next : undefined,
             appendDots: $dots.length ? $dots : undefined,
+            // 🔧 Disable GPU transforms to avoid peek blanking on wrap
+            useTransform: false,
+            // Load eagerly so edge clones are ready
             lazyLoad: "progressive",
             autoplay: isAuto,
-            autoplaySpeed: 3000, // ✅ 3s
+            autoplaySpeed: 3000, // 3s
             pauseOnHover: true,
             pauseOnFocus: true,
             responsive: [
-                { breakpoint: 1024, settings: { centerMode: true, centerPadding: "100px", variableWidth: true } },
-                { breakpoint: 768, settings: { centerMode: true, centerPadding: "60px", variableWidth: true } },
+                { breakpoint: 1024, settings: { centerMode: true, centerPadding: "100px", variableWidth: true, useTransform: false } },
+                { breakpoint: 768, settings: { centerMode: true, centerPadding: "60px", variableWidth: true, useTransform: false } },
             ],
         });
-
-        stabilizeOnWrap($el, minPadForViewport);
 
         requestAnimationFrame(() => {
             try {
@@ -235,14 +188,23 @@ jQuery(function ($) {
             prevArrow: $prev.length ? $prev : undefined,
             nextArrow: $next.length ? $next : undefined,
             appendDots: $dots.length ? $dots : undefined,
+            useTransform: false, // 🔧 same fix for tall
             lazyLoad: "progressive",
             autoplay: isAuto,
-            autoplaySpeed: 3000, // ✅ 3s
+            autoplaySpeed: 3000, // 3s
             pauseOnHover: true,
             pauseOnFocus: true,
         });
 
-        stabilizeOnWrap($el, tallPadForViewport);
+        // keep peek consistent when viewport changes (no wrap hacks)
+        const updatePad = () => {
+            try {
+                $el.slick("slickSetOption", "centerPadding", tallPadForViewport() + "px", false);
+                $el.slick("setPosition");
+            } catch (_) {}
+        };
+        $(window).on("resize", debounce(updatePad, 120));
+        $el.on("breakpoint", updatePad);
 
         requestAnimationFrame(() => {
             try {
