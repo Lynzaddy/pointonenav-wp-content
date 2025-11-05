@@ -1,4 +1,4 @@
-/* pointone-card-carousel.js (≥1600px fix for .tall wrap + video seeding) */
+/* pointone-card-carousel.js — fix blank first card at ≥1600px for .tall */
 jQuery(function ($) {
     /* ---------------------- utilities ---------------------- */
     function debounce(fn, wait = 120) {
@@ -27,7 +27,7 @@ jQuery(function ($) {
         if (w >= 768 && w < 1025) target = 3; // tablet
         else if (w >= 1025) target = 4; // desktop
         const contentWidth = target * footprint;
-        const pad = Math.max(Math.round((w - contentWidth) / 2), 40);
+        const pad = Math.max(((w - contentWidth) / 2) | 0, 40); // snap to int
         return pad;
     }
 
@@ -75,7 +75,7 @@ jQuery(function ($) {
             try {
                 if (v.readyState >= 2) {
                     if (!$slide.hasClass("slick-active")) {
-                        v.currentTime = seek; // nudge forward so a frame paints
+                        v.currentTime = seek;
                         v.pause();
                     }
                 } else {
@@ -94,13 +94,9 @@ jQuery(function ($) {
                 }
             } catch (_) {}
         };
-
-        // All videos
         $slider.find("video").each(function () {
             seedOne(this, $(this).closest(".slick-slide"));
         });
-
-        // Explicitly reseed all clones (helps on wrap at big widths)
         $slider.find(".slick-cloned video").each(function () {
             seedOne(this, $(this).closest(".slick-slide"));
         });
@@ -120,22 +116,9 @@ jQuery(function ($) {
             try {
                 v.muted = true;
                 v.playsInline = true;
-                v.currentTime = 0; // restart for reliable loop
+                v.currentTime = 0;
                 const p = v.play();
                 if (p && p.catch) p.catch(() => {});
-            } catch (_) {}
-        });
-    }
-
-    // Pre-seed the two left neighbors of the upcoming slide (handles wrap)
-    function preseedLeftNeighbors($slider, nextIndex, seek = 0.15) {
-        // Grab the two slides immediately to the left of where we’re going
-        const $track = $slider.find(".slick-track");
-        const $targets = $track.find(`[data-slick-index="${nextIndex - 1}"], [data-slick-index="${nextIndex - 2}"], [data-slick-index="-1"], [data-slick-index="-2"]`);
-        $targets.find("video").each(function () {
-            try {
-                this.currentTime = seek;
-                this.pause();
             } catch (_) {}
         });
     }
@@ -150,14 +133,19 @@ jQuery(function ($) {
         });
 
         $slider.on("beforeChange", function (e, slick, current, next) {
-            // If we're wrapping (last -> 0), pre-seed clones that appear on the left
+            // Pre-seed likely-left clones when wrapping to 0
             if (next === 0 && current >= 0) {
-                preseedLeftNeighbors($slider, next, 0.15);
+                $slider.find(".slick-cloned video").each(function () {
+                    try {
+                        this.currentTime = 0.15;
+                        this.pause();
+                    } catch (_) {}
+                });
             }
             pauseAllVideos($slider);
         });
 
-        $slider.on("afterChange breakpoint setPosition", function (e, slick, current) {
+        $slider.on("afterChange breakpoint setPosition", function () {
             seedPosterFrames($slider, 0.15);
             playActiveVideos($slider);
         });
@@ -209,15 +197,15 @@ jQuery(function ($) {
             prevArrow: $prev.length ? $prev : undefined,
             nextArrow: $next.length ? $next : undefined,
             appendDots: $dots.length ? $dots : undefined,
-            useTransform: false,
+            useTransform: true, // always use transforms
             lazyLoad: "progressive",
             autoplay: isAuto,
             autoplaySpeed: 3000,
             pauseOnHover: true,
             pauseOnFocus: true,
             responsive: [
-                { breakpoint: 1024, settings: { centerMode: true, centerPadding: "100px", variableWidth: true, useTransform: false } },
-                { breakpoint: 768, settings: { centerMode: true, centerPadding: "60px", variableWidth: true, useTransform: false } },
+                { breakpoint: 1024, settings: { centerMode: true, centerPadding: "100px", variableWidth: true, useTransform: true } },
+                { breakpoint: 768, settings: { centerMode: true, centerPadding: "60px", variableWidth: true, useTransform: true } },
             ],
         });
 
@@ -246,7 +234,6 @@ jQuery(function ($) {
 
         const isAuto = $el.hasClass("autoplay");
         const seedPad = tallPadForViewport();
-        const useXform = (window.innerWidth || document.documentElement.clientWidth) >= 1600; // transforms only at big widths
 
         $el.slick({
             variableWidth: true, // .tall .slide = 260px via CSS
@@ -263,30 +250,33 @@ jQuery(function ($) {
             prevArrow: $prev.length ? $prev : undefined,
             nextArrow: $next.length ? $next : undefined,
             appendDots: $dots.length ? $dots : undefined,
-            useTransform: useXform, // key tweak: transforms ON at ≥1600px
+            useTransform: true, // 🔑 force transforms at all widths
             lazyLoad: "progressive",
             autoplay: isAuto,
             autoplaySpeed: 3000,
             pauseOnHover: true,
             pauseOnFocus: true,
-            // no initialSlide (keeps clone order stable)
+            initialSlide: 1, // 🔑 start on 1 to stabilize clones
         });
 
-        // Toggle transforms on resize around 1600px and re-seat padding
-        const updatePadAndMode = () => {
+        // Immediately snap to 0 without animation so user never sees it
+        $el.on("init", function () {
             try {
-                const w = window.innerWidth || document.documentElement.clientWidth;
-                const wantTransform = w >= 1600;
-                $el.slick("slickSetOption", "useTransform", wantTransform, false);
+                $el.slick("slickGoTo", 1, true); // ensure at 1
+                $el.slick("slickGoTo", 0, true); // snap back to 0 (no animation)
+            } catch (_) {}
+        });
+
+        const updatePad = () => {
+            try {
                 $el.slick("slickSetOption", "centerPadding", tallPadForViewport() + "px", false);
                 $el.slick("setPosition");
                 seedPosterFrames($el, 0.15);
             } catch (_) {}
         };
-        $(window).on("resize", debounce(updatePadAndMode, 120));
-        $el.on("breakpoint", updatePadAndMode);
+        $(window).on("resize", debounce(updatePad, 120));
+        $el.on("breakpoint", updatePad);
 
-        // Double settle + seed
         requestAnimationFrame(() => {
             try {
                 $el.slick("setPosition");
