@@ -26,6 +26,11 @@
     margin: 0 -20px !important;
 }
 
+/* Make sure clones are always paintable */
+.slick-slide.slick-cloned {
+    visibility: visible !important;
+}
+
 /* Auto-height; JS equalizes visible ones */
 .slick-slide {
     height: auto;
@@ -43,7 +48,7 @@
     box-sizing: border-box;
 }
 
-/* ====== Media defaults (responsive variant) ====== */
+/* ====== Media defaults (non-tall) ====== */
 .slider .slide .image,
 .slider .slide video {
     width: 100%;
@@ -53,8 +58,6 @@
     border-radius: 8px;
     display: block;
 }
-
-/* Ensure videos never look "white" before a frame paints */
 .slider .slide video {
     background-color: #000;
 }
@@ -92,31 +95,54 @@
     display: block;
 }
 
-/* ====== TALL VARIANT ====== */
+/* ====== TALL VARIANT ======
+   - Keep the 40px gap (via global .slick-slide margin)
+   - Desktop: explicit 260x500 media box for bulletproof cloning/peeks
+   - Tablet/Mobile: responsive heights with a stable ratio
+*/
 .tall {
-    --tall-media-w: clamp(200px, 24vw, 260px);
-    --tall-aspect-w: 52; /* 260:325 -> 52:65 ratio */
-    --tall-aspect-h: 65;
-}
-@media (min-width: 1025px) {
-    .tall {
-        --tall-media-w: 260px;
-    }
+    --tall-media-w: 260px; /* slide width */
 }
 .tall .slide {
     width: var(--tall-media-w) !important;
     max-width: 100%;
     align-items: stretch;
 }
-.tall .slide .image,
-.tall .slide video {
-    width: 100% !important;
-    aspect-ratio: var(--tall-aspect-w) / var(--tall-aspect-h);
-    height: auto !important;
-    border-radius: 8px;
-    object-fit: cover;
-    object-position: center;
-    display: block;
+/* Desktop: fixed 260 x 500 */
+@media (min-width: 1025px) {
+    .tall .slide .image,
+    .tall .slide video {
+        width: 100% !important;
+        height: 500px !important;
+        border-radius: 8px;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+    }
+}
+/* Tablet: a bit shorter but stable */
+@media (min-width: 768px) and (max-width: 1024.98px) {
+    .tall .slide .image,
+    .tall .slide video {
+        width: 100% !important;
+        height: 420px !important;
+        border-radius: 8px;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+    }
+}
+/* Mobile: shorter still */
+@media (max-width: 767.98px) {
+    .tall .slide .image,
+    .tall .slide video {
+        width: 100% !important;
+        height: 360px !important;
+        border-radius: 8px;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+    }
 }
 
 /* ====== Slide Text & Spacing ====== */
