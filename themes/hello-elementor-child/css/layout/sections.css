@@ -59,101 +59,20 @@
     align-items: inherit;
 }
 
+/* ===== INNER CONTAINER (WIDE, with BG video) ===== */
 .section-container-inner.video {
-    /* Visual debug so you can see the box bounds */
-    background: #f90;
-
-    /* Wider layout */
+    position: relative;
+    overflow: hidden;
     max-width: var(--inner-content-wide-max-width);
-    margin: var(--vertical-padding-desktop) auto !important;
-
-    /* Rounded box that must clip the bg */
     border-radius: var(--image-border-radius);
-    overflow: hidden;
-
-    /* Height target (16:9-ish); adjust as needed */
     min-height: clamp(360px, 56.25vw, 788px);
-
-    position: relative;
-    box-sizing: border-box;
+    margin: 0 !important;
 }
 
-/* Content gets 20px gutters */
-.section-container-inner.video > .e-con-inner {
-    position: relative;
-    z-index: 1; /* content above bg */
-    box-sizing: border-box;
-    padding-left: 20px !important;
-    padding-right: 20px !important;
-}
-
-/* Elementor bg video wrapper: stretch to the edges of the rounded box.
-   Because Elementor places it INSIDE .e-con-inner (which has 20px padding),
-   we "bleed" it out by -20px so it reaches the true box edges. */
-.section-container-inner.video > .e-con-inner > .elementor-background-video-container {
-    position: absolute !important;
-    top: 0;
-    bottom: 0;
-    left: -20px;
-    right: -20px; /* cancel the inner padding */
-    z-index: 0 !important;
-
-    /* Robust clipping for iframes across browsers */
-    border-radius: inherit;
-    overflow: hidden;
-    /* Safari/WebKit can be stubborn with iframes + radius; clip-path helps */
-    clip-path: inset(0 round var(--image-border-radius));
-    pointer-events: none;
-}
-
-/* If Elementor overlay exists, keep it aligned & clipped too */
-.section-container-inner.video > .e-con-inner > .elementor-background-overlay {
-    position: absolute !important;
-    top: 0;
-    bottom: 0;
-    left: -20px;
-    right: -20px;
-    border-radius: inherit;
-    clip-path: inset(0 round var(--image-border-radius));
-    pointer-events: none;
-}
-
-/* === YouTube/Vimeo iframe: make it COVER the container ===
-   Use oversize + center trick so it never letterboxes */
-.section-container-inner.video .elementor-background-video-embed {
-    position: absolute !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-
-    /* Cover strategy: make the iframe large enough in BOTH dimensions,
-     then ensure it never becomes smaller than the box */
-    width: 177.78vh !important; /* 100 * (16/9) => wide enough when tall */
-    height: 56.25vw !important; /* 100 * (9/16) => tall enough when wide */
-    min-width: 100% !important;
-    min-height: 100% !important;
-
-    border: 0 !important;
-}
-
-/* === Self-hosted <video> (if you ever switch) === */
-.section-container-inner.video .elementor-background-video-container video {
-    position: absolute !important;
-    inset: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-}
-
-/* Mobile: radius must be 0 */
+/* Mobile: remove rounded corners */
 @media (max-width: 767.98px) {
     .section-container-inner.video {
         border-radius: 0 !important;
-    }
-    .section-container-inner.video > .e-con-inner > .elementor-background-video-container,
-    .section-container-inner.video > .e-con-inner > .elementor-background-overlay {
-        /* no curve to clip on mobile */
-        clip-path: inset(0);
     }
 }
 
