@@ -125,6 +125,16 @@
     display: block;
 }
 
+/* NEW: Constrain text width under media for .tall */
+.tall .slide .overline,
+.tall .slide .heading,
+.tall .slide .body,
+.tall .slide .link {
+    width: var(--tall-media-w);
+    max-width: var(--tall-media-w);
+    box-sizing: border-box;
+}
+
 /* ====== Slide Text & Spacing ====== */
 .slider .slide .overline {
     margin-top: 20px;
