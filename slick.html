@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Slick Carousel – Card Slides</title>
+
+        <!-- Slick core CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
+
+        <!-- Your styles -->
+        <link rel="stylesheet" href="my-slick.css" />
+    </head>
+    <body>
+        <h1>Slick Carousel - Card Slides</h1>
+
+        <!-- ✨ Switch classes here: "center" OR "responsive" -->
+        <div class="slider center">
+            <div class="slide">
+                <img class="image" src="Event-Speaker-2.jpg" alt="speaker" />
+                <div class="overline">Overline</div>
+                <div class="heading">Heading</div>
+                <div class="body">Body Copy goes here. Keep it to ~2–3 lines for consistency across cards.</div>
+                <div class="link"><a href="#">Learn more</a></div>
+            </div>
+
+            <div class="slide">
+                <img class="image" src="Event-Speaker-2.jpg" alt="speaker" />
+                <div class="overline">Category</div>
+                <div class="heading">Another Heading</div>
+                <div class="body">Short description for this card. Text can wrap to multiple lines.</div>
+                <div class="link"><a href="#">Learn more</a></div>
+            </div>
+
+            <div class="slide">
+                <video muted="" playsinline="" loop="" preload="auto" loading="eager" style="width: 100%; height: auto">
+                    <source src="https://pointonenav.com/wp-content/uploads/2025/07/home-customer-agragps-compressed-PON.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
+                <div class="overline">Topic</div>
+                <div class="heading">Third Card</div>
+                <div class="body">Optional body copy. If empty, layout still holds and the link stays bottom-aligned.</div>
+                <div class="link"><a href="#">Learn more</a></div>
+            </div>
+
+            <div class="slide">
+                <img class="image" src="https://pointonenav.local/wp-content/uploads/2025/10/Event-Speaker-2.jpg" alt="speaker" />
+                <div class="overline">Session</div>
+                <div class="heading">Card Four</div>
+                <div class="body">More details or teaser text can go here.</div>
+                <div class="link"><a href="#">Learn more</a></div>
+            </div>
+
+            <div class="slide">
+                <img class="image" src="https://pointonenav.local/wp-content/uploads/2025/10/Event-Speaker-1.jpg" alt="speaker" />
+                <div class="overline">Track</div>
+                <div class="heading">Fifth Card</div>
+                <div class="body">Add a quick summary about this item.</div>
+                <div class="link"><a href="#">Learn more</a></div>
+            </div>
+
+            <div class="slide">
+                <img class="image" src="https://pointonenav.local/wp-content/uploads/2025/10/Event-Speaker-3.jpg" alt="speaker" />
+                <div class="overline">Featured</div>
+                <div class="heading">Sixth Card</div>
+                <div class="body">Keep copy concise for visual balance between slides.</div>
+                <div class="link"><a href="#">Learn more</a></div>
+            </div>
+        </div>
+
+        <!-- jQuery + Slick JS -->
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
+        <!-- Your script -->
+        <script src="my-slick.js"></script>
+    </body>
+</html>

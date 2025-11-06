@@ -6,7 +6,7 @@
 */
 
 .elementor-location-footer {
-    font-family: "Instrument Sans", sans-serif;
+    font-family: var(--typography-font-primary);
     font-weight: var(--weight-regular);
     line-height: var(--lh-relaxed);
     letter-spacing: var(--ls-neg-16);
@@ -31,6 +31,10 @@
     text-decoration: none !important;
 }
 
+.footer-nav .elementor-nav-menu .menu-item a {
+    transition: none !important;
+}
+
 .footer-nav a:hover {
     text-decoration: underline !important;
 }
@@ -51,7 +55,7 @@
     margin-bottom: 16px;
     text-transform: uppercase;
     letter-spacing: var(--ls-neg-14);
-    line-height: 100%;
+    line-height: var(--lh-none);
 }
 
 /* Legal Links - Default: align right */

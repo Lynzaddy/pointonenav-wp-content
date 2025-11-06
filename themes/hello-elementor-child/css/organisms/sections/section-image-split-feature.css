@@ -1,0 +1,71 @@
+/* 
+==================================================
+    SECTION-IMAGE-SPLIT-FEATURE.CSS
+    Description: Styles for the image split feature section.
+==================================================  
+*/
+
+.sec-img-split-feature {
+    /* padding: 100px 0; */
+}
+
+.sec-img-split-feature .text-side {
+    padding: 0 140px 0 0;
+}
+
+.sec-img-split-feature .text-side-flip {
+    padding: 0 0 0 140px;
+}
+
+.sec-img-split-feature .image-side {
+    min-height: 700px;
+}
+
+/* Reduce padding for Small Desktop */
+@media (max-width: 1366px) {
+    .sec-img-split-feature .text-side {
+        padding: 0 80px 0 0;
+    }
+
+    .sec-img-split-feature .text-side-flip {
+        padding: 0 0 0 80px;
+    }
+}
+
+/* Responsive Margins for Outer */
+@media (max-width: 1024px) {
+    .sec-img-split-feature {
+        /* padding: 60px 0; */
+    }
+
+    .sec-img-split-feature .image-side {
+        min-height: 850px;
+    }
+
+    .sec-img-split-feature .text-side {
+        padding: 0;
+    }
+
+    .sec-img-split-feature .text-side-flip {
+        padding: 0;
+    }
+}
+
+/* Responsive Margins for Outer */
+@media (max-width: 767px) {
+    .sec-img-split-feature {
+        /* padding: 60px 0; */
+    }
+
+    .sec-img-split-feature .image-side {
+        min-height: 475px;
+    }
+
+    .sec-img-split-feature .text-side {
+        padding: 0;
+    }
+
+    .sec-img-split-feature .text-side-flip {
+        padding: 0;
+    }
+}

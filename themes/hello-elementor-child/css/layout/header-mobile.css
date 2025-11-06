@@ -1,106 +1,171 @@
 /* 
 ==================================================
     HEADER-MOBILE.CSS
-    Description: Styles for the mobile navigation layout in Point One Nav, including menu items, dropdowns, and responsive adjustments.
+    Description: Styles for the mobile navigation layout in Point One Nav,
+    including menu items, dropdowns, and responsive adjustments.
+
+    TABLE OF CONTENTS:
+    01. Accordion Title / Summary
+    02. Chevron Icons (Stroked)
+    03. Close Icons (Stroked)
+    04. Icon List Inside Accordion
+    05. Mobile Nav Layout
+    06. Hamburger Icon Colors
+
 ==================================================  
 */
 
-/* Accordion Title Styling */
+/* === 01. Accordion Title / Summary === */
 .mobile-nav-accordian .e-n-accordion-item summary {
     font-size: 16px;
-    line-height: 140%;
-    letter-spacing: -0.16px;
-    color: #141413;
+    line-height: var(--lh-medium);
+    letter-spacing: var(--ls-neg-016);
+    color: var(--color-gray-90);
     text-decoration: none !important;
     padding: 12px;
-    border-radius: 8px;
-    /* display: flex; */
-    justify-content: space-between;
-    align-items: center;
-    transition: background-color 0.2s ease;
+    border-radius: var(--image-border-radius);
     cursor: pointer;
-}
-
-/* Hover State */
-.mobile-nav-accordian .e-n-accordion-item summary:hover {
-    /* background-color: #141413;
-    color: #fff !important; */
-}
-
-/* Make sure this wraps all nav content and fills the off-canvas space */
-.mobile-nav-container {
     display: flex;
-    flex-direction: column;
-    /* height: 100%; */
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    list-style: none;
+    overflow: visible;
+    transition: background-color 0.2s ease;
 }
 
-/* Push button group to the bottom of that container */
-.mobile-nav-buttons {
-    /* margin-top: auto; */
-    padding-bottom: 2px; /* Adjust as needed for spacing from bottom */
+/* Hide default <summary> triangle markers in all engines */
+.mobile-nav-accordian .e-n-accordion-item summary::marker,
+.mobile-nav-accordian .e-n-accordion-item summary::-webkit-details-marker {
+    display: none;
 }
 
-/* Hide added mobile links on main nav */
-.mobile-links {
-    display: none !important;
-}
-
-/* === MOBILE MENU ACCORDIONS === */
+/* Accordion Title Wrappers */
 .e-n-accordion-item-title-text {
     color: var(--content-primary);
 }
 
-/* Accordion title base styles */
 .e-n-accordion-item-title {
     background-color: transparent;
     color: var(--content-primary);
-    border-radius: 8px;
+    border-radius: var(--image-border-radius);
     padding: 12px;
     cursor: pointer;
     transition: none !important;
+    overflow: visible;
 }
 
-/* Accordion title hover (only darken the header, not the region) */
 .mobile-nav-accordian .e-n-accordion-item:hover .e-n-accordion-item-title {
     background-color: var(--color-black-a08);
 }
 
-/* Keep expanded region background white */
 .mobile-nav-accordian .e-n-accordion-item[open] > div[role="region"] {
-    background-color: #fff;
+    background-color: var(--color-white-a100);
 }
 
-/* === ICON LIST INSIDE ACCORDION === */
+.mobile-nav-accordian .e-n-accordion-item-title-header {
+    padding-left: 7px !important;
+}
 
-/* Base link styles */
+.mobile-nav-accordian .e-n-accordion-item-title {
+    padding-left: 0 !important;
+}
+
+/* === 02. Chevron Icons (Stroked) === */
+.e-n-accordion-item-title-icon {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+    line-height: 1;
+    overflow: visible;
+}
+
+/* Size bump here to match .icon-close */
+.e-n-accordion-item-title-icon svg {
+    display: block;
+    width: 32px; /* increased from 24px */
+    height: 32px; /* increased from 24px */
+    vertical-align: middle;
+    overflow: visible;
+}
+
+.e-n-accordion-item-title-icon .e-opened svg path,
+.e-n-accordion-item-title-icon .e-closed svg path {
+    stroke-width: 1.5 !important;
+    stroke: currentColor !important;
+    fill: none !important;
+}
+
+/* === 03. Close Icons (Stroked) === */
+.icon-close svg {
+    width: 32px;
+    height: 32px;
+    display: block;
+}
+
+.icon-close svg path:not([stroke="none"]) {
+    stroke-width: 1.5 !important;
+    fill: none !important;
+}
+
+/* === 04. Icon List Inside Accordion === */
 .mobile-nav-list .elementor-icon-list-item a {
     font-size: 16px;
-    line-height: 140%;
-    letter-spacing: -0.16px;
-    color: #141413;
+    line-height: var(--lh-medium);
+    letter-spacing: var(--ls-neg-016);
+    color: var(--color-gray-90);
     text-decoration: none !important;
     display: block;
     padding: 12px;
     transition: none !important;
+    padding-left: 8px !important;
 }
 
-.mobile-nav-accordian .e-n-accordion-item-title-header {
-    padding-left: 12px !important;
-}
-
-/* List item hover effect */
 .mobile-nav-list .elementor-icon-list-item:hover {
     background-color: var(--color-black-a08);
-    color: #fff !important;
-    border-radius: 8px;
+    color: var(--color-white-a100) !important;
+    border-radius: var(--image-border-radius);
     transition: none !important;
 }
 
-/* === Mobile Hamburger Icon Color === */
+/* === 05. Mobile Nav Layout === */
+.mobile-nav-container {
+    display: flex;
+    flex-direction: column;
+}
 
+.mobile-nav-buttons {
+    padding-bottom: 2px;
+}
+
+.mobile-links {
+    display: none !important;
+}
+
+.e-off-canvas__content > .elementor-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.mobile-menu-middle {
+    padding-bottom: 10px;
+}
+
+.mobile-menu-bottom {
+    padding-bottom: 10px;
+}
+
+.mobile-nav-accordian .elementor-widget-container {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* === 06. Hamburger Icon Colors === */
 body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .hamburger-menu svg {
-    color: #fff !important;
-    fill: #fff !important;
+    color: var(--color-white-a100) !important;
+    fill: var(--color-white-a100) !important;
 }
 
 .custom-sticky-header.elementor-sticky--effects .hamburger-menu svg,
@@ -109,8 +174,12 @@ body:not(.has-transparent-header) .custom-sticky-header .hamburger-menu svg {
     fill: var(--content-primary) !important;
 }
 
-/* Turn off the background color of the icon in the hamburger menu */
 .hamburger-menu .elementor-icon-wrapper .elementor-icon,
 .mobile-menu-top .elementor-icon-wrapper .elementor-icon {
     background-color: transparent !important;
+}
+
+html.off-canvas-is-open,
+body.off-canvas-is-open {
+    overflow: hidden !important;
 }

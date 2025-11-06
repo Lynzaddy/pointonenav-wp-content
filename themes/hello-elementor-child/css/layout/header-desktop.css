@@ -1,30 +1,137 @@
 /* 
 ==================================================
     HEADER-DESKTOP.CSS
-    Description: Styles for the desktop navigation layout in Point One Nav, including menu items, dropdowns, and responsive adjustments.
-    
-    01. Desktop Menu Items
-    02. Hover State
-    03. Active (Current) State
-    04. Hover/Focus Parent Item or Dropdown
-    05. Subnav Code
+    Description: Custom CSS for Desktop Header and Navigation
+
+    TABLE OF CONTENTS:
+    01. Hide both Logos to start
+    02. Transparent Menu / Sticky Header Background
+    03. Transparent Menu / Menu Hover Styles
+    04. Normal Header Styles / Scrolled State or Internal Page  
+    05. Scrolled/Internal / Menu Hover Styles
+    06. Desktop Menu Items
+    07. Subnav Code
 ==================================================  
 */
 
-.elementor-location-header .custom-sticky-header {
-    background: transparent;
-    /* background-color: var(--color-white-a90) !important;
-    transition: background-color 0.3s ease;
-    backdrop-filter: blur(30px); */
-    /* border-bottom: 1px solid rgba(0, 0, 0, 0.02) !important; */
+/* === 01. Hide both Logos to start === */
+.logo-white {
+    display: none;
+}
+.logo-black {
+    display: block;
 }
 
-/* === Desktop Menu Items === */
+/* === 02. Transparent Menu / Sticky Header Background === */
+body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) {
+    background-color: transparent !important;
+}
+
+body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .logo-white {
+    display: block;
+}
+
+body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .logo-black {
+    display: none;
+}
+
+body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .elementor-item {
+    color: white !important;
+}
+
+body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .sub-arrow svg path {
+    fill: var(--color-white-a100);
+}
+
+/* === 03. Transparent Menu / Menu Hover Styles === */
+body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .elementor-item:hover {
+    background-color: var(--color-white-a20);
+    border-radius: 100px;
+    transition: background-color 0.3s ease, border-radius 0.3s ease;
+}
+
+/* Divider (Transparent) */
+body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .header-nav {
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Buttons (Transparent) */
+body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .btn-primary.inverse .elementor-button {
+    background: transparent;
+    color: white;
+    border: 1px solid white;
+}
+
+body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .btn-primary.inverse .elementor-button:hover {
+    background: transparent;
+    color: var(--color-white-a70) !important;
+    border: 1px solid var(--color-white-a70) !important;
+}
+
+body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .btn-tertiary .elementor-button {
+    background: transparent;
+    color: var(--color-white-a100) !important;
+    font-weight: var(--font-weight-500);
+}
+
+body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .btn-tertiary .elementor-button:hover {
+    color: var(--color-white-a70) !important;
+}
+
+/* === 04. Normal Header Styles / Scrolled State or Internal Page === */
+.custom-sticky-header.elementor-sticky--effects,
+body:not(.has-transparent-header) .custom-sticky-header {
+    background-color: var(--color-white-a90) !important;
+    transition: background-color 0.3s ease;
+    backdrop-filter: blur(30px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
+}
+
+.custom-sticky-header.elementor-sticky--effects .elementor-item,
+body:not(.has-transparent-header) .custom-sticky-header .elementor-item {
+    color: var(--content-primary);
+}
+
+.custom-sticky-header.elementor-sticky--effects .sub-arrow svg path,
+body:not(.has-transparent-header) .custom-sticky-header .sub-arrow svg path {
+    fill: var(--content-primary);
+}
+
+/* === 05. Scrolled/Internal / Menu Hover Styles === */
+.custom-sticky-header.elementor-sticky--effects .elementor-item:hover,
+body:not(.has-transparent-header) .custom-sticky-header .elementor-item:hover {
+    background-color: var(--background-tertiary);
+    border-radius: 100px;
+}
+
+/* Divider (Scrolled/Internal) */
+.custom-sticky-header.elementor-sticky--effects .header-nav,
+body:not(.has-transparent-header) .custom-sticky-header .header-nav {
+    border-left: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+/* Buttons (Scrolled/Internal) */
+.custom-sticky-header.elementor-sticky--effects .btn-primary.inverse .elementor-button,
+body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .elementor-button {
+    background-color: transparent;
+    color: var(--color-gray-90) !important;
+    border: 1px solid var(--color-gray-90);
+}
+
+/* Active menu item */
+.elementor-item-active {
+    color: #fff !important;
+}
+
+.elementor-location-header .custom-sticky-header {
+    background: transparent;
+}
+
+/* === 06. Desktop Menu Items === */
 .header-nav a.elementor-item {
     color: var(--content-primary);
-    font-family: "Instrument Sans", sans-serif;
+    font-family: var(--typography-font-primary);
     text-decoration: none !important;
-    padding: 8px 16px;
     font-weight: var(--weight-bold) !important;
     font-size: var(--font-size-14);
     line-height: var(--lh-relaxed);
@@ -33,87 +140,88 @@
 
 @media (max-width: 1366px) {
     .header-nav a.elementor-item {
-        padding: 8px 10px !important;
+        /* keep padding removed at this breakpoint too */
     }
 }
 
-/* === Hover State === */
+/* Hover State */
 .header-nav a.elementor-item:hover {
     background-color: var(--color-black-a08);
     border-radius: 100px;
 }
 
-/* === Active (Current) State === */
+/* Active (Current) State  */
 .header-nav .current-menu-item > a.elementor-item {
     color: var(--content-primary) !important;
-    /* background-color: var(--color-gray-90);
-    border-radius: 100px;
-    color: var(--content-primary-inverse); */
 }
 
-/* === Hover/Focus Parent Item or Dropdown === */
+/* Hover/Focus Parent Item or Dropdown */
 .header-nav .topnav-blackout:hover > a,
 .header-nav .topnav-blackout:focus-within > a {
     background-color: var(--color-black-a08);
     border-radius: 100px;
 }
 
-/* SUBNAV CODE */
-/* === Allow absolute positioning from parent item === */
+/* === 07. Subnav Code === */
+
+/* Parent anchors submenu and exposes hover bridge */
 .header-nav li.menu-item-has-children {
     position: relative;
     z-index: 1000;
+    overflow: visible; /* ensure bridge/dropdown are hoverable */
 }
 
-/* === Hover-safe 21px bridge === */
+/* Hover bridge on the parent li (fills the 20px outside gap) */
 .header-nav li.menu-item-has-children::before {
     content: "";
     position: absolute;
-    top: 100%;
+    top: 100%; /* immediately below the li */
     left: 0;
     width: 100%;
-    height: 21px;
+    height: 20px; /* the gap distance */
     background: transparent;
-    pointer-events: auto;
-    z-index: 999;
+    pointer-events: auto; /* keeps :hover while crossing the gap */
+    z-index: 2; /* sit above backgrounds, below the dropdown */
 }
 
-/* Remove extra padding/margin from submenu items */
+/* Reset submenu list items */
 .header-nav .sub-menu li {
     padding-left: 0 !important;
     margin-left: 0 !important;
 }
 
 .header-nav .sub-menu .elementor-sub-item {
-    padding-left: 12px !important; /* adjust this to your desired spacing */
+    padding-left: 12px !important;
     padding-right: 12px !important;
 }
 
-/* === Submenu container === */
+/* Submenu container — placed 20px below the parent, no transform */
 .header-nav ul.sub-menu,
 .header-nav .elementor-nav-menu--dropdown {
     position: absolute !important;
-    top: 100% !important;
+    top: calc(100% + 20px) !important; /* exact visual gap below parent */
     left: 0 !important;
-    transform: translateY(21px) !important;
-    z-index: 9999 !important;
-
-    display: block !important;
+    transform: none !important; /* no translate */
+    margin: 0 !important;
+    /* Visibility model */
     visibility: hidden !important;
     opacity: 0 !important;
     pointer-events: none !important;
-
+    /* Box styling */
+    z-index: 9999 !important;
+    display: block !important;
     width: 250px !important;
     padding: 8px !important;
-    background-color: white !important;
-    border: 1px solid rgba(0, 0, 0, 0.12) !important;
-    border-radius: 8px !important;
+    background-color: var(--color-white-a100) !important;
+    border: 1px solid var(--color-black-a12) !important;
+    border-radius: var(--image-border-radius) !important;
     box-sizing: border-box !important;
-
-    transition: opacity 0.15s ease-in-out, visibility 0.15s ease-in-out;
+    /* No animations that could reflow */
+    transition: none !important;
+    animation: none !important;
 }
 
-/* === Show submenu on hover/focus === */
+/* Show submenu on hover/focus (geometry stays identical) */
 .header-nav li.menu-item-has-children:hover > ul.sub-menu,
 .header-nav li.menu-item-has-children:focus-within > ul.sub-menu,
 .header-nav li.menu-item-has-children:hover > .elementor-nav-menu--dropdown,
@@ -121,96 +229,41 @@
     visibility: visible !important;
     opacity: 1 !important;
     pointer-events: auto !important;
+    top: calc(100% + 20px) !important; /* lock position in shown state */
+    left: 0 !important;
+    transform: none !important;
+    margin: 0 !important;
 }
 
-/* Submenu link base style */
+/* Submenu links */
 .header-nav .sub-menu .elementor-sub-item {
     display: block;
     color: var(--content-primary);
-
-    /* Typography: Body/b16 */
     font-family: var(--typography-font-primary);
     font-size: 16px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 148%; /* 23.68px */
-    letter-spacing: -0.16px;
-
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-relaxed);
+    letter-spacing: var(--ls-neg-016);
+    text-decoration: none;
+    border-radius: var(--image-border-radius);
     padding-left: 12px !important;
     padding-right: 12px !important;
-    border-radius: 8px;
-    transition: background-color 0.2s ease, color 0.2s ease;
-    text-decoration: none;
+    transition: none !important;
 }
 
-/* Submenu link hover style */
-.header-nav .sub-menu .elementor-sub-item:hover {
-    background-color: var(--background-tertiary); /* light blue */
-    border-radius: 8px;
-    color: #000; /* keep text black on hover */
-    transition: background-color 0.2s ease, border-radius 0.2s ease;
-}
-
-/* Style active submenu item */
-.header-nav .sub-menu .current-menu-item .elementor-sub-item {
-    background-color: #000; /* black background */
-    color: #fff !important; /* white text */
-    border-radius: 8px;
-}
-
-.header-nav ul.sub-menu,
-.header-nav .elementor-nav-menu--dropdown {
-    position: absolute !important;
-    top: 100% !important;
-    left: 0 !important;
-    transform: translateY(21px) !important;
-    z-index: 9999 !important;
-
-    display: block !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-
-    width: 250px !important;
-    padding: 8px !important;
-    background-color: white !important;
-    border: 1px solid rgba(0, 0, 0, 0.12) !important;
-    border-radius: 8px !important;
-    box-sizing: border-box !important;
-
-    transition: opacity 0.15s ease-in-out, visibility 0.15s ease-in-out;
-}
-
-.header-nav li.menu-item-has-children:hover > ul.sub-menu,
-.header-nav li.menu-item-has-children:focus-within > ul.sub-menu,
-.header-nav li.menu-item-has-children:hover > .elementor-nav-menu--dropdown,
-.header-nav li.menu-item-has-children:focus-within > .elementor-nav-menu--dropdown {
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-}
-
-.header-nav .sub-menu .elementor-sub-item {
-    display: block;
-    color: var(--content-primary, #141413);
-    font-family: var(--typography-font-primary, "Instrument Sans");
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 148%;
-    letter-spacing: -0.16px;
-    text-decoration: none;
-}
-
+/* Submenu link hover */
 .header-nav .sub-menu .elementor-sub-item:hover {
     background-color: var(--background-tertiary);
-    border-radius: 8px;
-    color: #000;
-    transition: background-color 0.2s ease, border-radius 0.2s ease;
+    border-radius: var(--image-border-radius);
+    color: var(--color-black-a100);
+    transition: none !important;
 }
 
+/* Active submenu item */
 .header-nav .sub-menu .current-menu-item .elementor-sub-item {
-    background-color: #000;
-    color: #fff !important;
-    border-radius: 8px;
+    background-color: var(--color-black-a100);
+    color: var(--color-white-a100) !important;
+    border-radius: var(--image-border-radius);
+    transition: none !important;
 }

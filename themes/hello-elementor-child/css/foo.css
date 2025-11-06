@@ -4,7 +4,7 @@ selector {
     right: 20px;
     width: 44px;
     height: 44px;
-    background-color: #fff;
+    background-color: var(--color-white-a100);
     color: #000;
     border-radius: 50%;
     z-index: 999;

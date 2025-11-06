@@ -47,7 +47,7 @@ add_filter('elementor/css-file/post/enable_cache_busting', '__return_true');
 
 // Page indicator as to which pages need the transparent header (Currently just the homepage)
 add_filter( 'body_class', function( $classes ) {
-    if ( is_front_page() || is_page('future-page-name') ) {
+    if ( is_front_page() || is_page('homepage-components') ) {
         $classes[] = 'has-transparent-header';
     }
     return $classes;

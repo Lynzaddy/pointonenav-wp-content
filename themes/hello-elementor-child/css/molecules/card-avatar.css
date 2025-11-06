@@ -1,0 +1,181 @@
+/* 
+==================================================
+    CARD-AVATAR.CSS
+    Description: Styles for avatar cards used in Point One Nav.
+
+    TABLE OF CONTENTS:
+
+==================================================  
+*/
+
+.elementor .product-container {
+    border-radius: var(--image-border-radius);
+    border: 1px solid var(--color-black-a12);
+    padding: 16px;
+}
+
+.elementor .products-section .product-container:hover {
+    background-color: #ebebeb;
+}
+.elementor .applications-section .icon img,
+.elementor .graphql-section .icon img,
+.elementor .pe-section .icon img,
+.elementor .rtk-section .icon img,
+.elementor .solutions-section .icon img,
+.elementor .products-section .product-container .icon img {
+    width: 32px;
+    height: 32px;
+    padding: 14px;
+    box-sizing: content-box;
+    border-radius: var(--image-border-radius);
+    border: 0;
+    /* border: 1px solid var(--color-black-a12, rgba(0, 0, 0, 0.12)); */
+    background-color: var(--background-quaternary);
+}
+
+/* Wrap title + chevron in a flex container to align items to top */
+.products-section .product-container .title-chev-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Top align */
+    gap: 16px; /* Optional spacing between title and chevron */
+}
+
+.products-section .product-container .title-chev-wrapper .title {
+    flex: 1;
+}
+
+.products-section .product-container .title-chev-wrapper .chevron {
+    flex-shrink: 0;
+}
+
+/* === CARD - AVATAR === */
+.card-avatar {
+    border-radius: var(--image-border-radius);
+    border: 1px solid var(--line-alpha);
+    display: flex;
+    max-width: 728px; /* >1024px = 540px */
+    padding: 16px;
+    align-items: flex-start;
+    gap: 32px; /* your normal card spacing */
+    position: relative; /* positioning context for overlay */
+    overflow: hidden; /* keeps overlay inside rounded corners */
+    cursor: pointer;
+    z-index: 1; /* clean stacking context */
+}
+
+.pe-get-started .card-avatar {
+    max-width: 728px;
+}
+
+.card-avatar:hover {
+    background: var(--state-hover);
+}
+
+/* Inverse theme variants */
+.inverse .card-avatar,
+.card-avatar.inverse {
+    border: 1px solid var(--line-alpha-inverse);
+}
+.inverse .card-avatar:hover,
+.card-avatar.inverse:hover {
+    background: var(--state-hover-inverse);
+}
+
+/* Icon behavior */
+.card-avatar .elementor-icon {
+    background-color: transparent !important;
+}
+.card-avatar .elementor-icon:hover {
+    background-color: transparent !important;
+}
+.card-avatar.inverse .elementor-icon svg {
+    stroke: var(--color-white-a100);
+}
+
+/* ==================================================
+   STRETCHED-LINK OVERLAY (whole card clickable)
+   HTML widget must be the FIRST child of .card-avatar, containing:
+     <a class="stretched-link" href="/polaris" aria-label="Open Polaris card"></a>
+   ================================================== */
+
+/* Take the HTML widget OUT of flex layout so it doesn't create a gap */
+.card-avatar .elementor-widget-html {
+    position: absolute !important; /* remove from flex flow */
+    inset: 0 !important; /* cover the whole card */
+    z-index: 30 !important; /* above non-interactive content */
+    margin: 0 !important;
+    padding: 0 !important;
+    width: auto !important;
+    height: auto !important;
+    transform: none !important; /* avoid new stacking context surprises */
+    filter: none !important;
+    perspective: none !important;
+}
+
+/* Keep the inner container neutral; link will be absolutely positioned */
+.card-avatar .elementor-widget-html .elementor-widget-container {
+    position: static !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* The overlay link spans the entire card */
+.card-avatar .stretched-link {
+    position: absolute;
+    inset: 0; /* top/right/bottom/left: 0 */
+    display: block;
+    background: transparent;
+    text-decoration: none;
+    color: transparent; /* visually hidden; rely on aria-label */
+    pointer-events: auto;
+}
+
+/* Real interactive children remain usable (above the overlay) */
+.card-avatar :is(a:not(.stretched-link), button, input, select, textarea, [role="button"]) {
+    position: relative;
+    z-index: 40;
+}
+
+/* Optional keyboard focus ring for accessibility */
+.card-avatar .stretched-link:focus-visible {
+    outline: none;
+}
+.card-avatar:has(.stretched-link:focus-visible) {
+    box-shadow: 0 0 0 3px var(--focus-ring, rgba(0, 123, 255, 0.35));
+}
+
+/* PE page: set the chip/background behind the icon */
+.pe-get-started .enc-icon .elementor-icon {
+    background-color: #d3f754 !important;
+}
+
+/* ELEMENT VISIBILITY */
+
+/* Default (desktop and larger): chevron shown, button container hidden */
+.card-avatar .chevron {
+    display: block !important;
+}
+.card-avatar .btn-container {
+    display: none !important;
+}
+
+/* Tablet & below (≤1024px): swap visibility */
+@media (max-width: 1024px) {
+    .card-avatar {
+        max-width: 100%;
+    }
+    .card-avatar .chevron {
+        display: none !important;
+    }
+    .card-avatar .btn-container {
+        display: block !important;
+    }
+}
+
+/* Mobile tweaks (≤768px): spacing only */
+@media (max-width: 768px) {
+    .card-avatar {
+        gap: 40px; /* your mobile gap */
+    }
+}

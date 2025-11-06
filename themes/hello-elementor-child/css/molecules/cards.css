@@ -12,6 +12,8 @@
 .card-image {
     border: 0;
     padding: 0;
+    row-gap: 20px;
+    column-gap: 20px;
 }
 
 .card-image .image-box {
@@ -57,17 +59,18 @@
 /* Mobile: give .image-box a real height so img can be 100% tall */
 @media (max-width: 768px) {
     .card-image .image-box {
-        min-height: clamp(220px, 60vw, 360px); /* responsive height range */
-        display: flex;             /* so image can align perfectly */
-        align-items: center;       /* vertically center image */
-        justify-content: center;   /* horizontally center image (for contain) */
+        aspect-ratio: 3 / 2; /* maintains 3:2 ratio regardless of width */
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden; /* ensures no image bleed outside box */
     }
 
     .card-image .image-box img {
+        width: 100%;
         height: 100%;
-        max-height: none;
-        width: auto;  /* let it scale proportionally; avoids forced stretching */
-        object-fit: contain;
+        object-fit: cover; /* fills the box while preserving the 3:2 ratio */
     }
 }
 
@@ -98,7 +101,7 @@ a.card-image .body .elementor-heading-title {
 /* Default: btn-link underlined */
 a.card-image .btn-link .elementor-heading-title {
     text-decoration: underline !important;
-    font-size: var(--font-size-14) !important;
+    font-size: var(--font-size-16) !important;
 }
 
 /* On hover anywhere in the card, remove underline */
@@ -157,65 +160,8 @@ a.card-image .btn-link:hover .elementor-heading-title {
     letter-spacing: var(--letter-spacing-pos-014) !important;
 }
 
-/* Card - Avatar */
-
-.card-avatar {
-    border-radius: 8px;
-    border: 1px solid var(--line-alpha, rgba(0, 0, 0, 0.12));
-    display: flex;
-    width: 540px;
-    padding: 16px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 40px;
-}
-
-/* if .inverse can be applied to any ancestor: */
-.inverse .card-avatar,
-.card-avatar.inverse {
-    border: 1px solid var(--line-alpha-inverse, rgba(255, 255, 255, 0.2));
-}
-
-.card-avatar:hover,
-.card-avatar-flipped:hover {
-    background: var(--states-hover, rgba(0, 0, 0, 0.08));
-}
-
-.card-avatar-flipped {
-    border-radius: 8px;
-    border: 1px solid var(--line-alpha, rgba(0, 0, 0, 0.12));
-    display: flex;
-    width: 540px;
-    padding: 16px;
-    align-items: flex-start;
-    gap: 30px;
-}
-
-/* if .inverse can be applied to any ancestor: */
-.inverse .card-avatar-flipped,
-.card-avatar-flipped.inverse {
-    border: 1px solid var(--line-alpha-inverse, rgba(255, 255, 255, 0.2));
-}
-
-.card-avatar.inverse:hover,
-.card-avatar-flipped.inverse:hover {
-    background: var(--state-hover-inverse, rgba(0, 0, 0, 0.08));
-}
-
-.card-avatar-flipped .elementor-icon {
-    background-color: transparent !important;
-}
-
-.card-avatar-flipped .elementor-icon:hover {
-    background-color: transparent !important;
-}
-
-.card-avatar-flipped.inverse .elementor-icon svg {
-    stroke: white;
-}
-
 .banner-contact {
-    border-radius: 8px;
+    border-radius: var(--image-border-radius);
     background: var(--background-tertiary, #e7e7e4);
     backdrop-filter: blur(20px);
     display: flex;
@@ -264,209 +210,4 @@ a.card-image .btn-link:hover .elementor-heading-title {
         width: auto; /* just as wide as text */
         min-width: 0; /* prevent Elementor from enforcing min width */
     }
-}
-
-/* Banner Logo */
-.banner-logo {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-}
-
-/************************************
- * HEADER SECTION — text + arrow
- ************************************/
-
-/************************************
- * HEADER — inline title + arrow (clean center alignment)
- * Replace previous .header CSS with this
- ************************************/
-
-/* Put heading + arrow on one line, centered vertically, with 8px gap */
-.banner-logo .header {
-    display: inline-flex !important; /* override Elementor's container flex */
-    align-items: center !important; /* vertical centering for both items */
-    justify-content: center;
-    gap: 8px;
-    color: inherit; /* allows inverse to flip color */
-}
-
-/* Reset Elementor widget wrappers so they don't fight alignment */
-.banner-logo .header > .elementor-widget {
-    display: inline-flex !important; /* ensures child participates in flex centering */
-    align-items: center !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    width: auto !important;
-    max-width: none !important;
-    line-height: 1 !important; /* avoid tall line boxes */
-}
-
-/* Heading styles (your typography, plus inline-friendly tweaks) */
-.banner-logo .header .elementor-heading-title {
-    margin: 0;
-    padding: 0;
-    display: inline-block; /* keeps metrics tidy next to icon */
-    color: var(--content-primary, #141413);
-    text-align: center;
-    font-family: var(--typography-font-secondary, "Azeret Mono");
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 1; /* tight line height to match icon */
-    letter-spacing: 0.14px;
-    text-transform: uppercase;
-}
-
-/* Icon: same size as text (1em) and centered */
-.banner-logo .header img,
-.banner-logo .header svg {
-    width: 1em;
-    height: 1em;
-    display: inline-block; /* stable inline box */
-    vertical-align: middle; /* belt-and-suspenders */
-    line-height: 1;
-    /* no translateY — centering is handled by flex */
-}
-
-/* Make inline SVGs adopt the text color */
-.banner-logo .header svg,
-.banner-logo .header svg * {
-    fill: currentColor !important;
-    stroke: currentColor !important;
-}
-
-/************************************
- * INVERSE MODE — ancestor has .inverse
- ************************************/
-
-/* Flip the whole header (and thus SVG) to white */
-.inverse .banner-logo .header,
-.banner-logo.inverse .header {
-    color: #ffffff !important;
-}
-
-/* Also ensure the heading text itself is white */
-.inverse .banner-logo .header .elementor-heading-title,
-.banner-logo.inverse .header .elementor-heading-title {
-    color: #ffffff !important;
-}
-
-/* Fallback for <img src="...svg"> icons (non-inline SVG) */
-.inverse .banner-logo .header img[src$=".svg"],
-.banner-logo.inverse .header img[src$=".svg"] {
-    filter: brightness(0) invert(1);
-}
-
-/************************************
- * LOGO GRID — layout & exact gaps
- ************************************/
-
-/* Outer container: center the grid block */
-.logo-section {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    color: inherit; /* for SVG currentColor */
-}
-
-/* Base: Mobile first (≤767px) — 2 across, gap 32px, grid hugs content */
-.logo-section .logo-grid {
-    display: grid !important; /* beat Elementor e-flex */
-    grid-template-columns: repeat(2, max-content);
-    justify-items: center;
-    align-items: center;
-    gap: 32px !important; /* exact mobile gap */
-    column-gap: 32px !important;
-    row-gap: 32px !important;
-    width: auto; /* shrink-wrap to content */
-    margin: 0 auto;
-    padding: 0;
-    /* neutralize Elementor gap vars just in case */
-    --grid-column-gap: 0;
-    --grid-row-gap: 0;
-}
-
-/* Children: prevent Elementor from stretching items or adding margins */
-.logo-section .logo-grid > .elementor-widget {
-    width: auto !important; /* stop 100% width */
-    max-width: none !important;
-    margin: 0 !important; /* kill default widget margins */
-    padding: 0 !important;
-    justify-self: center;
-    align-self: center;
-}
-
-/************************************
- * LOGO SIZE — per breakpoint
- * Works for inline <svg> and <img src="...svg">
- ************************************/
-
-/* Mobile ≤767px: max 120px */
-.logo-section .logo-grid .logo svg,
-.logo-section .logo-grid .logo img {
-    display: block;
-    height: auto;
-    width: auto; /* do not stretch */
-    max-width: 120px;
-}
-
-/* Tablet (768–1024px): 5 across, gap 24px, max 90px */
-@media (min-width: 768px) and (max-width: 1024px) {
-    .logo-section .logo-grid {
-        grid-template-columns: repeat(5, max-content);
-        gap: 24px !important;
-        column-gap: 24px !important;
-        row-gap: 24px !important;
-    }
-    .logo-section .logo-grid .logo svg,
-    .logo-section .logo-grid .logo img {
-        max-width: 90px;
-    }
-}
-
-/* Desktop (≥1025px): 5 across, gap 40px, max 140px */
-@media (min-width: 1025px) {
-    .logo-section .logo-grid {
-        grid-template-columns: repeat(5, max-content);
-        gap: 40px !important;
-        column-gap: 40px !important;
-        row-gap: 40px !important;
-    }
-    .logo-section .logo-grid .logo svg,
-    .logo-section .logo-grid .logo img {
-        max-width: 140px;
-    }
-}
-
-/************************************
- * SVG COLOR CONTROL
- ************************************/
-
-/* Force inline SVGs to follow currentColor (monochrome) */
-.logo-section .logo-grid .logo svg,
-.logo-section .logo-grid .logo svg * {
-    fill: currentColor !important;
-    stroke: currentColor !important;
-}
-
-/* Inverse mode: any ancestor with .inverse makes logos white */
-.inverse .logo-section,
-.logo-section.inverse,
-.inverse .logo-section .logo-grid {
-    color: #ffffff;
-}
-
-/* Fallback for <img src="...svg"> when not inline: invert to white in inverse mode */
-.inverse .logo-section .logo-grid .logo img[src$=".svg"],
-.logo-section.inverse .logo-grid .logo img[src$=".svg"] {
-    filter: brightness(0) invert(1);
-}
-
-/************************************
- * Small polish
- ************************************/
-.logo-section .logo-grid img {
-    vertical-align: middle;
 }

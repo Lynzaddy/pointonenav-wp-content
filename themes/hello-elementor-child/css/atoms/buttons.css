@@ -19,6 +19,17 @@
 ==================================================  
 */
 
+/* (*) Carry-over before components; check if needed once live */
+/* [type="button"]:focus,
+[type="button"]:hover,
+[type="submit"]:focus,
+[type="submit"]:hover,
+button:focus,
+button:hover {
+    background-color: transparent !important;
+    
+} */
+
 /* === 01. Base (Brand) Button Styles === */
 .elementor .elementor-button,
 .elementor .elementor-button:visited,
@@ -85,7 +96,7 @@
 
 /* === 03. Base (Brand) States === */
 .elementor .elementor-button:hover {
-    background: linear-gradient(0deg, var(--states-hover, rgba(0, 0, 0, 0.08)) 0%, var(--states-hover, rgba(0, 0, 0, 0.08)) 100%), var(--background-brand, #218241);
+    background: linear-gradient(0deg, var(--state-hover, rgba(0, 0, 0, 0.08)) 0%, var(--state-hover, rgba(0, 0, 0, 0.08)) 100%), var(--background-brand, #218241);
 }
 
 .elementor .elementor-button:active,
@@ -108,7 +119,7 @@
 
 /* === 04. Base (Brand) Inverse Modifier === */
 .elementor .inverse .elementor-button:hover {
-    background: linear-gradient(0deg, var(--states-hover-inverse, rgba(255, 255, 255, 0.1)) 0%, var(--states-hover-inverse, rgba(255, 255, 255, 0.1)) 100%), var(--background-brand, #218241);
+    background: linear-gradient(0deg, var(--state-hover-inverse, rgba(255, 255, 255, 0.1)) 0%, var(--state-hover-inverse, rgba(255, 255, 255, 0.1)) 100%), var(--background-brand, #218241);
 }
 
 .elementor .inverse .elementor-button:active,
@@ -141,7 +152,7 @@
 }
 
 .elementor .btn-primary .elementor-button:hover {
-    background: linear-gradient(0deg, var(--states-hover-inverse, rgba(255, 255, 255, 0.1)) 0%, var(--states-hover-inverse, rgba(255, 255, 255, 0.1)) 100%), var(--background-primary-inverse);
+    background: linear-gradient(0deg, var(--state-hover-inverse, rgba(255, 255, 255, 0.1)) 0%, var(--state-hover-inverse, rgba(255, 255, 255, 0.1)) 100%), var(--background-primary-inverse);
 }
 
 .elementor .btn-primary .elementor-button:active,
@@ -171,7 +182,7 @@
 }
 
 .elementor .inverse.btn-primary .elementor-button:hover {
-    background: linear-gradient(0deg, var(--states-hover, rgba(0, 0, 0, 0.08)) 0%, var(--states-hover, rgba(0, 0, 0, 0.08)) 100%), var(--background-primary, #fff);
+    background: linear-gradient(0deg, var(--state-hover, rgba(0, 0, 0, 0.08)) 0%, var(--state-hover, rgba(0, 0, 0, 0.08)) 100%), var(--background-primary, #fff);
 }
 
 .elementor .inverse.btn-primary .elementor-button:active,
