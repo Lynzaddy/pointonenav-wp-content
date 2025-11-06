@@ -1,9 +1,8 @@
 /* pointone-card-carousel.js
-   Revert .tall to behave like .center (one slide at a time)
-   - .center and .tall share the same init
-   - Autoplay is opt-in via .autoplay
-   - hide-nav still works
-   - Videos play only on active slide
+   - .center: play video ONLY on active slide
+   - .tall:   play ALL videos continuously
+   - Autoplay still opt-in via .autoplay
+   - hide-nav, mobile controls hide, equal-heights kept
 */
 (function ($) {
     $(function () {
@@ -56,35 +55,75 @@
             );
         }
 
-        /* ---------------- video handling (active only) ---------------- */
-        function pauseAll($slider) {
-            $slider.find("video").each(function () {
-                try {
-                    this.pause();
-                } catch (_) {}
+        /* ---------------- video helpers ---------------- */
+        function attrVideos($scope) {
+            $scope.find("video").attr({
+                preload: "metadata",
+                playsInline: true,
+                muted: true,
+                loop: true,
             });
         }
-        function playActive($slider) {
-            const $actives = $slider.find(".slick-active video");
-            $actives.each(function () {
-                try {
-                    this.currentTime = 0;
-                    const p = this.play();
-                    if (p && p.catch) p.catch(() => {});
-                } catch (_) {}
-            });
+        function tryPlay(v) {
+            try {
+                // restart for reliable loop-from-start UX
+                v.currentTime = 0;
+                const p = v.play();
+                if (p && p.catch) p.catch(() => {});
+            } catch (_) {}
         }
-        function bindVideoHandlers($slider) {
-            $slider.find("video").attr({ preload: "metadata", playsInline: true, muted: true, loop: true });
+
+        /* ---- Behavior A: only active (for .center) ---- */
+        function bindVideoHandlersActiveOnly($slider) {
+            attrVideos($slider);
+
+            function pauseAll() {
+                $slider.find("video").each(function () {
+                    try {
+                        this.pause();
+                    } catch (_) {}
+                });
+            }
+            function playActive() {
+                $slider.find(".slick-active video").each(function () {
+                    tryPlay(this);
+                });
+            }
+
             $slider.on("init reInit", function () {
-                pauseAll($slider);
-                playActive($slider);
+                pauseAll();
+                playActive();
             });
             $slider.on("beforeChange", function () {
-                pauseAll($slider);
+                pauseAll();
             });
             $slider.on("afterChange breakpoint", function () {
-                playActive($slider);
+                playActive();
+            });
+        }
+
+        /* ---- Behavior B: play everything (for .tall) ---- */
+        function bindVideoHandlersPlayAll($slider) {
+            attrVideos($slider);
+
+            function playAll() {
+                $slider.find("video").each(function () {
+                    tryPlay(this);
+                });
+            }
+
+            // Do NOT pause on slide change; keep everything rolling
+            $slider.on("init reInit afterChange breakpoint", function () {
+                // slight delay lets Slick settle heights/DOM
+                setTimeout(playAll, 0);
+            });
+
+            // If any media loads later, kick playback again
+            $slider.find("video").each(function () {
+                const v = this;
+                if (!v.readyState || v.readyState < 2) {
+                    $(v).on("loadedmetadata", () => tryPlay(v));
+                }
             });
         }
 
@@ -116,11 +155,15 @@
             const $dots = $bar.find(".sc-dots");
 
             bindEqualizer($el);
-            bindVideoHandlers($el);
+
+            // Video policy differs per style:
+            if ($el.hasClass("tall")) {
+                bindVideoHandlersPlayAll($el); // play ALL videos
+            } else {
+                bindVideoHandlersActiveOnly($el); // play only active slide
+            }
 
             const seedPad = minPadForViewport();
-
-            // Autoplay only if .autoplay class is present; default 3000ms
             const wantsAutoplay = $el.hasClass("autoplay");
 
             $el.slick({
@@ -147,7 +190,7 @@
                 lazyLoad: "progressive",
 
                 autoplay: wantsAutoplay,
-                autoplaySpeed: 3000, // one-at-a-time cadence
+                autoplaySpeed: 3000,
                 pauseOnHover: true,
                 pauseOnFocus: true,
 
