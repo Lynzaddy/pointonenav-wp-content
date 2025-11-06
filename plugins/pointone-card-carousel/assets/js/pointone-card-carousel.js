@@ -1,6 +1,6 @@
 /* pointone-card-carousel.js
    - Standard .center: unchanged
-   - .tall: smooth ticker + user interaction enabled (swipe/drag)
+   - .tall: smooth ticker + interactive drag with videos not blocking touch
 */
 (function ($) {
     $(function () {
@@ -179,7 +179,7 @@
             });
 
         /* =======================
-       TALL CAROUSELS — smooth ticker + interactive
+       TALL CAROUSELS — smooth ticker + interactive drag
        ======================= */
         $(".slider.tall").each(function () {
             const $el = $(this);
@@ -203,7 +203,7 @@
                 slidesToScroll: 1,
                 infinite: true,
 
-                // Controls & dots (still supported; hidden by CSS on mobile if desired)
+                // Controls & dots
                 arrows: true,
                 dots: true,
                 prevArrow: $prev,
@@ -214,53 +214,54 @@
 
                 // Smooth continuous movement
                 autoplay: true,
-                autoplaySpeed: 0, // no dwell
+                autoplaySpeed: 0, // no dwell between steps
                 speed: 12000, // long duration for linear scroll
                 cssEase: "linear",
                 pauseOnHover: false,
                 pauseOnFocus: false,
 
-                // <<< RE-ENABLE INTERACTION >>>
+                // Interaction enabled
                 swipe: true,
                 touchMove: true,
                 draggable: true,
                 swipeToSlide: true,
                 respondTo: "window",
                 waitForAnimate: false,
-
-                responsive: [
-                    { breakpoint: 1024, settings: { centerMode: true, centerPadding: "100px", variableWidth: true } },
-                    { breakpoint: 768, settings: { centerMode: true, centerPadding: "60px", variableWidth: true } },
-                ],
+                useTransform: true,
             });
 
-            // Pause the ticker while the user interacts; resume after a brief delay.
+            // --- Interaction mode: while dragging, switch to normal easing/speed,
+            // then resume linear ticker smoothly after a short idle.
             let resumeTimer = null;
-            const pause = () => {
+            const enterInteractive = () => {
                 try {
                     $el.slick("slickPause");
+                    $el.slick("slickSetOption", "cssEase", "ease", false);
+                    $el.slick("slickSetOption", "speed", 300, true);
                 } catch (_) {}
                 if (resumeTimer) {
                     clearTimeout(resumeTimer);
                     resumeTimer = null;
                 }
             };
-            const resume = () => {
+            const exitInteractive = () => {
                 if (resumeTimer) {
                     clearTimeout(resumeTimer);
                 }
                 resumeTimer = setTimeout(() => {
                     try {
+                        $el.slick("slickSetOption", "speed", 12000, false);
+                        $el.slick("slickSetOption", "cssEase", "linear", true);
                         $el.slick("slickPlay");
                     } catch (_) {}
-                }, 1200); // resume ~1.2s after interaction ends
+                }, 350);
             };
 
-            // Touch/drag events to control pause/resume
-            $el.on("touchstart mousedown", pause);
-            $el.on("touchend mouseup mouseleave", resume);
+            // Touch/drag hooks
+            $el.on("touchstart mousedown", enterInteractive);
+            $el.on("touchend mouseup mouseleave", exitInteractive);
 
-            // Keep peek padding responsive
+            // keep peek padding responsive
             const updatePadTall = () => {
                 try {
                     $el.slick("slickSetOption", "centerPadding", minPadForViewport() + "px", false);
@@ -270,7 +271,7 @@
             $(window).on("resize", debounce(updatePadTall, 120));
             $el.on("breakpoint", updatePadTall);
 
-            // First paint fix
+            // first paint fix
             requestAnimationFrame(() => {
                 try {
                     $el.slick("setPosition");

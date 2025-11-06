@@ -443,3 +443,13 @@
     backface-visibility: hidden;
     transform: translateZ(0);
 }
+
+/* Let swipe/drag reach Slick even over videos */
+.slider.tall video {
+    pointer-events: none !important; /* we don't show native controls */
+}
+
+/* Improve touch behavior (allow vertical page scroll while we handle horizontal drag) */
+.slider.tall .slide {
+    touch-action: pan-y;
+}
