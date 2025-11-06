@@ -60,12 +60,14 @@
 }
 
 .section-container-inner.video {
+    background-color: #f90;
     max-width: var(--inner-content-wide-max-width);
     border-radius: var(--image-border-radius);
     overflow: hidden;
     min-height: clamp(360px, 56.25vw, 788px);
     position: relative;
     box-sizing: border-box;
+    margin: 0 auto !important;
 }
 
 .section-container-inner.video > .e-con-inner {
@@ -74,6 +76,21 @@
     box-sizing: border-box;
     padding-left: 20px !important;
     padding-right: 20px !important;
+}
+
+.section-container-inner.video > .e-con-inner > .elementor-background-video-container {
+    position: absolute !important;
+    z-index: 0;
+    inset: 0; /* fill container */
+    pointer-events: none; /* don’t intercept clicks */
+}
+
+.section-container-inner.video .elementor-background-video-embed,
+.section-container-inner.video .elementor-background-video-container video {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover; /* cover the rounded box */
+    border-radius: inherit; /* match the container radius */
 }
 
 /* Mobile: radius must be 0 */
