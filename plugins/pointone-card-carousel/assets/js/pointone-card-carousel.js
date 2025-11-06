@@ -1,7 +1,6 @@
 /* pointone-card-carousel.js
-   - Standard carousels keep current behavior
-   - .tall carousels get smooth, continuous scroll (linear, no stops)
-   - .tall carousels play ALL videos continuously (no pause on slide change)
+   - Standard .center: unchanged
+   - .tall: smooth ticker + user interaction enabled (swipe/drag)
 */
 (function ($) {
     $(function () {
@@ -89,17 +88,14 @@
         /* -------------- video handling (TALL: play all) -------------- */
         function bindVideoHandlersTall($slider) {
             $slider.find("video").attr({ preload: "auto", playsInline: true, muted: true, loop: true });
-            // On init, try to play every video. Do NOT pause on slide changes.
             $slider.on("init reInit", function () {
                 $slider.find("video").each(function () {
                     try {
-                        this.currentTime = this.currentTime || 0;
                         const p = this.play();
                         if (p && p.catch) p.catch(() => {});
                     } catch (_) {}
                 });
             });
-            // Keep trying to play (some browsers block until user gesture)
             $slider.on("afterChange breakpoint", function () {
                 $slider.find("video").each(function () {
                     try {
@@ -127,7 +123,6 @@
 
         /* =======================
        STANDARD CENTER CAROUSELS
-       (exclude .tall)
        ======================= */
         $(".slider.center")
             .not(".tall")
@@ -184,9 +179,7 @@
             });
 
         /* =======================
-       TALL CAROUSELS — smooth ticker
-       - continuous linear scroll
-       - all videos play always
+       TALL CAROUSELS — smooth ticker + interactive
        ======================= */
         $(".slider.tall").each(function () {
             const $el = $(this);
@@ -198,33 +191,41 @@
             const $dots = $bar.find(".sc-dots");
 
             bindEqualizer($el);
-            bindVideoHandlersTall($el); // <<< play all videos
+            bindVideoHandlersTall($el); // play all videos
 
             const seedPad = minPadForViewport();
 
             $el.slick({
                 variableWidth: true,
-                centerMode: true, // keep peek style
+                centerMode: true,
                 centerPadding: seedPad + "px",
                 slidesToShow: 1,
                 slidesToScroll: 1,
                 infinite: true,
+
+                // Controls & dots (still supported; hidden by CSS on mobile if desired)
                 arrows: true,
                 dots: true,
                 prevArrow: $prev,
                 nextArrow: $next,
                 appendDots: $dots,
+
                 lazyLoad: "progressive",
 
-                // >>> Smooth ticker settings
+                // Smooth continuous movement
                 autoplay: true,
-                autoplaySpeed: 0, // no delay between moves
-                speed: 10000, // duration of one “pass”
-                cssEase: "linear", // smooth continuous movement
+                autoplaySpeed: 0, // no dwell
+                speed: 12000, // long duration for linear scroll
+                cssEase: "linear",
                 pauseOnHover: false,
                 pauseOnFocus: false,
-                swipe: false, // avoid snapping
-                touchMove: false,
+
+                // <<< RE-ENABLE INTERACTION >>>
+                swipe: true,
+                touchMove: true,
+                draggable: true,
+                swipeToSlide: true,
+                respondTo: "window",
                 waitForAnimate: false,
 
                 responsive: [
@@ -233,7 +234,33 @@
                 ],
             });
 
-            // keep peek padding responsive
+            // Pause the ticker while the user interacts; resume after a brief delay.
+            let resumeTimer = null;
+            const pause = () => {
+                try {
+                    $el.slick("slickPause");
+                } catch (_) {}
+                if (resumeTimer) {
+                    clearTimeout(resumeTimer);
+                    resumeTimer = null;
+                }
+            };
+            const resume = () => {
+                if (resumeTimer) {
+                    clearTimeout(resumeTimer);
+                }
+                resumeTimer = setTimeout(() => {
+                    try {
+                        $el.slick("slickPlay");
+                    } catch (_) {}
+                }, 1200); // resume ~1.2s after interaction ends
+            };
+
+            // Touch/drag events to control pause/resume
+            $el.on("touchstart mousedown", pause);
+            $el.on("touchend mouseup mouseleave", resume);
+
+            // Keep peek padding responsive
             const updatePadTall = () => {
                 try {
                     $el.slick("slickSetOption", "centerPadding", minPadForViewport() + "px", false);
@@ -243,7 +270,7 @@
             $(window).on("resize", debounce(updatePadTall, 120));
             $el.on("breakpoint", updatePadTall);
 
-            // first paint fix
+            // First paint fix
             requestAnimationFrame(() => {
                 try {
                     $el.slick("setPosition");

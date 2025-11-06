@@ -74,18 +74,17 @@
 }
 
 /* Add visible padding INSIDE content layer */
-.section-container-inner.wide > .e-con-inner {
+/* .section-container-inner.wide > .e-con-inner {
     position: relative;
-    z-index: 2; /* ensure content sits above bg video */
+    z-index: 2; 
     padding: 0 20px;
     box-sizing: border-box;
     border-radius: var(--image-border-radius);
-}
+} */
 
 /* Mobile: remove rounded corners */
 @media (max-width: 767.98px) {
-    .section-container-inner.wide,
-    .section-container-inner.wide > .e-con-inner {
+    .section-container-inner.wide {
         border-radius: 0 !important;
     }
 }
@@ -101,7 +100,7 @@
 
 /* Wide hero/video container */
 .section-container-inner.embedded {
-    margin: 0 0 var(--vertical-padding-desktop) 0;
+    margin: 0 auto var(--vertical-padding-desktop) auto;
 }
 
 /* Remove all vertical margin, stay horizontally centered */
@@ -140,7 +139,7 @@
 @media (max-width: 767px) {
     .section-container-inner {
         margin: var(--vertical-padding-mobile) auto;
-        padding: 0 12px;
+        padding: 0 var(--side-padding-narrow);
         /* background-color: #d6e8ff;  Light blue for testing */
     }
 }
