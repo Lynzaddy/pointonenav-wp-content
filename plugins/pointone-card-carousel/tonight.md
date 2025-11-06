@@ -27,3 +27,5 @@
 ## CDN
 
 -   Add Cloudways CDN ASAP for $5/month
+
+-   Backup taken at 7:35pm Central
