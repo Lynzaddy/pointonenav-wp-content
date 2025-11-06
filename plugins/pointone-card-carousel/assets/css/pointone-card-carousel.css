@@ -18,8 +18,8 @@
 }
 @media (max-width: 767.98px) {
     .slick-slide {
-        margin: 0 10px !important; /* 20px total on mobile */
-    }
+        margin: 0 10px !important;
+    } /* 20px total on mobile */
     .slick-list {
         margin: 0 -10px !important;
     }
@@ -86,8 +86,7 @@
 }
 
 /* =================================================================
-   .tall — FIX FOR LEFTMOST BLANK:
-   Use INTERNAL PADDING for the gap so Slick measures a stable width.
+   .tall — use INTERNAL PADDING for gap so Slick measures a stable width
    ================================================================= */
 .tall {
     --tall-media-w: 260px; /* content (image/video) width */
@@ -100,14 +99,13 @@
     } /* per side on mobile (total 20px) */
 }
 
-/* Remove outer margins ONLY for .tall */
+/* Remove outer margins ONLY for .tall (gap is inside the card) */
 .tall .slick-slide {
     margin: 0 !important;
 }
 
-/* Give the inner .slide a measured width = media + padding (gap) */
+/* The card width is media + left/right padding (our visual gap) */
 .tall .slide {
-    /* 260 + left/right padding (gap). Slick measures this reliably. */
     width: calc(var(--tall-media-w) + (2 * var(--tall-gap-x))) !important;
     max-width: 100%;
     align-items: stretch;
@@ -116,7 +114,7 @@
     box-sizing: border-box;
 }
 
-/* Keep the media exactly 260x325 (inside the padded slide) */
+/* Keep the media exactly 260x325 inside the padded card */
 .tall .slide .image,
 .tall .slide video {
     width: var(--tall-media-w) !important;
@@ -125,8 +123,6 @@
     object-fit: cover;
     object-position: center;
     display: block;
-    /* optional: avoid fractional subpixel blur on some GPUs */
-    image-rendering: auto;
 }
 
 /* ====== Slide Text & Spacing ====== */

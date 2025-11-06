@@ -1,7 +1,7 @@
 /* pointone-card-carousel.js
-   Fix for variableWidth+centerMode first-card gap at large viewports:
-   - Force double reflow + hard goTo on init and when crossing >=1600px.
-   - Keep your existing behaviors (.center vs .tall, autoplay opt-in).
+   - .center: play video ONLY on active slide
+   - .tall:   play ALL videos; extra clones + no-transform to fix left-edge gap
+   - hide-nav, mobile controls hide, equal-heights kept
 */
 (function ($) {
     $(function () {
@@ -18,7 +18,6 @@
 
         function minPadForViewport() {
             const w = window.innerWidth || document.documentElement.clientWidth;
-            if (w >= 1600) return 160; // big desktop
             if (w >= 1025) return 160; // desktop
             if (w >= 768) return 100; // tablet
             return 60; // mobile
@@ -133,25 +132,76 @@
             return $bar;
         }
 
-        /* ---------------------- hard fix helpers ---------------------- */
-        function hardRealign($el) {
-            // Force Slick to recalc widths/positions and snap back to current slide
-            try {
-                $el.slick("setPosition");
-                const idx = $el.slick("slickCurrentSlide");
-                // goTo with 'dontAnimate' true prevents visible jump
-                $el.slick("slickGoTo", idx, true);
-                $el.slick("setPosition");
-            } catch (_) {}
-        }
+        /* ============== INIT: .center (unchanged) ============== */
+        $(".slider.center")
+            .not(".tall")
+            .each(function () {
+                const $el = $(this);
+                if ($el.hasClass("slick-initialized")) return;
 
-        // Track whether we are in big-desktop to trigger realign only when crossing the threshold
-        let wasBigDesktop = window.innerWidth >= 1600;
+                const $bar = buildControlsBar($el);
+                const $prev = $bar.find(".slick-prev");
+                const $next = $bar.find(".slick-next");
+                const $dots = $bar.find(".sc-dots");
 
-        /* =======================
-       SHARED INIT for .center and .tall
-       ======================= */
-        $(".slider.center, .slider.tall").each(function () {
+                bindEqualizer($el);
+                bindVideoHandlersActiveOnly($el);
+
+                const seedPad = minPadForViewport();
+                const wantsAutoplay = $el.hasClass("autoplay");
+
+                $el.slick({
+                    variableWidth: true,
+                    centerMode: true,
+                    centerPadding: seedPad + "px",
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    infinite: true,
+                    speed: 300,
+                    cssEase: "ease",
+                    waitForAnimate: false,
+                    swipeToSlide: true,
+                    swipe: true,
+                    touchMove: true,
+                    draggable: true,
+                    respondTo: "window",
+
+                    arrows: true,
+                    dots: true,
+                    prevArrow: $prev,
+                    nextArrow: $next,
+                    appendDots: $dots,
+                    lazyLoad: "progressive",
+
+                    autoplay: wantsAutoplay,
+                    autoplaySpeed: 3000,
+                    pauseOnHover: true,
+                    pauseOnFocus: true,
+
+                    responsive: [
+                        { breakpoint: 1024, settings: { centerMode: true, centerPadding: "100px", variableWidth: true } },
+                        { breakpoint: 768, settings: { centerMode: true, centerPadding: "60px", variableWidth: true } },
+                    ],
+                });
+
+                const updatePad = () => {
+                    try {
+                        $el.slick("slickSetOption", "centerPadding", minPadForViewport() + "px", false);
+                        $el.slick("setPosition");
+                    } catch (_) {}
+                };
+                $(window).on("resize", debounce(updatePad, 120));
+                $el.on("breakpoint", updatePad);
+
+                requestAnimationFrame(() => {
+                    try {
+                        $el.slick("setPosition");
+                    } catch (_) {}
+                });
+            });
+
+        /* ============== INIT: .tall (clone buffer + no-transform) ============== */
+        $(".slider.tall").each(function () {
             const $el = $(this);
             if ($el.hasClass("slick-initialized")) return;
 
@@ -161,24 +211,23 @@
             const $dots = $bar.find(".sc-dots");
 
             bindEqualizer($el);
-
-            if ($el.hasClass("tall")) {
-                // For .tall we want every video rolling
-                bindVideoHandlersPlayAll($el);
-            } else {
-                bindVideoHandlersActiveOnly($el);
-            }
+            bindVideoHandlersPlayAll($el);
 
             const seedPad = minPadForViewport();
-            const wantsAutoplay = $el.hasClass("autoplay");
 
             $el.slick({
-                variableWidth: true, // width from CSS
+                variableWidth: true,
                 centerMode: true,
                 centerPadding: seedPad + "px",
-                slidesToShow: 1,
+
+                /* IMPORTANT: increase clone count so left edge never runs out */
+                slidesToShow: 3, // with variableWidth this mainly affects clones
                 slidesToScroll: 1,
                 infinite: true,
+
+                /* Prevent GPU rounding/flicker gaps on wrap */
+                useTransform: false,
+
                 speed: 300,
                 cssEase: "ease",
                 waitForAnimate: false,
@@ -187,61 +236,46 @@
                 touchMove: true,
                 draggable: true,
                 respondTo: "window",
+                touchThreshold: 10,
+
                 arrows: true,
                 dots: true,
                 prevArrow: $prev,
                 nextArrow: $next,
                 appendDots: $dots,
                 lazyLoad: "progressive",
-                autoplay: wantsAutoplay,
-                autoplaySpeed: 3000,
-                pauseOnHover: true,
-                pauseOnFocus: true,
-                // A tiny edgeFriction helps left-swipe at large widths feel right
-                edgeFriction: 0.15,
+
+                autoplay: false,
 
                 responsive: [
-                    { breakpoint: 1024, settings: { centerMode: true, centerPadding: "100px", variableWidth: true } },
-                    { breakpoint: 768, settings: { centerMode: true, centerPadding: "60px", variableWidth: true } },
+                    /* keep clone buffer consistent across breakpoints */
+                    { breakpoint: 1024, settings: { centerMode: true, centerPadding: "100px", variableWidth: true, slidesToShow: 3 } },
+                    { breakpoint: 768, settings: { centerMode: true, centerPadding: "60px", variableWidth: true, slidesToShow: 3 } },
                 ],
             });
 
-            // Initial double realign (fix first-card gap on load, esp. >=1600px)
-            // 1) next tick
-            requestAnimationFrame(() => hardRealign($el));
-            // 2) after media settles
-            setTimeout(() => hardRealign($el), 120);
-
-            // Keep peek padding responsive
             const updatePad = () => {
                 try {
                     $el.slick("slickSetOption", "centerPadding", minPadForViewport() + "px", false);
-                    hardRealign($el);
+                    $el.slick("setPosition");
                 } catch (_) {}
             };
-            $(window).on(
-                "resize",
-                debounce(() => {
-                    const nowBig = window.innerWidth >= 1600;
-                    // If we crossed the 1600px boundary in either direction, do a hard realign
-                    if (nowBig !== wasBigDesktop) {
-                        wasBigDesktop = nowBig;
-                        updatePad();
-                    } else {
-                        // normal resize, still do pad+realign to avoid fractional rounding gaps
-                        updatePad();
-                    }
-                }, 120)
-            );
+            $(window).on("resize", debounce(updatePad, 120));
+            $el.on("breakpoint", updatePad);
 
-            // Also realign when Slick flips breakpoints
-            $el.on("breakpoint", () => hardRealign($el));
+            requestAnimationFrame(() => {
+                try {
+                    $el.slick("setPosition");
+                } catch (_) {}
+            });
         });
 
-        // Global settle pass (covers weird delayed fonts/media)
+        // Global settle pass
         requestAnimationFrame(() => {
             $(".slider.slick-initialized").each(function () {
-                hardRealign($(this));
+                try {
+                    $(this).slick("setPosition");
+                } catch (_) {}
             });
         });
     });
