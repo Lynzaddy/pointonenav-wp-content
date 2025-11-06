@@ -1,11 +1,6 @@
 // my-slick.js
 (function ($) {
     $(function () {
-        // ---- Tuning knobs for the smooth slider ----
-        // Increase these to slow down the movement.
-        const SMOOTH_AUTOPLAY_DELAY = 180; // was ~50–80; try 120–250 for slow glide
-        const SMOOTH_STEP_DURATION = 6000; // was ~800; try 1200–2200 for slower steps
-
         // ---- Shared/base settings for all sliders ----
         const base = {
             slidesToShow: 6,
@@ -14,16 +9,16 @@
             arrows: true,
             dots: true,
             waitForAnimate: false, // allow arrows during animation
-            swipeToSlide: true, // snappier drag
-            touchThreshold: 8,
+            swipeToSlide: true, // makes drag feel snappier
+            touchThreshold: 8, // lower = more responsive drag
             responsive: [
-                { breakpoint: 1024, settings: { slidesToShow: 3 } },
-                { breakpoint: 640, settings: { slidesToShow: 2 } },
+                { breakpoint: 1024, settings: { slidesToShow: 2 } },
+                { breakpoint: 640, settings: { slidesToShow: 1 } },
             ],
         };
 
         // ---- 1) Smooth-ish / near-continuous (.slider.smooth) ----
-        // Slower, readable glide; still pauses cleanly and keeps controls.
+        // Looks continuous but pauses cleanly (no jump) and keeps full controls.
         $(".slider.smooth")
             .not(".slick-initialized")
             .each(function () {
@@ -32,10 +27,10 @@
                     arrows: false,
                     dots: false,
                     autoplay: true,
-                    autoplaySpeed: SMOOTH_AUTOPLAY_DELAY, // bigger = slower overall
-                    speed: SMOOTH_STEP_DURATION, // bigger = slower step
+                    autoplaySpeed: 50, // tiny delay between micro-steps (try 30–80)
+                    speed: 4000, // each micro-move duration (try 600–1000)
                     cssEase: "linear", // steady motion
-                    pauseOnHover: true,
+                    pauseOnHover: true, // now pauses cleanly without snapping
                     pauseOnFocus: true,
                     pauseOnDotsHover: true,
                 });
