@@ -5,7 +5,7 @@
     box-sizing: border-box;
 }
 
-/* ====== GAP handling via margins on slides ======
+/* ====== GAP handling (default, non-.tall) ======
    Desktop/Tablet: 40px total gap (20px L/R per slide)
    Mobile:        20px total gap (10px L/R per slide)
 */
@@ -18,8 +18,8 @@
 }
 @media (max-width: 767.98px) {
     .slick-slide {
-        margin: 0 10px !important;
-    } /* 20px total on mobile */
+        margin: 0 10px !important; /* 20px total on mobile */
+    }
     .slick-list {
         margin: 0 -10px !important;
     }
@@ -85,27 +85,48 @@
     display: block;
 }
 
-/* ====== .tall visual style ======
-   - Narrow/tall media: 260x325
-   - One-at-a-time behavior (JS uses centerMode + variableWidth)
-*/
+/* =================================================================
+   .tall — FIX FOR LEFTMOST BLANK:
+   Use INTERNAL PADDING for the gap so Slick measures a stable width.
+   ================================================================= */
 .tall {
-    --tall-media-w: 260px;
-    --tall-media-h: 325px;
+    --tall-media-w: 260px; /* content (image/video) width */
+    --tall-media-h: 325px; /* content (image/video) height */
+    --tall-gap-x: 20px; /* per side on desktop/tablet (total 40px) */
 }
+@media (max-width: 767.98px) {
+    .tall {
+        --tall-gap-x: 10px;
+    } /* per side on mobile (total 20px) */
+}
+
+/* Remove outer margins ONLY for .tall */
+.tall .slick-slide {
+    margin: 0 !important;
+}
+
+/* Give the inner .slide a measured width = media + padding (gap) */
 .tall .slide {
-    width: var(--tall-media-w) !important; /* fixed narrow card width */
+    /* 260 + left/right padding (gap). Slick measures this reliably. */
+    width: calc(var(--tall-media-w) + (2 * var(--tall-gap-x))) !important;
     max-width: 100%;
     align-items: stretch;
+    padding-left: var(--tall-gap-x);
+    padding-right: var(--tall-gap-x);
+    box-sizing: border-box;
 }
+
+/* Keep the media exactly 260x325 (inside the padded slide) */
 .tall .slide .image,
 .tall .slide video {
-    width: 100% !important;
-    height: var(--tall-media-h) !important; /* fixed tall media height */
+    width: var(--tall-media-w) !important;
+    height: var(--tall-media-h) !important;
     border-radius: 8px;
     object-fit: cover;
     object-position: center;
     display: block;
+    /* optional: avoid fractional subpixel blur on some GPUs */
+    image-rendering: auto;
 }
 
 /* ====== Slide Text & Spacing ====== */
@@ -217,7 +238,7 @@
 .slick-slider .slick-arrow-btn {
     position: relative;
     border: none !important;
-    background-color: #141413 !important; /* base stays black */
+    background-color: #141413 !important;
     border-radius: 50% !important;
     width: 40px !important;
     height: 40px !important;
@@ -235,8 +256,6 @@
     box-shadow: none !important;
     -webkit-tap-highlight-color: transparent !important;
 }
-
-/* Non-background hover via overlay prevents global transparent !important rules */
 .slick-controls .slick-arrow-btn::before,
 .slick-slider .slick-arrow-btn::before {
     content: "";
@@ -323,7 +342,7 @@
     justify-content: center;
     cursor: pointer;
     line-height: 0;
-    font-size: 0; /* hide numeric label */
+    font-size: 0;
     width: auto;
     height: auto;
     overflow: visible;
