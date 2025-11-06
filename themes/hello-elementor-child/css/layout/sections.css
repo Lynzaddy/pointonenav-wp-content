@@ -43,7 +43,6 @@
     justify-content: center; /* Centers the inner container */
     align-items: stretch;
     gap: 0;
-    /* background-color: yellow; Testing only */
     box-sizing: border-box;
 }
 
@@ -63,8 +62,10 @@
     /* gap: inherit; */
 }
 
-/* Keep your existing .wide styles but remove padding from here */
+/* ===== INNER CONTAINER (WIDE, with BG video) ===== */
 .section-container-inner.wide {
+    --wide-pad: 20px; /* easy to change later */
+
     position: relative;
     overflow: hidden;
     max-width: var(--inner-content-wide-max-width);
@@ -73,13 +74,38 @@
     margin: 0;
 }
 
-/* Add visible padding INSIDE content layer */
+/* Put visible padding on the content layer */
 .section-container-inner.wide > .e-con-inner {
-    padding: 0 20px;
-    border-radius: var(--image-border-radius);
+    position: relative;
+    box-sizing: border-box;
+    padding-left: var(--wide-pad) !important;
+    padding-right: var(--wide-pad) !important;
+    /* keep top/bottom controlled by your Elementor settings */
 }
 
-/* Mobile: remove rounded corners */
+/* Make Elementor’s bg video bleed under the side padding
+   so content has 20px inset but video still spans full width */
+.section-container-inner.wide > .e-con-inner > .elementor-background-video-container {
+    position: absolute !important;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--wide-pad) * -1);
+    right: calc(var(--wide-pad) * -1);
+    pointer-events: none; /* background only; content stays interactive */
+}
+
+/* If you ever switch to an <img> background, same idea */
+.section-container-inner.wide > .e-con-inner > .elementor-background-slideshow,
+.section-container-inner.wide > .e-con-inner > .elementor-background-overlay {
+    position: absolute !important;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--wide-pad) * -1);
+    right: calc(var(--wide-pad) * -1);
+    pointer-events: none;
+}
+
+/* Mobile: remove rounded corners if desired */
 @media (max-width: 767.98px) {
     .section-container-inner.wide {
         border-radius: 0 !important;
