@@ -61,7 +61,7 @@
 
 /* ===== INNER CONTAINER (WIDE, with BG video) ===== */
 .section-container-outer.video {
-    padding: 0 20px;
+    padding: 0 20px !important;
 }
 
 .section-container-inner.video {
