@@ -60,37 +60,71 @@
 }
 
 .section-container-inner.video {
-    background-color: #f90;
+    /* wide layout */
     max-width: var(--inner-content-wide-max-width);
+    margin: var(--vertical-padding-desktop) auto !important;
+
+    /* rounded box that clips the bg */
     border-radius: var(--image-border-radius);
     overflow: hidden;
+
+    /* target height window (16:9-ish) */
     min-height: clamp(360px, 56.25vw, 788px);
+
+    /* anchor for absolutely-positioned bg */
     position: relative;
     box-sizing: border-box;
-    margin: 0 auto !important;
 }
 
+/* content padding: always 20px L/R */
 .section-container-inner.video > .e-con-inner {
     position: relative;
-    z-index: 1;
+    z-index: 1; /* keep content above bg */
     box-sizing: border-box;
     padding-left: 20px !important;
     padding-right: 20px !important;
 }
 
+/* Elementor background container should fill and inherit radius */
 .section-container-inner.video > .e-con-inner > .elementor-background-video-container {
     position: absolute !important;
-    z-index: 0;
-    inset: 0; /* fill container */
-    pointer-events: none; /* don’t intercept clicks */
+    inset: 0 !important;
+    z-index: 0 !important;
+    overflow: hidden; /* clip the iframe/video inside */
+    border-radius: inherit; /* match rounding */
+    pointer-events: none; /* don't block clicks on content */
 }
 
-.section-container-inner.video .elementor-background-video-embed,
+/* === CASE 1: YouTube/Vimeo (iframe) ===
+   Make the iframe cover by sizing it based on both vw and vh, then center */
+.section-container-inner.video .elementor-background-video-embed {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+
+    /* Cover technique:
+     - 177.78vh = 100 * (16/9) => wide enough to cover tall boxes
+     - 56.25vw  = 100 * (9/16) => tall enough to cover wide boxes
+     Use both with min-constraints so it always covers. */
+    width: 177.78vh !important; /* grows with viewport height */
+    height: 56.25vw !important; /* grows with viewport width */
+    min-width: 100% !important;
+    min-height: 100% !important;
+
+    border: 0;
+    border-radius: 0; /* gets clipped by parent container radius */
+}
+
+/* === CASE 2: Self-hosted <video> ===
+   If you ever switch from iframe to <video>, let it cover. */
 .section-container-inner.video .elementor-background-video-container video {
+    position: absolute !important;
+    inset: 0 !important;
     width: 100% !important;
     height: 100% !important;
-    object-fit: cover; /* cover the rounded box */
-    border-radius: inherit; /* match the container radius */
+    object-fit: cover !important;
+    border-radius: inherit;
 }
 
 /* Mobile: radius must be 0 */
