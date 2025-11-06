@@ -60,52 +60,23 @@
 }
 
 .section-container-inner.video {
-    /* 1) Wide max width for video sections */
     max-width: var(--inner-content-wide-max-width);
-
-    /* 2) Rounded corners (clipped by overflow) */
     border-radius: var(--image-border-radius);
     overflow: hidden;
-
-    /* 3) Min height across sizes (16:9-ish using clamp) */
     min-height: clamp(360px, 56.25vw, 788px);
-
-    /* Keep your normal outer margins */
-    margin: var(--vertical-padding-desktop) auto;
-
-    /* Anchor for abs-pos background */
     position: relative;
     box-sizing: border-box;
 }
 
-/* 4) Consistent left/right padding for content (20px at all sizes) */
 .section-container-inner.video > .e-con-inner {
     position: relative;
-    z-index: 1; /* content above background video */
+    z-index: 1;
     box-sizing: border-box;
     padding-left: 20px !important;
     padding-right: 20px !important;
-    /* top/bottom padding stays controlled by Elementor if you want */
 }
 
-/* Elementor background video: sit behind content and fill the container */
-.section-container-inner.video > .e-con-inner > .elementor-background-video-container {
-    position: absolute !important;
-    z-index: 0;
-    inset: 0; /* fill container */
-    pointer-events: none; /* don’t intercept clicks */
-}
-
-/* Make sure the embed actually covers the space cleanly */
-.section-container-inner.video .elementor-background-video-embed,
-.section-container-inner.video .elementor-background-video-container video {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover; /* cover the rounded box */
-    border-radius: inherit; /* match the container radius */
-}
-
-/* 2b) Mobile: radius must be 0 */
+/* Mobile: radius must be 0 */
 @media (max-width: 767.98px) {
     .section-container-inner.video {
         border-radius: 0 !important;
@@ -118,7 +89,7 @@
     overflow: hidden;
     max-width: var(--inner-content-wide-max-width);
     border-radius: var(--image-border-radius);
-    min-height: clamp(360px, 56.25vw, 788px);
+    /* min-height: clamp(360px, 56.25vw, 788px); */
     margin: 0;
 }
 
