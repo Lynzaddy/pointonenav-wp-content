@@ -219,7 +219,7 @@
                 // >>> Smooth ticker settings
                 autoplay: true,
                 autoplaySpeed: 0, // no delay between moves
-                speed: 600, // duration of one “pass”
+                speed: 10000, // duration of one “pass”
                 cssEase: "linear", // smooth continuous movement
                 pauseOnHover: false,
                 pauseOnFocus: false,
