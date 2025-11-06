@@ -99,6 +99,7 @@
     overflow: hidden;
     max-width: var(--inner-content-wide-max-width);
     min-height: clamp(360px, 56.25vw, 788px);
+    padding: 0 20px;
 }
 
 /* Remove all vertical margin, stay horizontally centered */

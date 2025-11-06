@@ -1,27 +1,29 @@
 # Tonights Work
 
-## Carousel
+## Links
 
--   (X) Completed both the standard and what I called the "tall" carousel
+-   Put in links Bill provided in Figma
 
-## Homepage
+## PE
 
--   (X) Placed them with content from Figma on the homepage
+-   20px gap on both Video section
+-   Make the Tall Carousel smooth continuous transition
+-   Have the videos all play at once
+-   Feature Splits, make sure images are all consistent
+-   Bring back all the arrows on all carousels except the "Tall" one
+-   Make sure on mobile that are 20px
+-   how it works image
 
-## Events Listing Page (LIVE AND STAGING DONE)
+## Navigation
 
--   (X) Removed some of the extra spacing added on mobile
+-   [x] Remove Pricing + Atlas from header; Add Positioning Engine in front of GraphQL
+-   Check mobile nav as well
+-   [x] Add 'Polaris Pricing' in the Platform column of footer; Positioning Engine in the footer
 
-## Events Detail Page
+## Performance
 
--   (X) Took down spacing on mobile between the sections to 40px; this can always be edited
+-   New video files from Dev
 
-## Positioning Engine
+## CDN
 
--   Replaced all the images from the .zip Dev provided
--   (X) Made the video sections have a border radius of 0 on Mobile
-
-## Still working on
-
--   Add in Links Bill provided in Figma for all the sections
--   I'll work when I can tomorrow before our meeting and look through Slack and Asana
+-   Add Cloudways CDN ASAP for $5/month
