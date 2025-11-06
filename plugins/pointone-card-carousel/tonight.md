@@ -9,7 +9,7 @@
 -   20px gap on both Video section
 -   Make the Tall Carousel smooth continuous transition
 -   [x] Have the videos all play at once
--   Feature Splits, make sure images are all consistent
+-   [x] Feature Splits, make sure images are all consistent (CONFIRMED WITH FIGMA AND ADJUSTED)
 -   [x] Bring back all the arrows on all carousels except the "Tall" one
 -   [x] Make sure on mobile that are 20px
 -   [x] how it works image
