@@ -63,15 +63,22 @@
     /* gap: inherit; */
 }
 
-/* Wide hero/video container */
+/* Keep your existing .wide styles but remove padding from here */
 .section-container-inner.wide {
-    position: relative; /* so the bg video can anchor */
+    position: relative;
     overflow: hidden;
     max-width: var(--inner-content-wide-max-width);
     border-radius: var(--image-border-radius);
     min-height: clamp(360px, 56.25vw, 788px);
-    padding: 0 20px 0 20px !important;
     margin: 0;
+}
+
+/* Add visible padding INSIDE content layer */
+.section-container-inner.wide > .e-con-inner {
+    position: relative;
+    z-index: 2; /* ensure content sits above bg video */
+    padding: 0 20px;
+    box-sizing: border-box;
 }
 
 /* Mobile: remove rounded corners */
