@@ -60,3 +60,8 @@ body {
 .slider.smooth.is-paused .slick-track {
     transition: none !important;
 }
+
+/* improves touch swiping UX inside the carousel on mobile */
+.slider .slick-list {
+    touch-action: pan-y;
+}
