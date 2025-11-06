@@ -18,8 +18,8 @@
 }
 @media (max-width: 767.98px) {
     .slick-slide {
-        margin: 0 10px !important; /* 20px total on mobile */
-    }
+        margin: 0 10px !important;
+    } /* 20px total on mobile */
     .slick-list {
         margin: 0 -10px !important;
     }
@@ -42,7 +42,7 @@
     box-sizing: border-box;
 }
 
-/* ====== Media sizing (images & videos consistent) ====== */
+/* ====== MEDIA SIZING (default) for .center ====== */
 .slider .slide .image,
 .slider .slide video {
     width: 100%;
@@ -53,42 +53,56 @@
     display: block;
 }
 
-/* ====== Fixed media sizes for .center/.tall via CSS vars ====== */
-.center,
-.tall {
+/* ====== .center dimensions via CSS vars ====== */
+.center {
     --center-media-w: 280px;
     --center-media-h: 186.5px; /* 16:9 */
 }
 @media (min-width: 768px) {
-    .center,
-    .tall {
+    .center {
         --center-media-w: 400px;
         --center-media-h: 225px;
     }
 }
 @media (min-width: 1025px) {
-    .center,
-    .tall {
+    .center {
         --center-media-w: 680px;
         --center-media-h: 382.5px;
     }
 }
-
-/* slide width comes from var (paired with variableWidth in JS) */
-.center .slide,
-.tall .slide {
+.center .slide {
     width: var(--center-media-w) !important;
     max-width: 100%;
     align-items: stretch;
 }
-
-/* fixed media sizes */
 .center .slide .image,
-.center .slide video,
+.center .slide video {
+    width: 100% !important;
+    height: var(--center-media-h) !important;
+    border-radius: 8px;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+/* ====== .tall visual style (restored) ======
+   - Narrow/tall media: 260x325
+   - One-at-a-time behavior (handled by JS like .center)
+   - Still peeks via centerPadding from JS
+*/
+.tall {
+    --tall-media-w: 260px;
+    --tall-media-h: 325px;
+}
+.tall .slide {
+    width: var(--tall-media-w) !important; /* fixed narrow card width */
+    max-width: 100%;
+    align-items: stretch;
+}
 .tall .slide .image,
 .tall .slide video {
     width: 100% !important;
-    height: var(--center-media-h) !important;
+    height: var(--tall-media-h) !important; /* fixed tall media height */
     border-radius: 8px;
     object-fit: cover;
     object-position: center;
@@ -111,19 +125,17 @@
     color: var(--content-primary, #141413);
     font-family: var(--typography-font-secondary, "Azeret Mono");
     font-size: 14px;
-    font-style: normal;
     font-weight: 400;
     line-height: 100%;
     letter-spacing: 0.14px;
     text-transform: uppercase;
 }
 
-/* Heading / default 24; mobile 20; and .tall gets 20 globally as requested earlier */
+/* Heading / default 24; mobile 20; .tall = 20 on all sizes */
 .slider .slide .heading {
     color: var(--content-primary, #141413);
     font-family: var(--typography-font-primary, "Instrument Sans");
     font-size: 24px;
-    font-style: normal;
     font-weight: 500;
     line-height: 120%;
     letter-spacing: -0.4px;
@@ -133,7 +145,6 @@
         font-size: 20px;
     }
 }
-/* If you still want .tall headings at 20px on all breakpoints, keep this: */
 .tall .slide .heading {
     font-size: 20px;
 }
@@ -143,7 +154,6 @@
     color: var(--content-secondary, rgba(0, 0, 0, 0.6));
     font-family: var(--typography-font-primary, "Instrument Sans");
     font-size: 16px;
-    font-style: normal;
     font-weight: 400;
     line-height: 148%;
     letter-spacing: -0.16px;
@@ -160,7 +170,6 @@
     color: var(--content-primary, #141413);
     font-family: var(--typography-font-primary, "Instrument Sans");
     font-size: 16px;
-    font-style: normal;
     font-weight: 400;
     line-height: 148%;
     letter-spacing: -0.16px;
