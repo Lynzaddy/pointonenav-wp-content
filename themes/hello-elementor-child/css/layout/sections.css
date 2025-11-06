@@ -60,6 +60,10 @@
 }
 
 /* ===== INNER CONTAINER (WIDE, with BG video) ===== */
+.section-container-outer.video {
+    padding: 0 20px;
+}
+
 .section-container-inner.video {
     position: relative;
     overflow: hidden;
