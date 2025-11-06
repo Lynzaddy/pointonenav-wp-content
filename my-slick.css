@@ -1,4 +1,3 @@
-/* my-slick.css */
 /* ---- Base page styles (optional) ---- */
 body {
     margin: 0;
@@ -56,12 +55,12 @@ body {
     }
 }
 
-/* Instantly freeze the smooth slider while paused */
-.slider.smooth.is-paused .slick-track {
-    transition: none !important;
+/* ---- Make the SMOOTH slider completely non-interactive ---- */
+.slider.smooth .slick-list {
+    pointer-events: none; /* block clicks/taps/drags on the viewport */
 }
-
-/* improves touch swiping UX inside the carousel on mobile */
-.slider .slick-list {
-    touch-action: pan-y;
+.slider.smooth .slick-slide {
+    user-select: none; /* avoid text/image selection */
+    -webkit-user-drag: none; /* avoid image dragging on Safari */
+    cursor: default;
 }

@@ -17,7 +17,7 @@
             ],
         };
 
-        // ---------------- 1) Smooth / near-continuous (SEAMLESS WRAP) ----------------
+        // ---------------- 1) Smooth / marquee (SEAMLESS, NON-INTERACTIVE) ----------------
         $(".slider.smooth").each(function () {
             const $el = $(this);
 
@@ -36,80 +36,26 @@
                 arrows: false,
                 dots: false,
                 autoplay: true,
-                autoplaySpeed: 50, // micro delay (near-continuous look)
-                speed: 4000, // long step for silky motion
+                autoplaySpeed: 0, // no delay between steps (true continuous)
+                speed: 15000, // long, steady crawl; adjust to taste
                 cssEase: "linear",
-                // We will manage hover/touch pause ourselves for reliable resume
-                pauseOnHover: false,
+                pauseOnHover: false, // no pausing
                 pauseOnFocus: false,
                 pauseOnDotsHover: false,
+
+                // Make it non-interactive
+                draggable: false,
+                swipe: false,
+                touchMove: false,
+                accessibility: false,
             });
 
             // Seamless wrap: when we pass the first set (A), jump back by N (no animation)
             $el.on("afterChange", function (_e, _slick, current) {
                 const n = $el.data("originalCount");
                 if (typeof n === "number" && current >= n) {
-                    $el.slick("slickGoTo", current - n, true); // true = no animation
+                    $el.slick("slickGoTo", current - n, true); // true = no animation, no flicker
                 }
-                // If not manually paused or interacting, ensure crawl continues
-                if (!$el.data("paused") && !$el.data("interacting")) {
-                    $el.slick("slickPlay");
-                }
-            });
-
-            // ---------------- Interaction handling (guaranteed resume) ----------------
-            const $list = $el.find(".slick-list"); // the draggable viewport
-
-            // Helper to toggle manual pause via tap/click on a slide
-            function togglePause($carousel) {
-                const isPaused = $carousel.data("paused") === true;
-                if (isPaused) {
-                    $carousel.data("paused", false);
-                    $carousel.slick("slickPlay");
-                } else {
-                    $carousel.data("paused", true);
-                    $carousel.slick("slickPause");
-                }
-            }
-
-            // Pause immediately when the user engages (so drag feels natural)
-            $list.on("pointerdown pointerenter", function () {
-                $el.data("interacting", true);
-                $el.slick("slickPause");
-            });
-
-            // Resume as soon as the user disengages, unless manually paused
-            function resumeIfAllowed() {
-                $el.data("interacting", false);
-                if (!$el.data("paused")) {
-                    // tiny timeout helps avoid jitter with rapid event sequences
-                    setTimeout(function () {
-                        $el.slick("slickPlay");
-                    }, 40);
-                }
-            }
-            $list.on("pointerup pointercancel pointerleave", resumeIfAllowed);
-
-            // Also keep autoplay alive after layout updates
-            $el.on("setPosition", function () {
-                if (!$el.data("paused") && !$el.data("interacting")) {
-                    $el.slick("slickPlay");
-                }
-            });
-
-            // Tap/click a slide to toggle manual pause; leaving won’t auto-resume in that case
-            $el.on("click", ".slick-slide", function (e) {
-                if ($(e.target).closest(".slick-dots, .slick-arrow").length) return;
-                togglePause($el);
-            });
-
-            // Touch support (in addition to pointer events) for older browsers
-            $el.on("touchstart", function () {
-                $el.data("interacting", true);
-                $el.slick("slickPause");
-            });
-            $el.on("touchend touchcancel", function () {
-                resumeIfAllowed();
             });
         });
 
