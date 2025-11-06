@@ -101,7 +101,7 @@
 
 /* Wide hero/video container */
 .section-container-inner.embedded {
-    margin: 0 auto var(--vertical-padding-desktop) auto;
+    margin: 0 0 var(--vertical-padding-desktop) 0;
 }
 
 /* Remove all vertical margin, stay horizontally centered */
