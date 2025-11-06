@@ -85,10 +85,9 @@
     display: block;
 }
 
-/* ====== .tall visual style (restored) ======
+/* ====== .tall visual style ======
    - Narrow/tall media: 260x325
-   - One-at-a-time behavior (handled by JS like .center)
-   - Still peeks via centerPadding from JS
+   - One-at-a-time behavior (JS uses centerMode + variableWidth)
 */
 .tall {
     --tall-media-w: 260px;
