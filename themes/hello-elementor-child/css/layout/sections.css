@@ -75,10 +75,7 @@
 
 /* Add visible padding INSIDE content layer */
 .section-container-inner.wide > .e-con-inner {
-    position: relative;
-    z-index: 2;
     padding: 0 20px;
-    box-sizing: border-box;
     border-radius: var(--image-border-radius);
 }
 
