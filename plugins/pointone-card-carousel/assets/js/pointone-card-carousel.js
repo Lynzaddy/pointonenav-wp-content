@@ -1,6 +1,9 @@
 /* pointone-card-carousel.js
-   - Standard .center: unchanged
-   - .tall: smooth ticker + interactive drag with videos not blocking touch
+   Revert .tall to behave like .center (one slide at a time)
+   - .center and .tall share the same init
+   - Autoplay is opt-in via .autoplay
+   - hide-nav still works
+   - Videos play only on active slide
 */
 (function ($) {
     $(function () {
@@ -53,7 +56,7 @@
             );
         }
 
-        /* ---------------- video handling (standard) ---------------- */
+        /* ---------------- video handling (active only) ---------------- */
         function pauseAll($slider) {
             $slider.find("video").each(function () {
                 try {
@@ -71,7 +74,7 @@
                 } catch (_) {}
             });
         }
-        function bindVideoHandlersStandard($slider) {
+        function bindVideoHandlers($slider) {
             $slider.find("video").attr({ preload: "metadata", playsInline: true, muted: true, loop: true });
             $slider.on("init reInit", function () {
                 pauseAll($slider);
@@ -82,27 +85,6 @@
             });
             $slider.on("afterChange breakpoint", function () {
                 playActive($slider);
-            });
-        }
-
-        /* -------------- video handling (TALL: play all) -------------- */
-        function bindVideoHandlersTall($slider) {
-            $slider.find("video").attr({ preload: "auto", playsInline: true, muted: true, loop: true });
-            $slider.on("init reInit", function () {
-                $slider.find("video").each(function () {
-                    try {
-                        const p = this.play();
-                        if (p && p.catch) p.catch(() => {});
-                    } catch (_) {}
-                });
-            });
-            $slider.on("afterChange breakpoint", function () {
-                $slider.find("video").each(function () {
-                    try {
-                        const p = this.play();
-                        if (p && p.catch) p.catch(() => {});
-                    } catch (_) {}
-                });
             });
         }
 
@@ -122,66 +104,9 @@
         }
 
         /* =======================
-       STANDARD CENTER CAROUSELS
+       SHARED INIT for .center and .tall
        ======================= */
-        $(".slider.center")
-            .not(".tall")
-            .each(function () {
-                const $el = $(this);
-                if ($el.hasClass("slick-initialized")) return;
-
-                const $bar = buildControlsBar($el);
-                const $prev = $bar.find(".slick-prev");
-                const $next = $bar.find(".slick-next");
-                const $dots = $bar.find(".sc-dots");
-
-                bindEqualizer($el);
-                bindVideoHandlersStandard($el);
-
-                const seedPad = minPadForViewport();
-
-                $el.slick({
-                    variableWidth: true,
-                    centerMode: true,
-                    centerPadding: seedPad + "px",
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                    infinite: true,
-                    speed: 300,
-                    waitForAnimate: false,
-                    swipeToSlide: true,
-                    arrows: true,
-                    dots: true,
-                    prevArrow: $prev,
-                    nextArrow: $next,
-                    appendDots: $dots,
-                    lazyLoad: "progressive",
-                    responsive: [
-                        { breakpoint: 1024, settings: { centerMode: true, centerPadding: "100px", variableWidth: true } },
-                        { breakpoint: 768, settings: { centerMode: true, centerPadding: "60px", variableWidth: true } },
-                    ],
-                });
-
-                const updatePad = () => {
-                    try {
-                        $el.slick("slickSetOption", "centerPadding", minPadForViewport() + "px", false);
-                        $el.slick("setPosition");
-                    } catch (_) {}
-                };
-                $(window).on("resize", debounce(updatePad, 120));
-                $el.on("breakpoint", updatePad);
-
-                requestAnimationFrame(() => {
-                    try {
-                        $el.slick("setPosition");
-                    } catch (_) {}
-                });
-            });
-
-        /* =======================
-       TALL CAROUSELS — smooth ticker + interactive drag
-       ======================= */
-        $(".slider.tall").each(function () {
+        $(".slider.center, .slider.tall").each(function () {
             const $el = $(this);
             if ($el.hasClass("slick-initialized")) return;
 
@@ -191,87 +116,58 @@
             const $dots = $bar.find(".sc-dots");
 
             bindEqualizer($el);
-            bindVideoHandlersTall($el); // play all videos
+            bindVideoHandlers($el);
 
             const seedPad = minPadForViewport();
 
+            // Autoplay only if .autoplay class is present; default 3000ms
+            const wantsAutoplay = $el.hasClass("autoplay");
+
             $el.slick({
-                variableWidth: true,
+                variableWidth: true, // width comes from CSS
                 centerMode: true,
                 centerPadding: seedPad + "px",
                 slidesToShow: 1,
                 slidesToScroll: 1,
                 infinite: true,
+                speed: 300,
+                cssEase: "ease",
+                waitForAnimate: false,
+                swipeToSlide: true,
+                swipe: true,
+                touchMove: true,
+                draggable: true,
+                respondTo: "window",
 
-                // Controls & dots
                 arrows: true,
                 dots: true,
                 prevArrow: $prev,
                 nextArrow: $next,
                 appendDots: $dots,
-
                 lazyLoad: "progressive",
 
-                // Smooth continuous movement
-                autoplay: true,
-                autoplaySpeed: 0, // no dwell between steps
-                speed: 12000, // long duration for linear scroll
-                cssEase: "linear",
-                pauseOnHover: false,
-                pauseOnFocus: false,
+                autoplay: wantsAutoplay,
+                autoplaySpeed: 3000, // one-at-a-time cadence
+                pauseOnHover: true,
+                pauseOnFocus: true,
 
-                // Interaction enabled
-                swipe: true,
-                touchMove: true,
-                draggable: true,
-                swipeToSlide: true,
-                respondTo: "window",
-                waitForAnimate: false,
-                useTransform: true,
+                responsive: [
+                    { breakpoint: 1024, settings: { centerMode: true, centerPadding: "100px", variableWidth: true } },
+                    { breakpoint: 768, settings: { centerMode: true, centerPadding: "60px", variableWidth: true } },
+                ],
             });
 
-            // --- Interaction mode: while dragging, switch to normal easing/speed,
-            // then resume linear ticker smoothly after a short idle.
-            let resumeTimer = null;
-            const enterInteractive = () => {
-                try {
-                    $el.slick("slickPause");
-                    $el.slick("slickSetOption", "cssEase", "ease", false);
-                    $el.slick("slickSetOption", "speed", 300, true);
-                } catch (_) {}
-                if (resumeTimer) {
-                    clearTimeout(resumeTimer);
-                    resumeTimer = null;
-                }
-            };
-            const exitInteractive = () => {
-                if (resumeTimer) {
-                    clearTimeout(resumeTimer);
-                }
-                resumeTimer = setTimeout(() => {
-                    try {
-                        $el.slick("slickSetOption", "speed", 12000, false);
-                        $el.slick("slickSetOption", "cssEase", "linear", true);
-                        $el.slick("slickPlay");
-                    } catch (_) {}
-                }, 350);
-            };
-
-            // Touch/drag hooks
-            $el.on("touchstart mousedown", enterInteractive);
-            $el.on("touchend mouseup mouseleave", exitInteractive);
-
-            // keep peek padding responsive
-            const updatePadTall = () => {
+            // Keep peek padding responsive
+            const updatePad = () => {
                 try {
                     $el.slick("slickSetOption", "centerPadding", minPadForViewport() + "px", false);
                     $el.slick("setPosition");
                 } catch (_) {}
             };
-            $(window).on("resize", debounce(updatePadTall, 120));
-            $el.on("breakpoint", updatePadTall);
+            $(window).on("resize", debounce(updatePad, 120));
+            $el.on("breakpoint", updatePad);
 
-            // first paint fix
+            // First paint fix
             requestAnimationFrame(() => {
                 try {
                     $el.slick("setPosition");
