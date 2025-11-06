@@ -29,7 +29,7 @@
             .each(function () {
                 $(this).slick({
                     ...base,
-                    arrows: true,
+                    arrows: false,
                     dots: false,
                     autoplay: true,
                     autoplaySpeed: SMOOTH_AUTOPLAY_DELAY, // bigger = slower overall
