@@ -64,6 +64,13 @@
     padding: 0 20px !important;
 }
 
+/* Mobile: remove padding entirely */
+@media (max-width: 767px) {
+    .section-container-outer.video {
+        padding: 0 !important;
+    }
+}
+
 .section-container-inner.video {
     position: relative;
     overflow: hidden;
