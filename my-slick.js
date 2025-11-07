@@ -1,206 +1,84 @@
-$(function () {
-    /* ---------------------- utilities ---------------------- */
-    function debounce(fn, wait = 120) {
-        let t;
-        return function () {
-            clearTimeout(t);
-            const ctx = this,
-                args = arguments;
-            t = setTimeout(() => fn.apply(ctx, args), wait);
-        };
-    }
-
-    function minPadForViewport() {
-        const w = window.innerWidth || document.documentElement.clientWidth;
-        if (w >= 1025) return 160; // desktop
-        if (w >= 768) return 100; // tablet
-        return 60; // mobile
-    }
-
-    /* ------------- equal heights (keeps links aligned) ------------- */
-    function equalizeHeights($slider) {
-        if (!$slider.hasClass("slick-initialized")) return;
-        const $slides = $slider.find(".slick-slide");
-        $slides.css("min-height", "");
-        const $visible = $slider.find(".slick-slide.slick-active");
-        if ($visible.length === 0) return;
-        let maxH = 0;
-        $visible.each(function () {
-            const h = $(this).outerHeight();
-            if (h > maxH) maxH = h;
-        });
-        if (maxH > 0) $slides.css("min-height", maxH + "px");
-    }
-
-    function bindEqualizer($slider) {
-        $slider.on("init reInit afterChange breakpoint", function () {
-            // let slick settle its internal layout, then equalize
-            setTimeout(() => equalizeHeights($slider), 0);
-        });
-
-        // media-driven reflow
-        $slider.find("img, video").each(function () {
-            if (!this.complete) $(this).one("load", () => equalizeHeights($slider));
-            $(this).on && $(this).on("loadedmetadata", () => equalizeHeights($slider));
-        });
-
-        $(window).on(
-            "resize",
-            debounce(() => equalizeHeights($slider), 120)
-        );
-    }
-
-    /* ---------------- video: play only on active ---------------- */
-    function pauseAll($slider) {
-        $slider.find("video").each(function () {
-            try {
-                this.pause();
-            } catch (_) {}
-        });
-    }
-    function playActive($slider) {
-        const $actives = $slider.find(".slick-active video");
-        $actives.each(function () {
-            try {
-                // restart for reliable loop-from-start UX
-                this.currentTime = 0;
-                const p = this.play();
-                if (p && p.catch) p.catch(() => {}); // ignore autoplay block
-            } catch (_) {}
-        });
-    }
-    function bindVideoHandlers($slider) {
-        // hint to browser: avoid heavy eager loads
-        $slider.find("video").attr({ preload: "metadata", playsInline: true, muted: true, loop: true });
-        $slider.on("init reInit", function () {
-            pauseAll($slider);
-            playActive($slider);
-        });
-        $slider.on("beforeChange", function () {
-            pauseAll($slider);
-        });
-        $slider.on("afterChange breakpoint", function () {
-            playActive($slider);
-        });
-    }
-
-    /* -------------- controls: [Prev][Dots][Next] -------------- */
-    function buildControlsBar($slider) {
-        let $bar = $slider.next(".slick-controls");
-        if ($bar.length) return $bar;
-        $bar = $(`
-      <div class="slick-controls" aria-label="carousel controls">
-        <button type="button" class="slick-prev slick-arrow-btn" aria-label="Previous"><span class="icon"></span></button>
-        <div class="sc-dots" role="tablist"></div>
-        <button type="button" class="slick-next slick-arrow-btn" aria-label="Next"><span class="icon"></span></button>
-      </div>
-    `);
-        $slider.after($bar);
-        return $bar;
-    }
-
-    /* --------------------------- CENTER --------------------------- */
-    $(".center").each(function () {
-        const $el = $(this);
-        if ($el.hasClass("slick-initialized")) return;
-
-        const $bar = buildControlsBar($el);
-        const $prev = $bar.find(".slick-prev");
-        const $next = $bar.find(".slick-next");
-        const $dots = $bar.find(".sc-dots");
-
-        bindEqualizer($el);
-        bindVideoHandlers($el);
-
-        const seedPad = minPadForViewport();
-
-        $el.slick({
-            variableWidth: true, // slide width comes from CSS (center .slide uses CSS var)
-            centerMode: true,
-            centerPadding: seedPad + "px",
-            slidesToShow: 1,
+// my-slick.js
+(function ($) {
+    $(function () {
+        // ---------------- Shared/base settings ----------------
+        const base = {
+            slidesToShow: 6,
             slidesToScroll: 1,
-            infinite: true,
-            speed: 300,
-            waitForAnimate: false, // smoother rapid clicks
-            swipeToSlide: true,
-            arrows: true,
-            dots: true,
-            prevArrow: $prev,
-            nextArrow: $next,
-            appendDots: $dots,
-            lazyLoad: "progressive",
-            responsive: [
-                { breakpoint: 1024, settings: { centerMode: true, centerPadding: "100px", variableWidth: true } },
-                { breakpoint: 768, settings: { centerMode: true, centerPadding: "60px", variableWidth: true } },
-            ],
-        });
-
-        // Keep peek consistent on resize/breakpoint
-        const updatePad = () => {
-            try {
-                $el.slick("slickSetOption", "centerPadding", minPadForViewport() + "px", false);
-                $el.slick("setPosition");
-            } catch (_) {}
-        };
-        $(window).on("resize", debounce(updatePad, 120));
-        $el.on("breakpoint", updatePad);
-
-        // first paint fix
-        requestAnimationFrame(() => {
-            try {
-                $el.slick("setPosition");
-            } catch (_) {}
-        });
-    });
-
-    /* ------------------------ RESPONSIVE ------------------------- */
-    $(".responsive").each(function () {
-        const $el = $(this);
-        if ($el.hasClass("slick-initialized")) return;
-
-        const $bar = buildControlsBar($el);
-        const $prev = $bar.find(".slick-prev");
-        const $next = $bar.find(".slick-next");
-        const $dots = $bar.find(".sc-dots");
-
-        bindEqualizer($el);
-        bindVideoHandlers($el);
-
-        $el.slick({
-            slidesToShow: 4,
-            slidesToScroll: 1, // move one card at a time
-            infinite: true,
-            speed: 300,
+            infinite: true, // default; overridden for .smooth
+            arrows: false,
+            dots: false,
             waitForAnimate: false,
             swipeToSlide: true,
-            arrows: true,
-            dots: true,
-            prevArrow: $prev,
-            nextArrow: $next,
-            appendDots: $dots,
-            lazyLoad: "progressive",
+            touchThreshold: 8,
             responsive: [
-                { breakpoint: 1280, settings: { slidesToShow: 3 } },
                 { breakpoint: 1024, settings: { slidesToShow: 2 } },
-                { breakpoint: 768, settings: { slidesToShow: 1 } },
+                { breakpoint: 640, settings: { slidesToShow: 1 } },
             ],
+        };
+
+        // ---------------- 1) Smooth / marquee (SEAMLESS, NON-INTERACTIVE) ----------------
+        $(".slider.smooth").each(function () {
+            const $el = $(this);
+
+            // Duplicate slides once (A + B) for seamless wrap
+            if (!$el.data("duped")) {
+                const originalCount = $el.children(".slide").length;
+                $el.data("originalCount", originalCount);
+                $el.append($el.children(".slide").clone(true, true));
+                $el.data("duped", true);
+            }
+
+            // Init with infinite:false so we control the wrap (no visible jump)
+            $el.not(".slick-initialized").slick({
+                ...base,
+                infinite: false, // key to seamless wrap
+                arrows: false,
+                dots: false,
+                autoplay: true,
+                autoplaySpeed: 0, // no delay between steps (true continuous)
+                speed: 15000, // long, steady crawl; adjust to taste
+                cssEase: "linear",
+                pauseOnHover: false, // no pausing
+                pauseOnFocus: false,
+                pauseOnDotsHover: false,
+
+                // Make it non-interactive
+                draggable: false,
+                swipe: false,
+                touchMove: false,
+                accessibility: false,
+            });
+
+            // Seamless wrap: when we pass the first set (A), jump back by N (no animation)
+            $el.on("afterChange", function (_e, _slick, current) {
+                const n = $el.data("originalCount");
+                if (typeof n === "number" && current >= n) {
+                    $el.slick("slickGoTo", current - n, true); // true = no animation, no flicker
+                }
+            });
         });
 
-        // first paint fix
-        requestAnimationFrame(() => {
-            try {
-                $el.slick("setPosition");
-            } catch (_) {}
-        });
-    });
+        // ---------------- 2) Standard autoplay ----------------
+        $(".slider.autoplay")
+            .not(".slick-initialized")
+            .each(function () {
+                $(this).slick({
+                    ...base,
+                    autoplay: true,
+                    autoplaySpeed: 3000,
+                    speed: 400,
+                    cssEase: "ease",
+                    dots: false,
+                });
+            });
 
-    // Global settle pass (helps with hot reload / live server)
-    requestAnimationFrame(() => {
-        $(".slider.slick-initialized").each(function () {
-            try {
-                $(this).slick("setPosition");
-            } catch (_) {}
-        });
+        // ---------------- 3) Plain/standard ----------------
+        $(".slider")
+            .filter(":not(.autoplay):not(.smooth)")
+            .not(".slick-initialized")
+            .each(function () {
+                $(this).slick({ ...base });
+            });
     });
-});
+})(jQuery);

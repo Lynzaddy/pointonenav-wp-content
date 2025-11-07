@@ -40,10 +40,9 @@
     padding: 0;
     display: flex;
     flex-direction: row;
-    justify-content: center; /* Centers the inner container */
+    justify-content: center;
     align-items: stretch;
     gap: 0;
-    /* background-color: yellow; Testing only */
     box-sizing: border-box;
 }
 
@@ -51,32 +50,44 @@
 .section-container-inner {
     width: 100%;
     max-width: var(--inner-content-max-width);
-    margin: var(--vertical-padding-desktop) auto; /* Center horizontally */
-    padding: 0; /* Default padding, editable per device */
-    /*background-color: #ffd6d6;  Testing only */
+    margin: var(--vertical-padding-desktop) auto;
+    padding: 0;
     box-sizing: border-box;
-    /* Flexibility Settings */
-    display: inherit; /* Let Elementor define flex or block */
-    flex-direction: inherit; /* Inherit Elementor’s direction */
+    display: inherit;
+    flex-direction: inherit;
     justify-content: inherit;
     align-items: inherit;
-    /* gap: inherit; */
 }
 
-/* Keep your existing .wide styles but remove padding from here */
-.section-container-inner.wide {
+/* ===== INNER CONTAINER (WIDE, with BG video) ===== */
+.section-container-outer.video {
+    padding: 0 20px !important;
+}
+
+.section-container-inner.video {
     position: relative;
     overflow: hidden;
     max-width: var(--inner-content-wide-max-width);
     border-radius: var(--image-border-radius);
     min-height: clamp(360px, 56.25vw, 788px);
-    margin: 0;
+    margin: 0 !important;
 }
 
-/* Add visible padding INSIDE content layer */
-.section-container-inner.wide > .e-con-inner {
-    padding: 0 20px;
+/* Mobile: remove rounded corners */
+@media (max-width: 767.98px) {
+    .section-container-inner.video {
+        border-radius: 0 !important;
+    }
+}
+
+/* ===== INNER CONTAINER (WIDE, with BG video) ===== */
+.section-container-inner.wide {
+    position: relative;
+    overflow: hidden;
+    max-width: var(--inner-content-wide-max-width);
     border-radius: var(--image-border-radius);
+    /* min-height: clamp(360px, 56.25vw, 788px); */
+    margin: 0;
 }
 
 /* Mobile: remove rounded corners */
