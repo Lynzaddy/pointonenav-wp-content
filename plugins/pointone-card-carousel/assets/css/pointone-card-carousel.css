@@ -383,7 +383,7 @@
 }
 
 /* ====== Always hide all controls on mobile (regardless of hide-nav) ====== */
-@media (max-width: 767.98px) {
+@media (max-width: 1024px) {
     .slick-controls {
         display: none !important;
     }
