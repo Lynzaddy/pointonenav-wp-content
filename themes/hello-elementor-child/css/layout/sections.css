@@ -152,6 +152,9 @@
         padding: 0 var(--side-padding-standard);
         /* background-color: #d6ffd6;  Light green for testing */
     }
+    .section-container-inner.shallow-bottom {
+        margin: var(--vertical-padding-tablet) auto 60px auto !important;
+    }
 }
 
 /* ===== MOBILE (≤767px) ===== */
@@ -160,6 +163,9 @@
         margin: var(--vertical-padding-mobile) auto;
         padding: 0 var(--side-padding-narrow);
         /* background-color: #d6e8ff;  Light blue for testing */
+    }
+    .section-container-inner.shallow-bottom {
+        margin: var(--vertical-padding-mobile) auto 60px auto !important;
     }
 }
 
