@@ -16,14 +16,7 @@
     column-gap: 20px;
 }
 
-.card-image .image-box {
-    border: 0;
-    padding: 0;
-    min-height: 0; /* allows flex/grid to shrink the box */
-    height: auto;
-    overflow: hidden; /* keeps object-fit crops tidy if needed */
-}
-
+/* Base image box */
 .card-image .image-box {
     border: 0;
     padding: 0;
@@ -32,23 +25,20 @@
     overflow: hidden;
 }
 
+/* Base image */
 .card-image .image-box img {
     width: 100%;
     height: 100%;
     object-fit: contain;
     object-position: center;
     display: block;
-    max-height: 260px; /* default cap for desktop */
+    max-height: 260px; /* desktop cap */
 }
 
 /* Tablet: lower max height */
 @media (max-width: 1024px) {
     .card-image .image-box {
-        border: 0;
-        padding: 0;
         min-height: 150px;
-        height: auto;
-        overflow: hidden;
     }
 
     .card-image .image-box img {
@@ -56,21 +46,24 @@
     }
 }
 
-/* Mobile: give .image-box a real height so img can be 100% tall */
-@media (max-width: 768px) {
+/* Mobile: force image to fully fill the box */
+@media (max-width: 767px) {
     .card-image .image-box {
-        aspect-ratio: 3 / 2; /* maintains 3:2 ratio regardless of width */
+        aspect-ratio: 3 / 2; /* maintains 3:2 ratio */
         width: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
-        overflow: hidden; /* ensures no image bleed outside box */
+        overflow: hidden;
+        min-height: auto; /* let aspect-ratio control height */
     }
 
     .card-image .image-box img {
         width: 100%;
         height: 100%;
-        object-fit: cover; /* fills the box while preserving the 3:2 ratio */
+        max-height: none; /* 🔑 remove the cap here */
+        object-fit: cover; /* fills the box */
+        object-position: center;
     }
 }
 
