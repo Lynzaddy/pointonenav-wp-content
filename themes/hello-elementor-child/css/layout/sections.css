@@ -123,6 +123,10 @@
     margin: 0 auto !important;
 }
 
+.section-container-inner.shallow-bottom {
+    margin: var(--vertical-padding-desktop) auto 60px auto !important;
+}
+
 .section-container-inner.margin-medium {
     margin: 40px auto !important;
 }
