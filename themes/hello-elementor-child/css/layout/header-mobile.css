@@ -34,7 +34,7 @@
     transition: background-color 0.2s ease;
 }
 
-/* Hide default <summary> triangle markers in all engines */
+/* Hide default <summary> triangle markers */
 .mobile-nav-accordian .e-n-accordion-item summary::marker,
 .mobile-nav-accordian .e-n-accordion-item summary::-webkit-details-marker {
     display: none;
@@ -71,7 +71,7 @@
     padding-left: 0 !important;
 }
 
-/* === 02. Chevron Icons (Stroked) === */
+/* === 02. Chevron Icons (Stroked → FIXED) === */
 .e-n-accordion-item-title-icon {
     display: flex;
     align-items: center;
@@ -80,20 +80,19 @@
     overflow: visible;
 }
 
-/* Size bump here to match .icon-close */
 .e-n-accordion-item-title-icon svg {
     display: block;
-    width: 32px; /* increased from 24px */
-    height: 32px; /* increased from 24px */
+    width: 32px;
+    height: 32px;
     vertical-align: middle;
     overflow: visible;
 }
 
+/* ✅ FIX — Make chevrons solid + use var(--content-primary) */
 .e-n-accordion-item-title-icon .e-opened svg path,
 .e-n-accordion-item-title-icon .e-closed svg path {
-    stroke-width: 1.5 !important;
-    stroke: currentColor !important;
-    fill: none !important;
+    fill: var(--content-primary) !important;
+    stroke: none !important;
 }
 
 /* === 03. Close Icons (Stroked) === */
