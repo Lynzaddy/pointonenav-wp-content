@@ -20,6 +20,7 @@
     --vertical-padding-desktop: 100px;
     --vertical-padding-tablet: 60px;
     --vertical-padding-mobile: 60px;
+    --vertical-padding-zero: 0px;
 
     /* Inner Section Padding on Smaller Devices */
     --side-padding-narrow: 20px;
