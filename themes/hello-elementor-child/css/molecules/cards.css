@@ -77,7 +77,7 @@
         min-height: auto; /* let aspect-ratio control height */
     }
 
-    .card-image .image-tall {
+    .card-image .image-box-tall {
         aspect-ratio: 2 / 3; /* maintains 3:2 ratio */
         width: 100%;
         display: flex;
