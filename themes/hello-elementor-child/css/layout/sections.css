@@ -85,6 +85,11 @@
 @media (max-width: 767.98px) {
     .section-container-inner.video {
         border-radius: 0 !important;
+        /* 🔑 stop the clamp from making it too tall */
+        min-height: 0;
+        height: auto;
+        /* Optional (recommended): lock video container to 16:9 on mobile */
+        aspect-ratio: 16 / 9;
     }
 }
 
