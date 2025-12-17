@@ -137,7 +137,7 @@
     margin: 40px auto !important;
 }
 
-.section-container-inner.nine-sixty-text {
+.section-container-inner .nine-sixty-text {
     max-width: 960px;
     padding: 0px;
     margin: 0px;
