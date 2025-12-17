@@ -20,6 +20,7 @@
     --vertical-padding-desktop: 100px;
     --vertical-padding-tablet: 60px;
     --vertical-padding-mobile: 60px;
+    --vertical-padding-zero: 0px;
 
     /* Inner Section Padding on Smaller Devices */
     --side-padding-narrow: 20px;
@@ -84,6 +85,11 @@
 @media (max-width: 767.98px) {
     .section-container-inner.video {
         border-radius: 0 !important;
+        /* 🔑 stop the clamp from making it too tall */
+        min-height: 0;
+        height: auto;
+        /* Optional (recommended): lock video container to 16:9 on mobile */
+        aspect-ratio: 16 / 9;
     }
 }
 
@@ -129,6 +135,12 @@
 
 .section-container-inner.margin-medium {
     margin: 40px auto !important;
+}
+
+.section-container-inner .nine-sixty-text {
+    max-width: 960px;
+    padding: 0px;
+    margin: 0px;
 }
 
 /* Apply narrow vertical margin, stay horizontally centered */

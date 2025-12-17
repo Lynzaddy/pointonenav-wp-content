@@ -25,7 +25,7 @@
     overflow: hidden;
 }
 
-/* Base image */
+/* Base image (ONLY applies if there is actually an <img> tag inside .image-box) */
 .card-image .image-box img {
     width: 100%;
     height: 100%;
@@ -35,10 +35,44 @@
     max-height: 260px; /* desktop cap */
 }
 
+/* Tall image box (Elementor container w/ BACKGROUND image) */
+.card-image .image-box-tall {
+    aspect-ratio: 4 / 5;
+    border: 0;
+    padding: 0;
+
+    /* Keep this for desktop, but remove on mobile so ratio can scale */
+    max-height: 325px;
+
+    height: auto;
+    overflow: hidden;
+
+    /* IMPORTANT: because this is a background image container */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Tall image (ONLY applies if there is actually an <img> tag inside .image-box-tall)
+   Your current HTML shows .image-box-tall is empty (background image), so this
+   rule likely does nothing — but leaving it here is safe. */
+.card-image .image-box-tall img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+    max-height: 325px; /* desktop cap */
+}
+
 /* Tablet: lower max height */
 @media (max-width: 1024px) {
     .card-image .image-box {
         min-height: 150px;
+    }
+
+    .card-image .image-box-tall {
+        aspect-ratio: 4 / 5;
     }
 
     .card-image .image-box img {
@@ -46,7 +80,7 @@
     }
 }
 
-/* Mobile: force image to fully fill the box */
+/* Mobile: force image boxes to keep aspect ratios + remove tall cap so 4:5 holds */
 @media (max-width: 767px) {
     .card-image .image-box {
         aspect-ratio: 3 / 2; /* maintains 3:2 ratio */
@@ -58,11 +92,32 @@
         min-height: auto; /* let aspect-ratio control height */
     }
 
+    .card-image .image-box-tall {
+        aspect-ratio: 4 / 5; /* maintains 4:5 ratio */
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        min-height: auto; /* let aspect-ratio control height */
+
+        max-height: none; /* 🔑 allow aspect-ratio to control height on mobile */
+    }
+
     .card-image .image-box img {
         width: 100%;
         height: 100%;
         max-height: none; /* 🔑 remove the cap here */
         object-fit: cover; /* fills the box */
+        object-position: center;
+    }
+
+    /* If you ever place an <img> inside .image-box-tall on mobile */
+    .card-image .image-box-tall img {
+        width: 100%;
+        height: 100%;
+        max-height: none;
+        object-fit: cover;
         object-position: center;
     }
 }
