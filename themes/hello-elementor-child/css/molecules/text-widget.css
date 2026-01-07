@@ -50,6 +50,10 @@
     margin: 0;
 }
 
+.elementor .card-image .text-widget .btn-container {
+    align-items: flex-start !important;
+}
+
 /* Normalize inner heading nodes */
 /* (*) WORK TO REMOVE */
 /* .elementor .text-widget .overline .elementor-widget-container > .elementor-heading-title,
