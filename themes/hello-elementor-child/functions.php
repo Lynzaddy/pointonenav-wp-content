@@ -217,3 +217,24 @@ function render_state_faq_accordion() {
 }
 add_shortcode('state_faq_accordion', 'render_state_faq_accordion');
 
+add_action('wp_head', function () {
+    ?>
+    <!-- Ketch Consent Manager – EARLY LOAD -->
+    <script>
+      !function(){
+        window.semaphore = window.semaphore || [];
+        window.ketch = function(){
+          window.semaphore.push(arguments);
+        };
+
+        var e = document.createElement("script");
+        e.type = "text/javascript";
+        e.src = "https://global.ketchcdn.com/web/v3/config/point_one_nav/website_smart_tag/boot.js";
+        e.defer = true;
+        e.async = true;
+
+        document.getElementsByTagName("head")[0].appendChild(e);
+      }();
+    </script>
+    <?php
+}, 0);
