@@ -89,7 +89,7 @@
         min-height: 0;
         height: auto;
         /* Optional (recommended): lock video container to 16:9 on mobile */
-        aspect-ratio: 16 / 9;
+        aspect-ratio: 1 / 1;
     }
 }
 
