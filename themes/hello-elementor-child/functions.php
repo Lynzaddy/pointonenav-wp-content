@@ -216,3 +216,31 @@ function render_state_faq_accordion() {
   return ob_get_clean();
 }
 add_shortcode('state_faq_accordion', 'render_state_faq_accordion');
+
+add_action('wp_head', function () {
+    ?>
+    <!-- Enzuzo Consent Mode + Cookie Bar (EARLY LOAD) -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+
+      gtag('consent', 'default', {
+        'ad_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied',
+        'analytics_storage': 'denied',
+        'personalization_storage': 'denied',
+        'functionality_storage': 'granted',
+        'security_storage': 'granted',
+        'wait_for_update': 500
+      });
+
+      window.__enzuzo = window.__enzuzo || {};
+      window.__enzuzo.consentMode = window.__enzuzo.consentMode || {};
+      window.__enzuzo.consentMode.gtagScriptVersion = 1;
+    </script>
+
+    <script src="https://app.enzuzo.com/scripts/cookiebar/1c73a6f4-f1a5-11f0-9d9b-efb8bced1ecb" async></script>
+    <?php
+}, 0);
+
