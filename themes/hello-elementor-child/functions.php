@@ -238,3 +238,295 @@ add_action('wp_head', function () {
     </script>
     <?php
 }, 0);
+
+/**
+ * Sync ACF term_slug to WordPress post_name (slug)
+ */
+add_action('acf/save_post', function ($post_id) {
+
+    // Only for glossary terms
+    if (get_post_type($post_id) !== 'glossary_term') {
+        return;
+    }
+
+    // Get the custom slug field
+    $custom_slug = get_field('term_slug', $post_id);
+
+    if (!$custom_slug) {
+        return;
+    }
+
+    // Sanitize
+    $custom_slug = sanitize_title($custom_slug);
+
+    // Only update if different
+    if (get_post_field('post_name', $post_id) !== $custom_slug) {
+
+        // Prevent infinite loop
+        remove_action('acf/save_post', __FUNCTION__);
+
+        wp_update_post([
+            'ID'        => $post_id,
+            'post_name'=> $custom_slug,
+        ]);
+
+        add_action('acf/save_post', __FUNCTION__);
+    }
+
+}, 20);
+
+
+/**
+ * ======================================================
+ * GLOSSARY EXCERPT CONFIGURATION
+ * ======================================================
+ */
+
+/**
+ * Get glossary excerpt word count (admin configurable)
+ */
+function glossary_excerpt_word_count() {
+    return (int) get_option('glossary_excerpt_word_count', 18);
+}
+
+/**
+ * ======================================================
+ * AUTO-GENERATE EXCERPT ON FIRST SAVE
+ * ======================================================
+ */
+add_action('acf/save_post', function ($post_id) {
+
+    if (get_post_type($post_id) !== 'glossary_term') {
+        return;
+    }
+
+    // Respect manual excerpts
+    if (!empty(get_post_field('post_excerpt', $post_id))) {
+        return;
+    }
+
+    $definition = get_field('term_definition', $post_id);
+
+    if (!$definition) {
+        return;
+    }
+
+    $excerpt = wp_trim_words(
+        wp_strip_all_tags($definition),
+        glossary_excerpt_word_count(),
+        '…'
+    );
+
+    remove_action('acf/save_post', __FUNCTION__);
+
+    wp_update_post([
+        'ID'           => $post_id,
+        'post_excerpt' => $excerpt,
+    ]);
+
+    add_action('acf/save_post', __FUNCTION__);
+
+}, 20);
+
+/**
+ * ======================================================
+ * SINGLE TERM: REGENERATE EXCERPT BUTTON
+ * ======================================================
+ */
+add_action('post_submitbox_misc_actions', function () {
+
+    global $post;
+
+    if (!$post || $post->post_type !== 'glossary_term') {
+        return;
+    }
+
+    $url = wp_nonce_url(
+        admin_url(
+            'admin-post.php?action=regenerate_glossary_excerpt&post_id=' . $post->ID
+        ),
+        'regenerate_glossary_excerpt_' . $post->ID
+    );
+
+    echo '<div class="misc-pub-section">';
+    echo '<a href="' . esc_url($url) . '" class="button button-secondary" style="width:100%;text-align:center;">';
+    echo 'Regenerate Excerpt';
+    echo '</a>';
+    echo '</div>';
+
+});
+
+/**
+ * Handle single glossary excerpt regeneration
+ */
+add_action('admin_post_regenerate_glossary_excerpt', function () {
+
+    if (
+        empty($_GET['post_id']) ||
+        !current_user_can('edit_post', $_GET['post_id'])
+    ) {
+        wp_die('Unauthorized');
+    }
+
+    $post_id = (int) $_GET['post_id'];
+
+    check_admin_referer('regenerate_glossary_excerpt_' . $post_id);
+
+    if (get_post_type($post_id) !== 'glossary_term') {
+        wp_die('Invalid post type');
+    }
+
+    $definition = get_field('term_definition', $post_id);
+
+    if ($definition) {
+        wp_update_post([
+            'ID'           => $post_id,
+            'post_excerpt' => wp_trim_words(
+                wp_strip_all_tags($definition),
+                glossary_excerpt_word_count(),
+                '…'
+            ),
+        ]);
+    }
+
+    wp_safe_redirect(
+        admin_url('post.php?post=' . $post_id . '&action=edit&excerpt_regenerated=1')
+    );
+    exit;
+
+});
+
+/**
+ * ======================================================
+ * ADMIN NOTICE (SUCCESS)
+ * ======================================================
+ */
+add_action('admin_notices', function () {
+
+    if (!isset($_GET['excerpt_regenerated'])) {
+        return;
+    }
+
+    echo '<div class="notice notice-success is-dismissible">';
+    echo '<p><strong>Excerpt regenerated successfully.</strong></p>';
+    echo '</div>';
+
+});
+
+/**
+ * ======================================================
+ * ADMIN SETTINGS PAGE (WORD COUNT + BULK REGENERATE)
+ * ======================================================
+ */
+add_action('admin_menu', function () {
+
+    add_submenu_page(
+        'edit.php?post_type=glossary_term',
+        'Glossary Excerpts',
+        'Excerpt Settings',
+        'manage_options',
+        'glossary-excerpt-settings',
+        'render_glossary_excerpt_settings_page'
+    );
+
+});
+
+/**
+ * Render glossary excerpt settings page
+ */
+function render_glossary_excerpt_settings_page() {
+
+    if (!current_user_can('manage_options')) {
+        return;
+    }
+
+    if (isset($_POST['glossary_word_count'])) {
+        check_admin_referer('save_glossary_excerpt_settings');
+
+        update_option(
+            'glossary_excerpt_word_count',
+            max(1, (int) $_POST['glossary_word_count'])
+        );
+
+        echo '<div class="notice notice-success is-dismissible"><p>Settings saved.</p></div>';
+    }
+
+    $word_count = glossary_excerpt_word_count();
+    ?>
+
+    <div class="wrap">
+        <h1>Glossary Excerpt Settings</h1>
+
+        <form method="post">
+            <?php wp_nonce_field('save_glossary_excerpt_settings'); ?>
+
+            <table class="form-table">
+                <tr>
+                    <th scope="row">Excerpt Word Count</th>
+                    <td>
+                        <input type="number" name="glossary_word_count" value="<?php echo esc_attr($word_count); ?>" min="1" />
+                        <p class="description">Controls how many words appear in glossary cards.</p>
+                    </td>
+                </tr>
+            </table>
+
+            <?php submit_button('Save Settings'); ?>
+        </form>
+
+        <hr>
+
+        <h2>Bulk Regenerate All Excerpts</h2>
+        <p><strong>Warning:</strong> This will overwrite all glossary excerpts.</p>
+
+        <a href="<?php echo esc_url(
+            wp_nonce_url(
+                admin_url('admin-post.php?action=regenerate_all_glossary_excerpts'),
+                'regenerate_all_glossary_excerpts'
+            )
+        ); ?>" class="button button-primary">
+            Regenerate All Glossary Excerpts
+        </a>
+    </div>
+
+<?php
+}
+
+/**
+ * ======================================================
+ * BULK REGENERATE ALL GLOSSARY EXCERPTS
+ * ======================================================
+ */
+add_action('admin_post_regenerate_all_glossary_excerpts', function () {
+
+    if (!current_user_can('manage_options')) {
+        wp_die('Unauthorized');
+    }
+
+    check_admin_referer('regenerate_all_glossary_excerpts');
+
+    $terms = get_posts([
+        'post_type'      => 'glossary_term',
+        'posts_per_page' => -1,
+        'post_status'    => 'any',
+    ]);
+
+    foreach ($terms as $term) {
+        $definition = get_field('term_definition', $term->ID);
+        if (!$definition) continue;
+
+        wp_update_post([
+            'ID'           => $term->ID,
+            'post_excerpt' => wp_trim_words(
+                wp_strip_all_tags($definition),
+                glossary_excerpt_word_count(),
+                '…'
+            ),
+        ]);
+    }
+
+    wp_safe_redirect(
+        admin_url('edit.php?post_type=glossary_term&page=glossary-excerpt-settings&bulk_done=1')
+    );
+    exit;
+
+});
