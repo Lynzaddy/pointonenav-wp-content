@@ -380,8 +380,8 @@ button:hover {
     display: inline-block;
 } */
 
-.green-box-label .elementor-heading-title::before {
-    content: "\f101"; /* replace with the REAL square glyph */
+/* .green-box-label .elementor-heading-title::before {
+    content: "\fc40"; 
     font-family: "tabler-icons";
     font-weight: normal;
     font-style: normal;
@@ -390,7 +390,7 @@ button:hover {
     color: var(--background-brand);
     display: inline-block;
     margin-right: 0.4em;
-}
+} */
 
 /* Add a Green Arrow Pointing Up in front of Element (can be applied to most) */
 .green-arrow-up-label {
