@@ -369,15 +369,27 @@ button:hover {
 }
 
 /* Icon before the label */
-.green-box-label::before {
+/* .green-box-label::before {
     content: "\fc40";
     font-family: "tabler-icons";
     font-weight: normal;
     font-style: normal;
-    font-size: 0.5em; /* Slightly smaller than text */
+    font-size: 0.5em; 
     line-height: 1;
-    color: var(--background-brand); /* Green color */
+    color: var(--background-brand);
     display: inline-block;
+} */
+
+.green-box-label .elementor-heading-title::before {
+    content: "\f101"; /* replace with the REAL square glyph */
+    font-family: "tabler-icons";
+    font-weight: normal;
+    font-style: normal;
+    font-size: 0.5em;
+    line-height: 1;
+    color: var(--background-brand);
+    display: inline-block;
+    margin-right: 0.4em;
 }
 
 /* Add a Green Arrow Pointing Up in front of Element (can be applied to most) */
