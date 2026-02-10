@@ -85,6 +85,14 @@
     display: block;
 }
 
+@media (max-width: 767.98px) {
+    .center .slide img,
+    .center .slide video {
+        max-height: 160px !important;
+        object-fit: cover;
+    }
+}
+
 /* =================================================================
    .tall — use INTERNAL PADDING for gap so Slick measures a stable width
    ================================================================= */
