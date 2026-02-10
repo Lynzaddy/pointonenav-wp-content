@@ -36,12 +36,12 @@
 }
 
 /* =====================================================
-   MEDIA NORMALIZATION (IMG + VIDEO MUST MATCH)
+   MEDIA NORMALIZATION (IMG + VIDEO)
    ===================================================== */
 .slider .slide img,
 .slider .slide video {
     width: 100% !important;
-    height: 100% !important; /* CRITICAL: kills video auto-height */
+    height: 100% !important;
     aspect-ratio: 16 / 9;
     object-fit: cover;
     object-position: center;
@@ -49,13 +49,12 @@
     display: block;
 }
 
-/* Remove inline video sizing side-effects */
 .slider .slide video {
     max-height: none !important;
     min-height: 0 !important;
 }
 
-/* ====== .center dimensions via CSS vars ====== */
+/* ====== .center sizing ====== */
 .center {
     --center-media-w: 280px;
     --center-media-h: 186.5px;
@@ -76,18 +75,15 @@
 .center .slide {
     width: var(--center-media-w) !important;
     max-width: 100%;
-    align-items: stretch;
 }
 
-/* FORCE identical media height for img + video */
 .center .slide img,
 .center .slide video {
-    width: 100% !important;
     height: var(--center-media-h) !important;
 }
 
 /* =====================================================
-   .tall — internal gap sizing
+   .tall variant
    ===================================================== */
 .tall {
     --tall-media-w: 260px;
@@ -106,27 +102,14 @@
 
 .tall .slide {
     width: calc(var(--tall-media-w) + (2 * var(--tall-gap-x))) !important;
-    max-width: 100%;
     padding-left: var(--tall-gap-x);
     padding-right: var(--tall-gap-x);
-    box-sizing: border-box;
 }
 
-/* LOCK tall media size */
 .tall .slide img,
 .tall .slide video {
     width: var(--tall-media-w) !important;
     height: var(--tall-media-h) !important;
-}
-
-/* Text width alignment */
-.tall .slide .overline,
-.tall .slide .heading,
-.tall .slide .body,
-.tall .slide .link {
-    width: var(--tall-media-w);
-    max-width: var(--tall-media-w);
-    box-sizing: border-box;
 }
 
 /* ====== Text spacing ====== */
@@ -142,50 +125,57 @@
 
 /* ====== Typography ====== */
 .slider .slide .overline {
-    color: var(--content-primary, #141413);
     font-family: var(--typography-font-secondary, "Azeret Mono");
     font-size: 14px;
-    font-weight: 400;
     text-transform: uppercase;
 }
 
 .slider .slide .heading {
     font-family: var(--typography-font-primary, "Instrument Sans");
     font-size: 24px;
-    font-weight: 500;
 }
 @media (max-width: 767.98px) {
     .slider .slide .heading {
         font-size: 20px;
     }
 }
-.tall .slide .heading {
-    font-size: 20px;
-}
 
 .slider .slide .body {
-    color: var(--content-secondary, rgba(0, 0, 0, 0.6));
     font-size: 16px;
     line-height: 148%;
-    flex: 1 1 auto;
 }
 
-.slider .slide .link {
-    margin-top: 8px;
-    margin-bottom: 16px;
-}
-
-/* ====== Controls ====== */
+/* =====================================================
+   SLICK CONTROLS — FIXED ALIGNMENT
+   ===================================================== */
 .slick-controls {
-    display: inline-flex;
+    display: flex !important;
     align-items: center;
     justify-content: center;
     gap: 32px;
-    width: 100%;
-    margin-top: 10px;
-    min-height: 40px;
+
+    width: 100vw; /* escape slick-list padding */
+    margin-left: 50%;
+    transform: translateX(-50%); /* hard center */
+
+    margin-top: 12px;
+    padding: 0;
+    box-sizing: border-box;
 }
 
+/* Keep arrows visible */
+.slick-controls button {
+    flex: 0 0 auto;
+}
+
+/* Dot row safety */
+.slick-controls .sc-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ====== Hide controls on tablet & down ====== */
 @media (max-width: 1024px) {
     .slick-controls {
         display: none !important;
