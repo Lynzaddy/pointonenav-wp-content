@@ -1,20 +1,26 @@
-/* ====== Slider container ====== */
+/* =====================================================
+   SLIDER CONTAINER
+   ===================================================== */
 .slider {
     display: block;
     overflow-x: hidden;
     box-sizing: border-box;
 }
 
-/* ====== GAP handling (default, non-.tall) ====== */
+/* =====================================================
+   GAP HANDLING (non-.tall)
+   ===================================================== */
 .slick-slide {
     margin: 0 20px !important;
     padding: 0 !important;
     height: auto;
     box-sizing: border-box;
 }
+
 .slick-list {
     margin: 0 -20px !important;
 }
+
 @media (max-width: 767.98px) {
     .slick-slide {
         margin: 0 10px !important;
@@ -24,14 +30,14 @@
     }
 }
 
-/* ====== Card base ====== */
+/* =====================================================
+   CARD BASE
+   ===================================================== */
 .slider .slide {
     display: flex;
     flex-direction: column;
     background: transparent;
-    border-radius: 0;
     overflow: hidden;
-    height: 100%;
     box-sizing: border-box;
 }
 
@@ -54,17 +60,21 @@
     min-height: 0 !important;
 }
 
-/* ====== .center sizing ====== */
+/* =====================================================
+   CENTER MODE SIZING
+   ===================================================== */
 .center {
     --center-media-w: 280px;
     --center-media-h: 186.5px;
 }
+
 @media (min-width: 768px) {
     .center {
         --center-media-w: 400px;
         --center-media-h: 225px;
     }
 }
+
 @media (min-width: 1025px) {
     .center {
         --center-media-w: 680px;
@@ -83,13 +93,14 @@
 }
 
 /* =====================================================
-   .tall variant
+   TALL VARIANT
    ===================================================== */
 .tall {
     --tall-media-w: 260px;
     --tall-media-h: 325px;
     --tall-gap-x: 20px;
 }
+
 @media (max-width: 767.98px) {
     .tall {
         --tall-gap-x: 10px;
@@ -104,6 +115,7 @@
     width: calc(var(--tall-media-w) + (2 * var(--tall-gap-x))) !important;
     padding-left: var(--tall-gap-x);
     padding-right: var(--tall-gap-x);
+    box-sizing: border-box;
 }
 
 .tall .slide img,
@@ -112,28 +124,37 @@
     height: var(--tall-media-h) !important;
 }
 
-/* ====== Text spacing ====== */
+/* =====================================================
+   TEXT SPACING
+   ===================================================== */
 .slider .slide .overline {
     margin-top: 20px;
 }
+
 .slider .slide .heading {
     margin-top: 20px;
 }
+
 .slider .slide .body {
     margin-top: 8px;
 }
 
-/* ====== Typography ====== */
+/* =====================================================
+   TYPOGRAPHY
+   ===================================================== */
 .slider .slide .overline {
     font-family: var(--typography-font-secondary, "Azeret Mono");
     font-size: 14px;
+    font-weight: 400;
     text-transform: uppercase;
 }
 
 .slider .slide .heading {
     font-family: var(--typography-font-primary, "Instrument Sans");
     font-size: 24px;
+    font-weight: 500;
 }
+
 @media (max-width: 767.98px) {
     .slider .slide .heading {
         font-size: 20px;
@@ -146,7 +167,7 @@
 }
 
 /* =====================================================
-   SLICK CONTROLS — FIXED ALIGNMENT
+   SLICK CONTROLS (CENTERED + STABLE)
    ===================================================== */
 .slick-controls {
     display: flex !important;
@@ -154,28 +175,94 @@
     justify-content: center;
     gap: 32px;
 
-    width: 100vw; /* escape slick-list padding */
+    width: 100vw;
     margin-left: 50%;
-    transform: translateX(-50%); /* hard center */
-
+    transform: translateX(-50%);
     margin-top: 12px;
+
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Keep arrows visible */
-.slick-controls button {
-    flex: 0 0 auto;
-}
-
-/* Dot row safety */
-.slick-controls .sc-dots {
-    display: flex;
+/* =====================================================
+   ARROW BUTTONS
+   ===================================================== */
+.slick-controls .slick-arrow-btn {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #141413 !important;
+    border: none !important;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 }
 
-/* ====== Hide controls on tablet & down ====== */
+/* ARROW ICON (VS CODE SAFE) */
+.slick-arrow-btn .icon {
+    width: 24px;
+    height: 24px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='9 6 15 12 9 18'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 24px 24px;
+}
+
+.slick-prev .icon {
+    transform: rotate(180deg);
+}
+
+/* =====================================================
+   DOTS — HARD RESET (NO SLICK THEME BLEED)
+   ===================================================== */
+.slick-dots,
+.slick-dots li button:before {
+    content: none !important;
+}
+
+.slick-controls .slick-dots {
+    display: flex !important;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.slick-controls .slick-dots li button {
+    padding: 0;
+    border: none;
+    background: transparent;
+}
+
+/* Inactive dot */
+.slick-controls .slick-dots li button::after {
+    content: "";
+    display: block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: #929285;
+    transition: all 0.2s ease;
+}
+
+/* Active dot */
+.slick-controls .slick-dots li.slick-active button::after {
+    width: 20px;
+    height: 4px;
+    border-radius: 100px;
+    background-color: #141413;
+}
+
+/* Hover */
+.slick-controls .slick-dots li button:hover::after {
+    background-color: #6b7280;
+}
+
+/* =====================================================
+   HIDE CONTROLS ON TABLET + MOBILE
+   ===================================================== */
 @media (max-width: 1024px) {
     .slick-controls {
         display: none !important;
