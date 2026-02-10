@@ -43,14 +43,21 @@
 }
 
 /* ====== MEDIA SIZING (default) for .center ====== */
-.slider .slide .image,
+.slider .slide img,
 .slider .slide video {
-    width: 100%;
+    width: 100% !important;
+    height: 100% !important; /* CRITICAL: kills video auto-height */
     aspect-ratio: 16 / 9;
     object-fit: cover;
     object-position: center;
     border-radius: 8px;
     display: block;
+}
+
+/* Remove inline video sizing side-effects */
+.slider .slide video {
+    max-height: none !important;
+    min-height: 0 !important;
 }
 
 /* ====== .center dimensions via CSS vars ====== */
@@ -191,8 +198,6 @@
 .slider .slide .link {
     margin-top: 8px;
     margin-bottom: 16px;
-
-    color: #f90 !important;
 }
 .slider .slide .link a {
     color: var(--content-primary, #141413);
