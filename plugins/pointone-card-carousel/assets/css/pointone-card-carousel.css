@@ -191,6 +191,8 @@
 .slider .slide .link {
     margin-top: 8px;
     margin-bottom: 16px;
+
+    color: #f90 !important;
 }
 .slider .slide .link a {
     color: var(--content-primary, #141413);
@@ -360,7 +362,11 @@
     height: 4px;
     border-radius: 50%;
     background-color: #929285;
-    transition: width 0.25s ease, height 0.25s ease, background-color 0.2s ease, border-radius 0.2s ease;
+    transition:
+        width 0.25s ease,
+        height 0.25s ease,
+        background-color 0.2s ease,
+        border-radius 0.2s ease;
 }
 .slick-controls .sc-dots .slick-dots li.slick-active button::after {
     width: 20px;
