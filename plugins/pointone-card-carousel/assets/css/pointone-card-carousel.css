@@ -9,10 +9,14 @@
 .slick-slide {
     margin: 0 20px !important;
     padding: 0 !important;
+    height: auto;
+    box-sizing: border-box;
 }
+
 .slick-list {
     margin: 0 -20px !important;
 }
+
 @media (max-width: 767.98px) {
     .slick-slide {
         margin: 0 10px !important;
@@ -22,26 +26,19 @@
     }
 }
 
-.slick-slide {
-    height: auto;
-    box-sizing: border-box;
-}
-
 /* ====== Card base ====== */
 .slider .slide {
     display: flex;
     flex-direction: column;
     background: transparent;
     overflow: hidden;
-    height: 100%;
     box-sizing: border-box;
 }
 
-/* ====== MEDIA BASE ====== */
+/* ====== MEDIA BASE (DO NOT FORCE HEIGHT) ====== */
 .slider .slide img,
 .slider .slide video {
     width: 100% !important;
-    height: 100% !important;
     aspect-ratio: 16 / 9;
     object-fit: cover;
     object-position: center;
@@ -59,12 +56,14 @@
     --center-media-w: 280px;
     --center-media-h: 186.5px;
 }
+
 @media (min-width: 768px) {
     .center {
         --center-media-w: 400px;
         --center-media-h: 225px;
     }
 }
+
 @media (min-width: 1025px) {
     .center {
         --center-media-w: 680px;
@@ -77,12 +76,13 @@
     max-width: 100%;
 }
 
-/* ✅ FIXED SELECTOR — IMG + VIDEO BOTH LOCKED */
-.center .slide img,
-.center .slide video {
-    width: 100% !important;
-    height: var(--center-media-h) !important;
-    object-fit: cover;
+/* ====== MOBILE-ONLY HEIGHT LOCK (IMG + VIDEO) ====== */
+@media (max-width: 767.98px) {
+    .center .slide img,
+    .center .slide video {
+        height: var(--center-media-h) !important;
+        object-fit: cover;
+    }
 }
 
 /* ====== TALL VARIANT ====== */
@@ -91,6 +91,7 @@
     --tall-media-h: 325px;
     --tall-gap-x: 20px;
 }
+
 @media (max-width: 767.98px) {
     .tall {
         --tall-gap-x: 10px;
@@ -119,9 +120,11 @@
 .slider .slide .overline {
     margin-top: 20px;
 }
+
 .slider .slide .heading {
     margin-top: 20px;
 }
+
 .slider .slide .body {
     margin-top: 8px;
 }
@@ -132,21 +135,24 @@
     font-size: 14px;
     text-transform: uppercase;
 }
+
 .slider .slide .heading {
     font-family: var(--typography-font-primary, "Instrument Sans");
     font-size: 24px;
 }
+
 @media (max-width: 767.98px) {
     .slider .slide .heading {
         font-size: 20px;
     }
 }
+
 .slider .slide .body {
     font-size: 16px;
     line-height: 148%;
 }
 
-/* ====== CONTROLS (unchanged) ====== */
+/* ====== CONTROLS (UNCHANGED, SAFE) ====== */
 .slick-controls {
     display: inline-flex;
     align-items: center;
