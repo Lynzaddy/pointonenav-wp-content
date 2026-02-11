@@ -1,49 +1,47 @@
-/* 
-==================================================
-    PON-SLIDER.CSS
-    Description: Styles for the PON slider section.
-==================================================  
-*/
-
 /* ====== Slider container ====== */
 .slider {
     display: block;
     overflow-x: hidden;
-    padding-bottom: 16px; /* room for controls */
     box-sizing: border-box;
 }
 
-/* ====== SOLID, ALWAYS-ON GAP (40px total) ======
-   20px margin left/right on every slide; counter with -20px on list */
+/* ====== GAP handling (default, non-.tall) ====== */
 .slick-slide {
     margin: 0 20px !important;
     padding: 0 !important;
+    height: auto;
+    box-sizing: border-box;
 }
 .slick-list {
     margin: 0 -20px !important;
 }
-
-/* Auto-height; JS equalizes visible ones */
-.slick-slide {
-    height: auto;
-    box-sizing: border-box;
+@media (max-width: 767.98px) {
+    .slick-slide {
+        margin: 0 10px !important;
+    }
+    .slick-list {
+        margin: 0 -10px !important;
+    }
 }
 
 /* ====== Card base ====== */
 .slider .slide {
     display: flex;
     flex-direction: column;
-    background: #fff;
+    background: transparent;
     border-radius: 0;
     overflow: hidden;
     height: 100%;
     box-sizing: border-box;
 }
 
-/* ====== Media defaults (responsive variant) ====== */
-.slider .slide .image,
+/* =====================================================
+   MEDIA NORMALIZATION (IMG + VIDEO MUST MATCH)
+   ===================================================== */
+.slider .slide img,
 .slider .slide video {
-    width: 100%;
+    width: 100% !important;
+    height: 100% !important; /* CRITICAL: kills video auto-height */
     aspect-ratio: 16 / 9;
     object-fit: cover;
     object-position: center;
@@ -51,10 +49,16 @@
     display: block;
 }
 
-/* ====== Fixed media sizes for .center via CSS vars ====== */
+/* Remove inline video sizing side-effects */
+.slider .slide video {
+    max-height: none !important;
+    min-height: 0 !important;
+}
+
+/* ====== .center dimensions via CSS vars ====== */
 .center {
     --center-media-w: 280px;
-    --center-media-h: 186.5px; /* 16:9 */
+    --center-media-h: 186.5px;
 }
 @media (min-width: 768px) {
     .center {
@@ -69,265 +73,121 @@
     }
 }
 
-/* .center slide width matches media (pairs with variableWidth in JS) */
 .center .slide {
     width: var(--center-media-w) !important;
     max-width: 100%;
     align-items: stretch;
 }
 
-/* Fixed media sizes for .center */
-.center .slide .image,
+/* FORCE identical media height for img + video */
+.center .slide img,
 .center .slide video {
     width: 100% !important;
     height: var(--center-media-h) !important;
-    border-radius: 8px;
-    object-fit: cover;
-    object-position: center;
-    display: block;
 }
 
-/* ====== Slide Text & Spacing ====== */
+/* =====================================================
+   .tall — internal gap sizing
+   ===================================================== */
+.tall {
+    --tall-media-w: 260px;
+    --tall-media-h: 325px;
+    --tall-gap-x: 20px;
+}
+@media (max-width: 767.98px) {
+    .tall {
+        --tall-gap-x: 10px;
+    }
+}
+
+.tall .slick-slide {
+    margin: 0 !important;
+}
+
+.tall .slide {
+    width: calc(var(--tall-media-w) + (2 * var(--tall-gap-x))) !important;
+    max-width: 100%;
+    padding-left: var(--tall-gap-x);
+    padding-right: var(--tall-gap-x);
+    box-sizing: border-box;
+}
+
+/* LOCK tall media size */
+.tall .slide img,
+.tall .slide video {
+    width: var(--tall-media-w) !important;
+    height: var(--tall-media-h) !important;
+}
+
+/* Text width alignment */
+.tall .slide .overline,
+.tall .slide .heading,
+.tall .slide .body,
+.tall .slide .link {
+    width: var(--tall-media-w);
+    max-width: var(--tall-media-w);
+    box-sizing: border-box;
+}
+
+/* ====== Text spacing ====== */
 .slider .slide .overline {
     margin-top: 20px;
-} /* from media */
+}
 .slider .slide .heading {
-    margin-top: 8px;
+    margin-top: 20px;
 }
 .slider .slide .body {
     margin-top: 8px;
 }
 
-/* Overline / o14 */
+/* ====== Typography ====== */
 .slider .slide .overline {
     color: var(--content-primary, #141413);
     font-family: var(--typography-font-secondary, "Azeret Mono");
     font-size: 14px;
-    font-style: normal;
     font-weight: 400;
-    line-height: 100%;
-    letter-spacing: 0.14px;
     text-transform: uppercase;
 }
 
-/* Heading / h20 */
 .slider .slide .heading {
-    color: var(--content-primary, #141413);
     font-family: var(--typography-font-primary, "Instrument Sans");
-    font-size: 20px;
-    font-style: normal;
+    font-size: 24px;
     font-weight: 500;
-    line-height: 120%;
-    letter-spacing: -0.4px;
+}
+@media (max-width: 767.98px) {
+    .slider .slide .heading {
+        font-size: 20px;
+    }
+}
+.tall .slide .heading {
+    font-size: 20px;
 }
 
-/* Body / b16 */
 .slider .slide .body {
     color: var(--content-secondary, rgba(0, 0, 0, 0.6));
-    font-family: var(--typography-font-primary, "Instrument Sans");
     font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
     line-height: 148%;
-    letter-spacing: -0.16px;
-    flex: 1 1 auto; /* keeps link bottom-aligned */
-    min-height: 0;
+    flex: 1 1 auto;
 }
 
-/* Link / b16-link */
 .slider .slide .link {
     margin-top: 8px;
     margin-bottom: 16px;
 }
-.slider .slide .link a {
-    color: var(--content-primary, #141413);
-    font-family: var(--typography-font-primary, "Instrument Sans");
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 148%;
-    letter-spacing: -0.16px;
-    text-decoration-line: underline;
-    text-decoration-style: solid;
-    text-decoration-skip-ink: none;
-    text-decoration-thickness: auto;
-    text-underline-offset: auto;
-    text-underline-position: from-font;
-    transition: color 0.2s ease;
-}
-.slider .slide .link a:hover,
-.slider .slide .link a:focus-visible {
-    color: var(--content-secondary, rgba(0, 0, 0, 0.6));
-}
 
-/* ====== Controls Row: [Prev] [Dots] [Next] ====== */
+/* ====== Controls ====== */
 .slick-controls {
     display: inline-flex;
-    align-items: center; /* vertical centering for arrows + dots wrapper */
+    align-items: center;
     justify-content: center;
-    gap: 32px; /* arrows ↔ dots spacing */
+    gap: 32px;
     width: 100%;
     margin-top: 10px;
-    padding: 0 8px;
-    box-sizing: border-box;
-    min-height: 40px; /* anchors the row height */
-}
-
-/* Keep arrows inside the controls row */
-.slick-controls .slick-prev,
-.slick-controls .slick-next {
-    position: static !important;
-    left: auto !important;
-    right: auto !important;
-    top: auto !important;
-    transform: none !important;
-    z-index: 1;
-}
-.slick-controls .slick-prev:before,
-.slick-controls .slick-next:before {
-    content: none !important;
-}
-
-/* ====== 40x40 arrows + thicker 24x24 chevron ====== */
-.slick-arrow-btn {
-    border: none;
-    background-color: #000;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
     min-height: 40px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    line-height: 0;
-    flex: 0 0 auto;
-    transition: background-color 0.15s ease;
-    outline: none;
-    box-shadow: none;
-    -webkit-tap-highlight-color: transparent;
-}
-.slick-arrow-btn:hover {
-    background: #6b7280;
-}
-.slick-arrow-btn:focus,
-.slick-arrow-btn:focus-visible {
-    background: #000;
-}
-.slick-arrow-btn:active {
-    background: #4b5563;
 }
 
-/* Stroked chevron (thicker), centered at 24x24 */
-.slick-arrow-btn .icon {
-    width: 24px;
-    height: 24px;
-    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' vector-effect='non-scaling-stroke' stroke-linecap='round' stroke-linejoin='round'><polyline points='9 6 15 12 9 18'/></svg>")
-        center / 24px 24px no-repeat;
-}
-.slick-prev .icon {
-    transform: rotate(180deg);
-}
-
-/* ====== Dots as Dashes (no overlap, perfectly centered) ====== */
-/* Wrapper for dots row — give it the same height as arrows and center */
-.slick-controls .sc-dots {
-    display: flex;
-    align-items: center; /* vertically center inside 40px track */
-    justify-content: center;
-    height: 40px; /* match arrow button height for perfect centering */
-}
-
-/* Inner <ul> of dots */
-.slick-controls .sc-dots .slick-dots {
-    position: static !important;
-    display: inline-flex !important;
-    align-items: center; /* center tiny bars on the same baseline */
-    justify-content: center;
-    gap: 8px; /* requested gap between dots */
-    margin: 0;
-    padding: 0;
-    width: auto !important;
-    flex: 0 0 auto !important;
-    list-style: none;
-    line-height: 0; /* kill baseline drift */
-}
-
-/* Remove Slick theme defaults that cause collisions */
-.slick-dots {
-    position: static !important;
-}
-.slick-dots li {
-    width: auto !important;
-    height: auto !important;
-    margin: 0 !important;
-    display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 auto;
-}
-.slick-dots li button:before {
-    content: none !important;
-} /* remove default bullet */
-
-/* Reset the button and draw the dash in ::after so sizes always win */
-.slick-controls .sc-dots .slick-dots li button {
-    position: relative;
-    padding: 0;
-    margin: 0;
-    border: 0;
-    background: transparent;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    line-height: 0;
-    font-size: 0; /* hide the numeric label without affecting layout */
-    width: auto;
-    height: auto;
-    overflow: visible;
-}
-
-/* Inactive dash */
-.slick-controls .sc-dots .slick-dots li button::after {
-    content: "";
-    display: block;
-    width: 20px; /* inactive width */
-    height: 4px; /* inactive height */
-    border-radius: 100px;
-    background-color: #929285; /* inactive color */
-    transition: width 0.25s ease, height 0.25s ease, background-color 0.2s ease;
-}
-
-/* Active dash */
-.slick-controls .sc-dots .slick-dots li.slick-active button::after {
-    width: 36px; /* active width */
-    height: 8px; /* active height */
-    background-color: #141413; /* active color */
-}
-
-/* Hover feedback */
-.slick-controls .sc-dots .slick-dots li button:hover::after {
-    background-color: #6b7280;
-}
-
-/* Compact controls on tablet+mobile */
 @media (max-width: 1024px) {
     .slick-controls {
-        gap: 28px;
-    }
-    .slick-controls .sc-dots {
-        height: 36px;
-    } /* match smaller arrows if you shrink them */
-    .slick-arrow-btn {
-        width: 36px;
-        height: 36px;
-        min-width: 36px;
-        min-height: 36px;
-    }
-    .slick-arrow-btn .icon {
-        width: 22px;
-        height: 22px;
+        display: none !important;
     }
 }

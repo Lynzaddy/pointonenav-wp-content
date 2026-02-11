@@ -339,3 +339,106 @@
         gap: var(--card-mb-lg) !important;
     }
 }
+
+/* =========================================================
+   Feature Container – Point One Navigation
+   Component: feature-container-pon
+   Elementor-safe, CSS-only layout control
+========================================================= */
+
+/* =========================================================
+   Reset spacing (ALL breakpoints)
+========================================================= */
+
+.feature-container-pon,
+.feature-container-pon .fc-image,
+.feature-container-pon .fc-text {
+    margin: 0;
+    padding: 0;
+}
+
+/* =========================================================
+   Base Layout (ALL breakpoints)
+========================================================= */
+
+.feature-container-pon {
+    display: flex;
+    width: 100%;
+}
+
+/* Force children to behave as columns */
+.feature-container-pon > .fc-image,
+.feature-container-pon > .fc-text {
+    flex: 1 1 0;
+}
+
+/* Vertically center text content */
+.feature-container-pon .fc-text {
+    display: flex;
+    align-items: center;
+}
+
+/* Image handling — preserve aspect ratio */
+.feature-container-pon .fc-image img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+/* =========================================================
+   Desktop (≥ 1200px)
+========================================================= */
+
+@media (min-width: 1200px) {
+    .feature-container-pon {
+        flex-direction: row !important;
+        gap: 140px;
+    }
+
+    .feature-container-pon .fc-image {
+        display: flex;
+        justify-content: center;
+    }
+
+    .feature-container-pon .fc-image img {
+        height: 700px;
+        width: auto;
+    }
+}
+
+/* =========================================================
+   Laptop (992px–1199px)
+========================================================= */
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    .feature-container-pon {
+        flex-direction: row !important;
+        gap: 60px;
+    }
+
+    .feature-container-pon .fc-image {
+        display: flex;
+        justify-content: center;
+    }
+
+    .feature-container-pon .fc-image img {
+        height: 700px;
+        width: auto;
+    }
+}
+
+/* =========================================================
+   Tablet & Mobile (≤ 991px)
+========================================================= */
+
+@media (max-width: 991px) {
+    .feature-container-pon {
+        flex-direction: column !important;
+        gap: 40px;
+    }
+
+    .feature-container-pon .fc-image img {
+        width: 100%;
+        height: auto;
+    }
+}

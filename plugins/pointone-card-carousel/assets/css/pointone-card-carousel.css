@@ -85,6 +85,14 @@
     display: block;
 }
 
+@media (max-width: 767.98px) {
+    .center .slide img,
+    .center .slide video {
+        max-height: 160px !important;
+        object-fit: cover;
+    }
+}
+
 /* =================================================================
    .tall — use INTERNAL PADDING for gap so Slick measures a stable width
    ================================================================= */
@@ -189,9 +197,10 @@
 
 /* Link / b16-link */
 .slider .slide .link {
-    margin-top: 8px;
+    margin-top: 16px;
     margin-bottom: 16px;
 }
+
 .slider .slide .link a {
     color: var(--content-primary, #141413);
     font-family: var(--typography-font-primary, "Instrument Sans");
@@ -199,7 +208,7 @@
     font-weight: 400;
     line-height: 148%;
     letter-spacing: -0.16px;
-    text-decoration-line: underline;
+    text-decoration-line: underline !important;
     text-decoration-style: solid;
     text-decoration-skip-ink: none;
     transition: color 0.2s ease;
@@ -360,7 +369,11 @@
     height: 4px;
     border-radius: 50%;
     background-color: #929285;
-    transition: width 0.25s ease, height 0.25s ease, background-color 0.2s ease, border-radius 0.2s ease;
+    transition:
+        width 0.25s ease,
+        height 0.25s ease,
+        background-color 0.2s ease,
+        border-radius 0.2s ease;
 }
 .slick-controls .sc-dots .slick-dots li.slick-active button::after {
     width: 20px;
