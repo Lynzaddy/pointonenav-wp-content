@@ -1,0 +1,136 @@
+/* 
+==================================================
+    COLORS.CSS
+    Description: Sets up Figma design system colors and CSS variables for consistent theming.
+
+    TABLE OF CONTENTS:
+    01. Design System Colors
+    02. Token Designations
+
+==================================================  
+*/
+
+:root {
+    /* ==== 01. Design System Colors (Most Common Included) ======== */
+
+    /* Brand Colors */
+    --color-brand-30: #d3f754;
+    --color-brand-40: #084206;
+    --color-brand-60: #218241;
+    --color-brand-90: #082d06;
+
+    /* White Variations */
+    --color-white-a08: rgba(255, 255, 255, 0.08);
+    --color-white-a10: rgba(255, 255, 255, 0.1);
+    --color-white-a12: rgba(255, 255, 255, 0.12);
+    --color-white-a20: rgba(255, 255, 255, 0.2);
+    --color-white-a30: rgba(255, 255, 255, 0.3);
+    --color-white-a70: rgba(255, 255, 255, 0.7);
+    --color-white-a90: rgba(255, 255, 255, 0.9);
+    --color-white-a100: rgba(255, 255, 255, 1);
+
+    /* Black Variations */
+    --color-black-a03: rgba(0, 0, 0, 0.03);
+    --color-black-a06: rgba(0, 0, 0, 0.06);
+    --color-black-a08: rgba(0, 0, 0, 0.08);
+    --color-black-a12: rgba(0, 0, 0, 0.12);
+    --color-black-a40: rgba(0, 0, 0, 0.4);
+    --color-black-a50: rgba(0, 0, 0, 0.5);
+    --color-black-a60: rgba(0, 0, 0, 0.6);
+    --color-black-a70: rgba(0, 0, 0, 0.7);
+    --color-black-a100: rgba(0, 0, 0, 1);
+
+    /* Gray Variations */
+    --color-gray-05: #fafaf9;
+    --color-gray-10: #f6f6f4;
+    --color-gray-20: #e7e7e4;
+    --color-gray-30: #dbdad2;
+    --color-gray-40: #c2c1b3;
+    --color-gray-50: #929285;
+    --color-gray-60: #808073;
+    --color-gray-70: #57574c;
+    --color-gray-80: #2a2a27;
+    --color-gray-90: #141413;
+    --color-gray-95: #0b0b0a;
+
+    /* Misc Web Colors */
+    --color-red-40: #e88181;
+    --color-red-60: #c73b3b;
+    --color-lime-40: #77b96f;
+    --color-lime-60: #418039;
+    --color-sand-20: #d5d0c3;
+    --color-sand-30: #c5beac;
+    --color-sand-90: #51463d;
+    --color-sand-95: #2a2420;
+
+    /* ==== 02. Token Designations ======== */
+
+    /* Content Tokens */
+    --content-primary: var(--color-gray-90);
+    --content-primary-inverse: var(--color-white-a100);
+    --content-secondary: var(--color-black-a60);
+    --content-secondary-inverse: var(--color-white-a70);
+    --content-brand: var(--color-brand-30);
+    --content-brand-inverse: var(--color-brand-30);
+    --content-tertiary: var(--color-gray-60);
+    --content-tertiary-inverse: var(--color-gray-40);
+    --content-error: var(--color-red-60);
+    --content-error-inverse: var(--color-red-40);
+    --content-success: var(--color-lime-60);
+    --content-success-inverse: var(--color-lime-40);
+    --content-disabled: var(--color-gray-50);
+    --content-disabled-inverse: var(--color-white-a30);
+
+    /* State Tokens */
+    --state-disabled: var(--color-black-a03);
+    --state-disabled-inverse: var(--color-white-a08);
+    --state-hover: var(--color-black-a08);
+    --state-hover-inverse: var(--color-white-a10);
+    --state-press: var(--color-black-a12);
+    --state-press-inverse: var(--color-white-a20);
+    --state-active: var(--color-black-a08);
+    --state-active-inverse: var(--color-white-a08);
+
+    /* Line Tokens */
+    --line-alpha: var(--color-black-a12);
+    --line-alpha-inverse: var(--color-white-a20);
+    --line-primary: var(--color-gray-30);
+    --line-primary-inverse: var(--color-gray-70);
+    --line-brand: var(--color-brand-60);
+    --line-brand-inverse: var(--color-brand-90);
+    --line-brand-neon: var(--color-brand-30);
+    --line-emphasis: var(--color-gray-90);
+    --line-emphasis-inverse: var(--color-white-a100);
+    --line-input: var(--color-gray-40);
+    --line-input-inverse: var(--color-gray-60);
+    --line-error: var(--color-red-60);
+    --line-error-inverse: var(--color-red-40);
+    --line-disabled: var(--color-gray-20);
+    --line-disabled-inverse: var(--color-white-a20);
+
+    /* Shadow Tokens */
+    --shadow-1: var(--color-black-a70);
+    --shadow-2: var(--color-black-a12);
+
+    /* Background Tokens */
+    --background-primary: var(--color-white-a100);
+    --background-primary-inverse: var(--color-gray-90);
+    --background-primary-blur: var(--color-white-a70);
+    --background-secondary: var(--color-gray-10);
+    --background-secondary-inverse: var(--color-gray-80);
+    --background-tertiary: var(--color-gray-20);
+    --background-tertiary-inverse: var(--color-gray-70);
+    --background-quaternary: var(--color-gray-40);
+    --background-quaternary-inverse: var(--color-gray-60);
+    --background-brand: var(--color-brand-60);
+    --background-brand-neon: var(--color-brand-30);
+    --background-success: var(--color-lime-60);
+    --background-success-inverse: var(--color-lime-40);
+    --background-skrimm: var(--color-black-a70);
+
+    /* Decorative Tokens */
+    --sand-primary: var(--color-sand-20);
+    --sand-primary-inverse: var(--color-sand-90);
+    --sand-secondary: var(--color-sand-30);
+    --sand-secondary-inverse: var(--color-sand-95);
+}

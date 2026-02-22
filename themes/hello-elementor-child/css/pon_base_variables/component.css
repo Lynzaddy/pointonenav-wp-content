@@ -1,0 +1,73 @@
+/* 
+==================================================
+    COMPONENT.CSS
+    Description: Imports all if the component definitions within Figma
+
+    TABLE OF CONTENTS:
+
+==================================================  
+*/
+
+:root {
+    /* Icon */
+    --icon-base: 1.5px;
+    --icon-light: 1px;
+    --icon-emphasis: 2px;
+
+    /* Containers */
+    --card-radius: 8px;
+    --overlay-radius: 8px;
+    --row-radius: 8px;
+    --row-density-medium: 48px;
+    --chip-radius: 100px;
+    --image-radius: 8px;
+
+    /* Button */
+    --button-density-large: 60px;
+    --button-density-medium: 40px;
+    --button-density-small: 32px;
+    --button-radius: 100px;
+
+    /* Form Elements */
+    --input-density-large: 60px;
+    --input-density-medium: 40px;
+    --input-density-small: 32px;
+    --input-radius: 0;
+    --input-gap-text: 4px;
+    --checkbox-radius: 2px;
+    --switch-radius: 100px;
+    --switch-density-small: 32px;
+    --switch-width: 48px;
+
+    /* Search & Filter */
+    --search-density-large: 60px;
+    --search-density-medium: 40px;
+    --search-density-small: 32px;
+    --search-radius: 100px;
+
+    /* Marketing */
+    --desktop-horizontal-padding: 140px;
+    --desktop-vertical-padding: 100px;
+    --tablet-horizontal-padding: 40px;
+    --tablet-vertical-padding: 60px;
+    --mobile-horizontal-padding: 20px;
+    --mobile-vertical-padding: 60px;
+
+    /* Navigation */
+    --underline-density-medium: 40px;
+    --underline-density-small: 32px;
+    --sidenav-radius: 100px;
+    --sidenav-horizontal-density-medium: 48px;
+    --sidenav-vertical-density-medium: 40px;
+    --mTabs-density-large: 60px;
+    --segment-controller-density-large: 60px;
+    --segment-controller-density-medium: 52px;
+    --segment-controller-density-small: 44px;
+    --segment-controller-radius: 8px;
+
+    /* Navigation/Pill */
+    --pill-density-large: 48px;
+    --pill-density-medium: 40px;
+    --pill-density-small: 32px;
+    --pill-radius: 100px;
+}
