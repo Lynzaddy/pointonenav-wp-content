@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Point One Nav - Site Alert Bar (ACF + Elementor)
- * Description: Date-based site-wide alert bar with dismiss (localStorage), admin enhancements, and clone support.
- * Version: 1.4.1
+ * Description: Date-based site-wide alert bar with dismiss, admin enhancements, and clone support.
+ * Version: 1.5.0
  * Author: Point One Navigation
  */
 
@@ -25,20 +25,25 @@ final class Site_Alert_Bar_Plugin {
         /* Admin Columns */
         add_filter('manage_' . self::CPT . '_posts_columns', [$this, 'admin_columns']);
         add_action('manage_' . self::CPT . '_posts_custom_column', [$this, 'admin_column_values'], 10, 2);
+
+        /* Sortable */
         add_filter('manage_edit_' . self::CPT . '_sortable_columns', [$this, 'make_columns_sortable']);
         add_action('pre_get_posts', [$this, 'handle_column_sorting']);
-        add_action('admin_head', [$this, 'admin_badge_styles']);
 
-        /* Clone Support */
+        /* Admin UI */
+        add_action('admin_enqueue_scripts', [$this, 'admin_badge_styles']);
+
+        /* Clone */
         add_filter('post_row_actions', [$this, 'add_clone_link'], 10, 2);
         add_action('admin_action_clone_site_alert', [$this, 'clone_site_alert']);
     }
 
-    /* =============================================
+    /* =====================================================
        CPT
-    ============================================= */
+    ===================================================== */
 
     public function register_cpt() {
+
         register_post_type(self::CPT, [
             'labels' => [
                 'name' => 'Site Alerts',
@@ -52,9 +57,9 @@ final class Site_Alert_Bar_Plugin {
         ]);
     }
 
-    /* =============================================
+    /* =====================================================
        ACF FIELDS
-    ============================================= */
+    ===================================================== */
 
     public function register_acf_fields() {
 
@@ -112,9 +117,204 @@ final class Site_Alert_Bar_Plugin {
         ]);
     }
 
-    /* =============================================
-       CLONE FEATURE
-    ============================================= */
+    /* =====================================================
+       FRONTEND
+    ===================================================== */
+
+    public function register_shortcode() {
+        add_shortcode(self::SHORTCODE, [$this, 'render_shortcode']);
+    }
+
+    public function enqueue_assets() {
+        wp_enqueue_script(
+            self::SCRIPT_HANDLE,
+            plugins_url('assets/site-alert-bar.js', __FILE__),
+            [],
+            '1.5.0',
+            true
+        );
+    }
+
+    private function get_active_alert_id(): int {
+
+        if (!function_exists('get_field')) return 0;
+
+        $now = current_time('timestamp');
+        $now_str = date('Y-m-d H:i:s', $now);
+
+        $q = new WP_Query([
+            'post_type'=>self::CPT,
+            'post_status'=>'publish',
+            'meta_key'=>'alert_start_date',
+            'orderby'=>'meta_value',
+            'order'=>'DESC',
+            'meta_query'=>[
+                [
+                    'key'=>'alert_start_date',
+                    'value'=>$now_str,
+                    'compare'=>'<=',
+                    'type'=>'DATETIME'
+                ]
+            ]
+        ]);
+
+        foreach ($q->posts as $p) {
+            $start = get_field('alert_start_date',$p->ID);
+            $end = get_field('alert_end_date',$p->ID);
+
+            if ($start && $end && strtotime($start)<= $now && $now < strtotime($end)) {
+                return $p->ID;
+            }
+        }
+
+        return 0;
+    }
+
+    public function render_shortcode(): string {
+
+        $id = $this->get_active_alert_id();
+        if (!$id) return '';
+
+        $desktop = get_field('alert_desktop_text',$id);
+        $mobile = get_field('alert_mobile_text',$id);
+        $cta_text = get_field('alert_cta_text',$id);
+        $cta_url = esc_url(get_field('alert_cta_url',$id));
+        $position = get_field('alert_cta_position',$id) ?: 'before';
+        $new = get_field('alert_cta_new_window',$id);
+
+        if (!$desktop || !$mobile || !$cta_text || !$cta_url) return '';
+
+        $target = $new ? '_blank' : '_self';
+        $rel = $new ? 'noopener' : '';
+
+        ob_start(); ?>
+        <div class="site-alert-bar" data-alert-id="<?php echo $id; ?>">
+            <div class="site-alert-bar__inner">
+                <div class="site-alert-bar__message">
+
+                    <?php if ($position==='before'): ?>
+                        <a class="site-alert-bar__cta" href="<?php echo $cta_url; ?>" target="<?php echo esc_attr($target); ?>" <?php if($rel) echo 'rel="'.$rel.'"'; ?>>
+                            <?php echo esc_html($cta_text); ?>
+                        </a>
+                    <?php endif; ?>
+
+                    <span class="site-alert-bar__text site-alert-bar__text--desktop"><?php echo esc_html($desktop); ?></span>
+                    <span class="site-alert-bar__text site-alert-bar__text--mobile"><?php echo esc_html($mobile); ?></span>
+
+                    <?php if ($position==='after'): ?>
+                        <a class="site-alert-bar__cta" href="<?php echo $cta_url; ?>" target="<?php echo esc_attr($target); ?>" <?php if($rel) echo 'rel="'.$rel.'"'; ?>>
+                            <?php echo esc_html($cta_text); ?>
+                        </a>
+                    <?php endif; ?>
+
+                </div>
+
+                <button class="site-alert-bar__close" type="button">&times;</button>
+            </div>
+        </div>
+        <?php
+        return ob_get_clean();
+    }
+
+    /* =====================================================
+       ADMIN COLUMNS
+    ===================================================== */
+
+    public function admin_columns($columns) {
+
+        $new = [];
+
+        foreach ($columns as $key => $value) {
+            $new[$key] = $value;
+
+            if ($key === 'title') {
+                $new['alert_start']  = 'Start Date/Time';
+                $new['alert_end']    = 'End Date/Time';
+                $new['alert_status'] = 'Status';
+            }
+        }
+
+        return $new;
+    }
+
+    public function admin_column_values($column, $post_id) {
+
+        $start = get_field('alert_start_date', $post_id);
+        $end   = get_field('alert_end_date', $post_id);
+
+        if ($column === 'alert_start') {
+            echo $start ? esc_html(date_i18n('M j, Y g:i a', strtotime($start))) : '—';
+        }
+
+        if ($column === 'alert_end') {
+            echo $end ? esc_html(date_i18n('M j, Y g:i a', strtotime($end))) : '—';
+        }
+
+        if ($column === 'alert_status') {
+
+            if (!$start || !$end) { echo '—'; return; }
+
+            $now = current_time('timestamp');
+            $start_ts = strtotime($start);
+            $end_ts = strtotime($end);
+
+            if ($now < $start_ts) {
+                echo '<span class="sab-badge sab-scheduled">Scheduled</span>';
+            } elseif ($start_ts <= $now && $now < $end_ts) {
+                echo '<span class="sab-badge sab-active">Active</span>';
+            } else {
+                echo '<span class="sab-badge sab-expired">Expired</span>';
+            }
+        }
+    }
+
+    public function make_columns_sortable($columns) {
+        $columns['alert_start'] = 'alert_start_date';
+        $columns['alert_end'] = 'alert_end_date';
+        return $columns;
+    }
+
+    public function handle_column_sorting($query) {
+
+        if (!is_admin() || !$query->is_main_query()) return;
+        if ($query->get('post_type') !== self::CPT) return;
+
+        if (!$query->get('orderby')) {
+            $query->set('meta_key', 'alert_start_date');
+            $query->set('orderby', 'meta_value');
+            $query->set('order', 'DESC');
+        }
+
+        if ($query->get('orderby') === 'alert_start_date') {
+            $query->set('meta_key', 'alert_start_date');
+            $query->set('orderby', 'meta_value');
+        }
+
+        if ($query->get('orderby') === 'alert_end_date') {
+            $query->set('meta_key', 'alert_end_date');
+            $query->set('orderby', 'meta_value');
+        }
+    }
+
+    public function admin_badge_styles() {
+
+        ?>
+        <style>
+            .sab-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid rgba(0,0,0,.08);background:#fff;}
+            .sab-badge::before{content:"";width:8px;height:8px;border-radius:50%;}
+            .sab-active{background:#e6f9ed;color:#0f5132;}
+            .sab-active::before{background:#28a745;}
+            .sab-scheduled{background:#fff8e1;color:#856404;}
+            .sab-scheduled::before{background:#f59e0b;}
+            .sab-expired{background:#f1f3f5;color:#383d41;}
+            .sab-expired::before{background:#6b7280;}
+        </style>
+        <?php
+    }
+
+    /* =====================================================
+       CLONE
+    ===================================================== */
 
     public function add_clone_link($actions, $post) {
 
@@ -140,9 +340,7 @@ final class Site_Alert_Bar_Plugin {
         }
 
         $post = get_post($post_id);
-        if (!$post || $post->post_type !== self::CPT) {
-            wp_die('Invalid alert.');
-        }
+        if (!$post || $post->post_type !== self::CPT) wp_die('Invalid alert.');
 
         $new_post_id = wp_insert_post([
             'post_type'   => self::CPT,
@@ -150,7 +348,6 @@ final class Site_Alert_Bar_Plugin {
             'post_title'  => $post->post_title . ' (Copy)',
         ]);
 
-        /* Copy all meta (including ACF fields) */
         $meta = get_post_meta($post_id);
         foreach ($meta as $key => $values) {
             foreach ($values as $value) {
@@ -161,11 +358,6 @@ final class Site_Alert_Bar_Plugin {
         wp_redirect(admin_url('edit.php?post_type=' . self::CPT));
         exit;
     }
-
-    /* =============================================
-       (Remaining alert + admin code unchanged)
-    ============================================= */
-
 }
 
 new Site_Alert_Bar_Plugin();
