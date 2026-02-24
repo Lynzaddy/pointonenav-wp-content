@@ -96,7 +96,7 @@ jobs:
             fi
 
             # 1) Deploy everything EXCEPT uploads and plugins
-            rsync -rltD --delete \
+            rsync -rltD \
               --exclude 'uploads' \
               --exclude 'uploads/**' \
               --exclude 'plugins' \
@@ -108,7 +108,7 @@ jobs:
 
             # 2) Deploy ALL tracked plugins
             if [ -d "$SRC_PLUGINS" ]; then
-              rsync -rltD --delete \
+              rsync -rltD \
                 --no-perms --no-owner --no-group \
                 --omit-dir-times --no-times \
                 --chmod=Du=rwx,Fu=rw \
@@ -188,7 +188,7 @@ jobs:
               SRC_PLUGINS="$RELEASE_DIR/wp-content/plugins"
             fi
 
-            rsync -rltD --delete \
+            rsync -rltD \
               --exclude 'uploads' \
               --exclude 'uploads/**' \
               --exclude 'plugins' \
@@ -199,7 +199,7 @@ jobs:
               "$SRC_BASE"/ "$APP_WP_CONTENT"/
 
             if [ -d "$SRC_PLUGINS" ]; then
-              rsync -rltD --delete \
+              rsync -rltD \
                 --no-perms --no-owner --no-group \
                 --omit-dir-times --no-times \
                 --chmod=Du=rwx,Fu=rw \
