@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Point One Nav - Site Alert Bar (ACF + Elementor)
  * Description: Date-based site-wide alert bar with dismiss (localStorage) and ACF fields registered in code.
- * Version: 1.0.4
+ * Version: 1.1.1
  * Author: Point One Navigation
  * License: GPLv2 or later
  */
@@ -14,17 +14,14 @@ final class Site_Alert_Bar_Plugin {
     const SHORTCODE = 'site_alert_bar';
     const SCRIPT_HANDLE = 'site-alert-bar';
     const FIELD_GROUP_KEY = 'group_site_alert_bar';
-    const TEXT_DOMAIN = 'site-alert-bar';
 
     public function __construct() {
         add_action('init', [$this, 'register_cpt']);
         add_action('init', [$this, 'register_shortcode']);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_assets']);
 
-        // Register ACF fields in code (requires ACF).
         add_action('acf/init', [$this, 'register_acf_fields']);
 
-        // Optional: nicer admin columns (helps editors).
         add_filter('manage_' . self::CPT . '_posts_columns', [$this, 'admin_columns']);
         add_action('manage_' . self::CPT . '_posts_custom_column', [$this, 'admin_column_values'], 10, 2);
     }
@@ -60,20 +57,27 @@ final class Site_Alert_Bar_Plugin {
 
     public function register_acf_fields() {
         if (!function_exists('acf_add_local_field_group')) {
-            return; // ACF not active.
+            return;
         }
 
-        // ACF date/time return format: Y-m-d H:i:s (matches our DATETIME comparisons)
         acf_add_local_field_group([
             'key' => self::FIELD_GROUP_KEY,
             'title' => 'Site Alert Bar',
             'fields' => [
                 [
-                    'key' => 'field_alert_text',
-                    'label' => 'Alert Text',
-                    'name' => 'alert_text',
-                    'type' => 'text',
-                    'instructions' => 'Main alert message text (CTA link will be placed before this).',
+                    'key' => 'field_alert_desktop_text',
+                    'label' => 'Alert Desktop Text',
+                    'name' => 'alert_desktop_text',
+                    'type' => 'textarea',
+                    'instructions' => 'Shown on screens 768px and larger.',
+                    'required' => 1,
+                ],
+                [
+                    'key' => 'field_alert_mobile_text',
+                    'label' => 'Alert Mobile Text',
+                    'name' => 'alert_mobile_text',
+                    'type' => 'textarea',
+                    'instructions' => 'Shown on screens 767px and smaller.',
                     'required' => 1,
                 ],
                 [
@@ -81,17 +85,29 @@ final class Site_Alert_Bar_Plugin {
                     'label' => 'Alert CTA Text',
                     'name' => 'alert_cta_text',
                     'type' => 'text',
-                    'instructions' => 'Clickable CTA text shown before the alert text (e.g., "Register Now").',
+                    'instructions' => 'Clickable CTA label (e.g., "Register Now").',
                     'required' => 1,
                 ],
                 [
-                    'key' => 'field_alert_cta_link',
-                    'label' => 'Alert CTA Link',
-                    'name' => 'alert_cta_link',
-                    'type' => 'link',
-                    'instructions' => 'Link for the CTA text.',
+                    'key' => 'field_alert_cta_url',
+                    'label' => 'Alert CTA URL',
+                    'name' => 'alert_cta_url',
+                    'type' => 'text',
+                    'instructions' => 'Full URL including https:// (e.g., https://zoom.us/...).',
                     'required' => 1,
-                    'return_format' => 'array',
+                ],
+                [
+                    'key' => 'field_alert_cta_position',
+                    'label' => 'CTA Position',
+                    'name' => 'alert_cta_position',
+                    'type' => 'select',
+                    'instructions' => 'Place the CTA link before or after the alert text.',
+                    'choices' => [
+                        'before' => 'Before Alert Text',
+                        'after'  => 'After Alert Text',
+                    ],
+                    'default_value' => 'before',
+                    'required' => 1,
                 ],
                 [
                     'key' => 'field_alert_start_date',
@@ -139,27 +155,18 @@ final class Site_Alert_Bar_Plugin {
     }
 
     public function enqueue_assets() {
-        // Only enqueue if shortcode appears on the page OR if you want it always.
-        // Since it’s in the header site-wide, enqueue globally.
         $src = plugins_url('assets/site-alert-bar.js', __FILE__);
-        wp_enqueue_script(self::SCRIPT_HANDLE, $src, [], '1.0.0', true);
+        wp_enqueue_script(self::SCRIPT_HANDLE, $src, [], '1.1.1', true);
     }
 
-    /**
-     * Returns the newest active alert post ID, or 0 if none.
-     * Rules:
-     * - Active if start <= now AND now < end (end is exclusive)
-     * - If multiple are active, show the most recent one (latest start date)
-     */
     private function get_active_alert_id(): int {
         if (!function_exists('get_field')) {
-            return 0; // ACF not active.
+            return 0;
         }
 
         $now_ts = current_time('timestamp');
         $now_str = date('Y-m-d H:i:s', $now_ts);
 
-        // Pull recent alerts that have started; then we’ll pick the newest still-not-ended.
         $q = new WP_Query([
             'post_type'      => self::CPT,
             'post_status'    => 'publish',
@@ -198,32 +205,45 @@ final class Site_Alert_Bar_Plugin {
 
     public function render_shortcode($atts = [], $content = null): string {
         $alert_id = $this->get_active_alert_id();
-        if (!$alert_id) {
+        if (!$alert_id) return '';
+
+        $desktop_text = (string) get_field('alert_desktop_text', $alert_id);
+        $mobile_text  = (string) get_field('alert_mobile_text', $alert_id);
+        $cta_text     = (string) get_field('alert_cta_text', $alert_id);
+        $cta_url_raw  = (string) get_field('alert_cta_url', $alert_id);
+        $cta_position = (string) (get_field('alert_cta_position', $alert_id) ?: 'before');
+
+        if (!$desktop_text || !$mobile_text || !$cta_text || !$cta_url_raw) {
             return '';
         }
 
-        $alert_text = get_field('alert_text', $alert_id);
-        $cta_text   = get_field('alert_cta_text', $alert_id);
-        $cta_link   = get_field('alert_cta_link', $alert_id);
-
-        if (!$alert_text || !$cta_text || empty($cta_link['url'])) {
-            return '';
-        }
-
-        $cta_url    = esc_url($cta_link['url']);
-        $cta_target = !empty($cta_link['target']) ? esc_attr($cta_link['target']) : '_self';
-        $cta_title  = !empty($cta_link['title']) ? esc_attr($cta_link['title']) : esc_attr($cta_text);
+        $cta_url = esc_url($cta_url_raw);
 
         ob_start(); ?>
         <div class="site-alert-bar" data-alert-id="<?php echo (int) $alert_id; ?>">
             <div class="site-alert-bar__inner">
                 <div class="site-alert-bar__message">
-                    <a class="site-alert-bar__cta" href="<?php echo $cta_url; ?>" target="<?php echo $cta_target; ?>" aria-label="<?php echo $cta_title; ?>">
-                        <?php echo esc_html($cta_text); ?>
-                    </a>
-                    <span class="site-alert-bar__text">
-                        <?php echo esc_html($alert_text); ?>
+
+                    <?php if ($cta_position === 'before'): ?>
+                        <a class="site-alert-bar__cta" href="<?php echo $cta_url; ?>" target="_blank" rel="noopener">
+                            <?php echo esc_html($cta_text); ?>
+                        </a>
+                    <?php endif; ?>
+
+                    <span class="site-alert-bar__text site-alert-bar__text--desktop">
+                        <?php echo esc_html($desktop_text); ?>
                     </span>
+
+                    <span class="site-alert-bar__text site-alert-bar__text--mobile">
+                        <?php echo esc_html($mobile_text); ?>
+                    </span>
+
+                    <?php if ($cta_position === 'after'): ?>
+                        <a class="site-alert-bar__cta" href="<?php echo $cta_url; ?>" target="_blank" rel="noopener">
+                            <?php echo esc_html($cta_text); ?>
+                        </a>
+                    <?php endif; ?>
+
                 </div>
 
                 <button class="site-alert-bar__close" type="button" aria-label="Dismiss alert">
@@ -256,10 +276,7 @@ final class Site_Alert_Bar_Plugin {
             $start = get_field('alert_start_date', $post_id);
             $end   = get_field('alert_end_date', $post_id);
 
-            if (!$start || !$end) {
-                echo '—';
-                return;
-            }
+            if (!$start || !$end) { echo '—'; return; }
 
             $start_ts = strtotime($start);
             $end_ts = strtotime($end);
@@ -267,7 +284,6 @@ final class Site_Alert_Bar_Plugin {
             if ($now < $start_ts) echo 'Scheduled';
             elseif ($start_ts <= $now && $now < $end_ts) echo 'Active';
             else echo 'Expired';
-
             return;
         }
 
@@ -275,12 +291,8 @@ final class Site_Alert_Bar_Plugin {
             $start = get_field('alert_start_date', $post_id);
             $end   = get_field('alert_end_date', $post_id);
 
-            if (!$start || !$end) {
-                echo '—';
-                return;
-            }
+            if (!$start || !$end) { echo '—'; return; }
 
-            // Display using WP format
             $start_disp = date_i18n('M j, Y g:i a', strtotime($start));
             $end_disp   = date_i18n('M j, Y g:i a', strtotime($end));
             echo esc_html($start_disp . ' → ' . $end_disp);
