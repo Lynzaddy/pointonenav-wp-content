@@ -30,9 +30,10 @@ jobs:
                   cp "$ART" "$GITHUB_WORKSPACE/$NAME"
                   echo "ARTIFACT_NAME=$NAME" >> $GITHUB_ENV
 
-            # =======================
-            # STAGING
-            # =======================
+# ==================================================
+# =================== STAGING ======================
+# ==================================================
+
             - name: Ensure remote dirs (STAGING)
               if: env.TARGET == 'staging'
               uses: appleboy/ssh-action@v1.1.0
@@ -46,8 +47,6 @@ jobs:
                       APP_ROOT="$(dirname "$APP_WP_CONTENT")"
                       DEPLOY_BASE="$APP_ROOT/.deploy"
                       mkdir -p "$DEPLOY_BASE/deploy" "$DEPLOY_BASE/releases" "$DEPLOY_BASE/backups"
-                      ls -ld "$APP_ROOT" "$DEPLOY_BASE" "$DEPLOY_BASE/deploy"
-                      test -w "$DEPLOY_BASE/deploy"
 
             - name: Upload artifact with rsync (STAGING)
               if: env.TARGET == 'staging'
@@ -60,21 +59,7 @@ jobs:
                   chmod 600 "$GITHUB_WORKSPACE/id_staging"
                   RSYNC_SSH="ssh -i $GITHUB_WORKSPACE/id_staging -o StrictHostKeyChecking=no"
                   rsync -avz -e "$RSYNC_SSH" "$ARTIFACT_NAME" \
-                    "${STAGING_USER}@${STAGING_HOST}:public_html/.deploy/deploy/wp-content-${GITHUB_SHA}.tar.gz"
-
-            - name: Verify upload on STAGING
-              if: env.TARGET == 'staging'
-              uses: appleboy/ssh-action@v1.1.0
-              with:
-                  host: ${{ secrets.STAGING_HOST }}
-                  username: ${{ secrets.STAGING_USER }}
-                  key: ${{ secrets.STAGING_SSH_KEY }}
-                  script: |
-                      set -e
-                      APP_WP_CONTENT="${{ secrets.STAGING_PATH }}"
-                      APP_ROOT="$(dirname "$APP_WP_CONTENT")"
-                      DEPLOY_BASE="$APP_ROOT/.deploy"
-                      ls -lah "$DEPLOY_BASE/deploy"
+                    "${STAGING_USER}@${STAGING_HOST}:public_html/.deploy/deploy/$ARTIFACT_NAME"
 
             - name: Release on STAGING (backup + deploy)
               if: env.TARGET == 'staging'
@@ -89,26 +74,16 @@ jobs:
                       APP_ROOT="$(dirname "$APP_WP_CONTENT")"
                       DEPLOY_BASE="$APP_ROOT/.deploy"
 
-                      # Find newest tarball uploaded
-                      TARBALL="$(ls -1t "$DEPLOY_BASE/deploy"/wp-content-*.tar.gz | head -n1 || true)"
-                      if [ -z "${TARBALL:-}" ] || [ ! -f "$TARBALL" ]; then
-                        echo "No tarball found under $DEPLOY_BASE/deploy"; exit 1
-                      fi
+                      TARBALL="$(ls -1t "$DEPLOY_BASE/deploy"/wp-content-*.tar.gz | head -n1)"
                       NAME="$(basename "$TARBALL" .tar.gz)"
                       RELEASE_DIR="$DEPLOY_BASE/releases/$NAME"
 
-                      echo ":: info :: Using tarball: $TARBALL"
-                      echo ":: info :: Release dir:  $RELEASE_DIR"
-
-                      # Backup current wp-content (excluding uploads)
                       tar -czf "$DEPLOY_BASE/backups/${NAME}-backup-$(date +%F-%H%M).tgz" \
                         -C "$APP_WP_CONTENT" --exclude='uploads' .
 
-                      # Prepare release
                       mkdir -p "$RELEASE_DIR"
                       tar -xzf "$TARBALL" -C "$RELEASE_DIR"
 
-                      # Detect archive layout (repo root = wp-content OR site root)
                       if [ -d "$RELEASE_DIR/plugins" ]; then
                         SRC_BASE="$RELEASE_DIR"
                         SRC_PLUGINS_DIR="$RELEASE_DIR/plugins"
@@ -117,56 +92,50 @@ jobs:
                         SRC_PLUGINS_DIR="$RELEASE_DIR/wp-content/plugins"
                       fi
 
-                      echo ":: info :: SRC_BASE       = $SRC_BASE"
-                      echo ":: info :: SRC_PLUGINS_DIR = $SRC_PLUGINS_DIR"
-                      echo ":: info :: APP_WP_CONTENT  = $APP_WP_CONTENT"
-                      ls -lah "$SRC_PLUGINS_DIR/pointone-card-carousel" || true
+                      # Sync wp-content except uploads + plugins
+                      rsync -rltD \
+                        --exclude 'uploads' \
+                        --exclude 'uploads/**' \
+                        --exclude 'plugins' \
+                        --exclude 'plugins/**' \
+                        --no-perms --no-owner --no-group \
+                        --omit-dir-times --no-times \
+                        --chmod=Du=rwx,Fu=rw \
+                        "$SRC_BASE"/ "$APP_WP_CONTENT"/
 
-                      # 1) Deploy everything EXCEPT uploads and ALL plugins (keep server plugins intact)
-                      if command -v rsync >/dev/null 2>&1; then
-                        rsync -rltD \
-                          --exclude 'uploads' \
-                          --exclude 'uploads/**' \
-                          --exclude 'plugins' \
-                          --exclude 'plugins/**' \
-                          --no-perms --no-owner --no-group \
-                          --omit-dir-times --no-times \
-                          --chmod=Du=rwx,Fu=rw \
-                          "$SRC_BASE"/ "$APP_WP_CONTENT"/
-                      else
-                        shopt -s dotglob
-                        find "$APP_WP_CONTENT" -mindepth 1 -maxdepth 1 \
-                          ! -name 'uploads' ! -name 'plugins' -exec rm -rf {} +
-                        cp -a "$SRC_BASE"/. "$APP_WP_CONTENT"/
-                      fi
-
-                      # 2) Explicitly deploy ONLY the Point One plugin
+                      # Deploy pointone-card-carousel
                       if [ -d "$SRC_PLUGINS_DIR/pointone-card-carousel" ]; then
-                        echo ":: info :: Deploying plugins/pointone-card-carousel"
                         rsync -rltD \
                           --no-perms --no-owner --no-group \
                           --omit-dir-times --no-times \
                           --chmod=Du=rwx,Fu=rw \
                           "$SRC_PLUGINS_DIR/pointone-card-carousel/" \
                           "$APP_WP_CONTENT/plugins/pointone-card-carousel/"
-                      else
-                        echo ":: warning :: pointone-card-carousel not found in artifact; skipping plugin sync."
                       fi
 
-                      # Safe cache flushes
+                      # Deploy pointone-site-alert-bar
+                      if [ -d "$SRC_PLUGINS_DIR/pointone-site-alert-bar" ]; then
+                        rsync -rltD \
+                          --no-perms --no-owner --no-group \
+                          --omit-dir-times --no-times \
+                          --chmod=Du=rwx,Fu=rw \
+                          "$SRC_PLUGINS_DIR/pointone-site-alert-bar/" \
+                          "$APP_WP_CONTENT/plugins/pointone-site-alert-bar/"
+                      fi
+
                       if command -v wp >/dev/null 2>&1; then
                         cd "$APP_ROOT"
                         wp --skip-plugins --skip-themes cache flush || true
                         wp --skip-themes elementor flush_css || true
                       fi
 
-                      # Normalize perms
                       find "$APP_WP_CONTENT" -type d -exec chmod 755 {} \;
                       find "$APP_WP_CONTENT" -type f -exec chmod 644 {} \;
 
-            # =======================
-            # PRODUCTION
-            # =======================
+# ==================================================
+# ================= PRODUCTION =====================
+# ==================================================
+
             - name: Ensure remote dirs (PRODUCTION)
               if: env.TARGET == 'production'
               uses: appleboy/ssh-action@v1.1.0
@@ -180,8 +149,6 @@ jobs:
                       APP_ROOT="$(dirname "$APP_WP_CONTENT")"
                       DEPLOY_BASE="$APP_ROOT/.deploy"
                       mkdir -p "$DEPLOY_BASE/deploy" "$DEPLOY_BASE/releases" "$DEPLOY_BASE/backups"
-                      ls -ld "$APP_ROOT" "$DEPLOY_BASE" "$DEPLOY_BASE/deploy"
-                      test -w "$DEPLOY_BASE/deploy"
 
             - name: Upload artifact with rsync (PRODUCTION)
               if: env.TARGET == 'production'
@@ -194,21 +161,7 @@ jobs:
                   chmod 600 "$GITHUB_WORKSPACE/id_prod"
                   RSYNC_SSH="ssh -i $GITHUB_WORKSPACE/id_prod -o StrictHostKeyChecking=no"
                   rsync -avz -e "$RSYNC_SSH" "$ARTIFACT_NAME" \
-                    "${PROD_USER}@${PROD_HOST}:public_html/.deploy/deploy/wp-content-${GITHUB_SHA}.tar.gz"
-
-            - name: Verify upload on PRODUCTION
-              if: env.TARGET == 'production'
-              uses: appleboy/ssh-action@v1.1.0
-              with:
-                  host: ${{ secrets.PROD_HOST }}
-                  username: ${{ secrets.PROD_USER }}
-                  key: ${{ secrets.PROD_SSH_KEY }}
-                  script: |
-                      set -e
-                      APP_WP_CONTENT="${{ secrets.PROD_PATH }}"
-                      APP_ROOT="$(dirname "$APP_WP_CONTENT")"
-                      DEPLOY_BASE="$APP_ROOT/.deploy"
-                      ls -lah "$DEPLOY_BASE/deploy"
+                    "${PROD_USER}@${PROD_HOST}:public_html/.deploy/deploy/$ARTIFACT_NAME"
 
             - name: Release on PRODUCTION (backup + deploy)
               if: env.TARGET == 'production'
@@ -223,15 +176,9 @@ jobs:
                       APP_ROOT="$(dirname "$APP_WP_CONTENT")"
                       DEPLOY_BASE="$APP_ROOT/.deploy"
 
-                      TARBALL="$(ls -1t "$DEPLOY_BASE/deploy"/wp-content-*.tar.gz | head -n1 || true)"
-                      if [ -z "${TARBALL:-}" ] || [ ! -f "$TARBALL" ]; then
-                        echo "No tarball found under $DEPLOY_BASE/deploy"; exit 1
-                      fi
+                      TARBALL="$(ls -1t "$DEPLOY_BASE/deploy"/wp-content-*.tar.gz | head -n1)"
                       NAME="$(basename "$TARBALL" .tar.gz)"
                       RELEASE_DIR="$DEPLOY_BASE/releases/$NAME"
-
-                      echo ":: info :: Using tarball: $TARBALL"
-                      echo ":: info :: Release dir:  $RELEASE_DIR"
 
                       tar -czf "$DEPLOY_BASE/backups/${NAME}-backup-$(date +%F-%H%M).tgz" \
                         -C "$APP_WP_CONTENT" --exclude='uploads' .
@@ -239,7 +186,6 @@ jobs:
                       mkdir -p "$RELEASE_DIR"
                       tar -xzf "$TARBALL" -C "$RELEASE_DIR"
 
-                      # Detect archive layout (repo root = wp-content OR site root)
                       if [ -d "$RELEASE_DIR/plugins" ]; then
                         SRC_BASE="$RELEASE_DIR"
                         SRC_PLUGINS_DIR="$RELEASE_DIR/plugins"
@@ -248,40 +194,32 @@ jobs:
                         SRC_PLUGINS_DIR="$RELEASE_DIR/wp-content/plugins"
                       fi
 
-                      echo ":: info :: SRC_BASE       = $SRC_BASE"
-                      echo ":: info :: SRC_PLUGINS_DIR = $SRC_PLUGINS_DIR"
-                      echo ":: info :: APP_WP_CONTENT  = $APP_WP_CONTENT"
-                      ls -lah "$SRC_PLUGINS_DIR/pointone-card-carousel" || true
+                      rsync -rltD \
+                        --exclude 'uploads' \
+                        --exclude 'uploads/**' \
+                        --exclude 'plugins' \
+                        --exclude 'plugins/**' \
+                        --no-perms --no-owner --no-group \
+                        --omit-dir-times --no-times \
+                        --chmod=Du=rwx,Fu=rw \
+                        "$SRC_BASE"/ "$APP_WP_CONTENT"/
 
-                      # 1) Deploy everything EXCEPT uploads and ALL plugins
-                      if command -v rsync >/dev/null 2>&1; then
-                        rsync -rltD \
-                          --exclude 'uploads' \
-                          --exclude 'uploads/**' \
-                          --exclude 'plugins' \
-                          --exclude 'plugins/**' \
-                          --no-perms --no-owner --no-group \
-                          --omit-dir-times --no-times \
-                          --chmod=Du=rwx,Fu=rw \
-                          "$SRC_BASE"/ "$APP_WP_CONTENT"/
-                      else
-                        shopt -s dotglob
-                        find "$APP_WP_CONTENT" -mindepth 1 -maxdepth 1 \
-                          ! -name 'uploads' ! -name 'plugins' -exec rm -rf {} +
-                        cp -a "$SRC_BASE"/. "$APP_WP_CONTENT"/
-                      fi
-
-                      # 2) Explicitly deploy ONLY the Point One plugin
                       if [ -d "$SRC_PLUGINS_DIR/pointone-card-carousel" ]; then
-                        echo ":: info :: Deploying plugins/pointone-card-carousel"
                         rsync -rltD \
                           --no-perms --no-owner --no-group \
                           --omit-dir-times --no-times \
                           --chmod=Du=rwx,Fu=rw \
                           "$SRC_PLUGINS_DIR/pointone-card-carousel/" \
                           "$APP_WP_CONTENT/plugins/pointone-card-carousel/"
-                      else
-                        echo ":: warning :: pointone-card-carousel not found in artifact; skipping plugin sync."
+                      fi
+
+                      if [ -d "$SRC_PLUGINS_DIR/pointone-site-alert-bar" ]; then
+                        rsync -rltD \
+                          --no-perms --no-owner --no-group \
+                          --omit-dir-times --no-times \
+                          --chmod=Du=rwx,Fu=rw \
+                          "$SRC_PLUGINS_DIR/pointone-site-alert-bar/" \
+                          "$APP_WP_CONTENT/plugins/pointone-site-alert-bar/"
                       fi
 
                       if command -v wp >/dev/null 2>&1; then
