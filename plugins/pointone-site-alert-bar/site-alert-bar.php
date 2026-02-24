@@ -135,9 +135,10 @@ final class Site_Alert_Bar_Plugin {
 
                 [
                     'key' => 'field_alert_start_date',
-                    'label' => 'Alert Start Date',
+                    'label' => 'Alert Start Date/Time',
                     'name' => 'alert_start_date',
                     'type' => 'date_time_picker',
+                    'instructions' => 'Date and time when the alert should start being displayed.',
                     'required' => 1,
                     'display_format' => 'm/d/Y g:i a',
                     'return_format' => 'Y-m-d H:i:s',
@@ -145,7 +146,7 @@ final class Site_Alert_Bar_Plugin {
 
                 [
                     'key' => 'field_alert_end_date',
-                    'label' => 'Alert End Date',
+                    'label' => 'Alert End Date/Time',
                     'name' => 'alert_end_date',
                     'type' => 'date_time_picker',
                     'required' => 1,
