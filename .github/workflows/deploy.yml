@@ -124,7 +124,7 @@ jobs:
 
                       # 1) Deploy everything EXCEPT uploads and ALL plugins (keep server plugins intact)
                       if command -v rsync >/dev/null 2>&1; then
-                        rsync -rltD --delete \
+                        rsync -rltD \
                           --exclude 'uploads' \
                           --exclude 'uploads/**' \
                           --exclude 'plugins' \
@@ -143,7 +143,7 @@ jobs:
                       # 2) Explicitly deploy ONLY the Point One plugin
                       if [ -d "$SRC_PLUGINS_DIR/pointone-card-carousel" ]; then
                         echo ":: info :: Deploying plugins/pointone-card-carousel"
-                        rsync -rltD --delete \
+                        rsync -rltD \
                           --no-perms --no-owner --no-group \
                           --omit-dir-times --no-times \
                           --chmod=Du=rwx,Fu=rw \
@@ -255,7 +255,7 @@ jobs:
 
                       # 1) Deploy everything EXCEPT uploads and ALL plugins
                       if command -v rsync >/dev/null 2>&1; then
-                        rsync -rltD --delete \
+                        rsync -rltD \
                           --exclude 'uploads' \
                           --exclude 'uploads/**' \
                           --exclude 'plugins' \
@@ -274,7 +274,7 @@ jobs:
                       # 2) Explicitly deploy ONLY the Point One plugin
                       if [ -d "$SRC_PLUGINS_DIR/pointone-card-carousel" ]; then
                         echo ":: info :: Deploying plugins/pointone-card-carousel"
-                        rsync -rltD --delete \
+                        rsync -rltD \
                           --no-perms --no-owner --no-group \
                           --omit-dir-times --no-times \
                           --chmod=Du=rwx,Fu=rw \
