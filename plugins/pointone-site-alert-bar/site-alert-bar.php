@@ -2,9 +2,8 @@
 /**
  * Plugin Name: Point One Nav - Site Alert Bar (ACF + Elementor)
  * Description: Date-based site-wide alert bar with dismiss (localStorage) and ACF fields registered in code.
- * Version: 1.2.0
+ * Version: 1.3.0
  * Author: Point One Navigation
- * License: GPLv2 or later
  */
 
 if (!defined('ABSPATH')) exit;
@@ -17,52 +16,48 @@ final class Site_Alert_Bar_Plugin {
     const FIELD_GROUP_KEY = 'group_site_alert_bar';
 
     public function __construct() {
+
         add_action('init', [$this, 'register_cpt']);
         add_action('init', [$this, 'register_shortcode']);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_assets']);
         add_action('acf/init', [$this, 'register_acf_fields']);
 
+        /* Admin columns */
         add_filter('manage_' . self::CPT . '_posts_columns', [$this, 'admin_columns']);
         add_action('manage_' . self::CPT . '_posts_custom_column', [$this, 'admin_column_values'], 10, 2);
+
+        /* Sortable */
+        add_filter('manage_edit_' . self::CPT . '_sortable_columns', [$this, 'make_columns_sortable']);
+        add_action('pre_get_posts', [$this, 'handle_column_sorting']);
+
+        /* Admin styling */
+        add_action('admin_head', [$this, 'admin_badge_styles']);
     }
 
-    /* ---------------------------------------------
+    /* =============================================
        CPT
-    --------------------------------------------- */
+    ============================================= */
 
     public function register_cpt() {
 
-        $labels = [
-            'name'               => 'Site Alerts',
-            'singular_name'      => 'Site Alert',
-            'add_new'            => 'Add New',
-            'add_new_item'       => 'Add New Site Alert',
-            'edit_item'          => 'Edit Site Alert',
-            'new_item'           => 'New Site Alert',
-            'view_item'          => 'View Site Alert',
-            'search_items'       => 'Search Site Alerts',
-            'not_found'          => 'No alerts found',
-            'not_found_in_trash' => 'No alerts found in Trash',
-            'menu_name'          => 'Site Alerts',
-        ];
-
         register_post_type(self::CPT, [
-            'labels'             => $labels,
-            'public'             => false,
-            'show_ui'            => true,
-            'show_in_menu'       => true,
-            'menu_icon'          => 'dashicons-megaphone',
-            'supports'           => ['title'],
-            'has_archive'        => false,
-            'rewrite'            => false,
-            'show_in_rest'       => false,
-            'capability_type'    => 'post',
+            'labels' => [
+                'name' => 'Site Alerts',
+                'singular_name' => 'Site Alert',
+                'add_new_item' => 'Add New Site Alert',
+                'edit_item' => 'Edit Site Alert',
+                'menu_name' => 'Site Alerts',
+            ],
+            'public' => false,
+            'show_ui' => true,
+            'menu_icon' => 'dashicons-megaphone',
+            'supports' => ['title'],
         ]);
     }
 
-    /* ---------------------------------------------
+    /* =============================================
        ACF FIELDS
-    --------------------------------------------- */
+    ============================================= */
 
     public function register_acf_fields() {
 
@@ -73,104 +68,59 @@ final class Site_Alert_Bar_Plugin {
             'title' => 'Site Alert Bar',
             'fields' => [
 
-                [
-                    'key' => 'field_alert_desktop_text',
-                    'label' => 'Alert Desktop Text',
-                    'name' => 'alert_desktop_text',
-                    'type' => 'text',
-                    'instructions' => 'Shown on screens 768px and larger.',
-                    'required' => 1,
-                ],
+                ['key'=>'field_alert_desktop_text','label'=>'Alert Desktop Text','name'=>'alert_desktop_text','type'=>'text','required'=>1],
+                ['key'=>'field_alert_mobile_text','label'=>'Alert Mobile Text','name'=>'alert_mobile_text','type'=>'text','required'=>1],
+                ['key'=>'field_alert_cta_text','label'=>'Alert CTA Text','name'=>'alert_cta_text','type'=>'text','required'=>1],
+                ['key'=>'field_alert_cta_url','label'=>'Alert CTA URL','name'=>'alert_cta_url','type'=>'text','required'=>1],
 
                 [
-                    'key' => 'field_alert_mobile_text',
-                    'label' => 'Alert Mobile Text',
-                    'name' => 'alert_mobile_text',
-                    'type' => 'text',
-                    'instructions' => 'Shown on screens 767px and smaller.',
-                    'required' => 1,
-                ],
-
-                [
-                    'key' => 'field_alert_cta_text',
-                    'label' => 'Alert CTA Text',
-                    'name' => 'alert_cta_text',
-                    'type' => 'text',
-                    'instructions' => 'Clickable CTA label (e.g., "Register Now").',
-                    'required' => 1,
-                ],
-
-                [
-                    'key' => 'field_alert_cta_url',
-                    'label' => 'Alert CTA URL',
-                    'name' => 'alert_cta_url',
-                    'type' => 'text',
-                    'instructions' => 'Full URL including https://',
-                    'required' => 1,
-                ],
-
-                [
-                    'key' => 'field_alert_cta_position',
-                    'label' => 'CTA Position',
-                    'name' => 'alert_cta_position',
-                    'type' => 'select',
-                    'instructions' => 'Choose whether the CTA appears before or after the alert text.',
-                    'choices' => [
-                        'before' => 'Before Alert Text',
-                        'after'  => 'After Alert Text',
+                    'key'=>'field_alert_cta_position',
+                    'label'=>'CTA Position',
+                    'name'=>'alert_cta_position',
+                    'type'=>'select',
+                    'choices'=>[
+                        'before'=>'Before Alert Text',
+                        'after'=>'After Alert Text'
                     ],
-                    'default_value' => 'before',
-                    'required' => 1,
+                    'default_value'=>'before',
                 ],
 
                 [
-                    'key' => 'field_alert_cta_new_window',
-                    'label' => 'Open CTA in New Window?',
-                    'name' => 'alert_cta_new_window',
-                    'type' => 'true_false',
-                    'instructions' => 'Enable if the link should open in a new browser tab.',
-                    'ui' => 1,
-                    'default_value' => 1,
+                    'key'=>'field_alert_cta_new_window',
+                    'label'=>'Open CTA in New Window?',
+                    'name'=>'alert_cta_new_window',
+                    'type'=>'true_false',
+                    'ui'=>1,
+                    'default_value'=>1,
                 ],
 
                 [
-                    'key' => 'field_alert_start_date',
-                    'label' => 'Alert Start Date/Time',
-                    'name' => 'alert_start_date',
-                    'type' => 'date_time_picker',
-                    'instructions' => 'Date and time when the alert should start being displayed.',
-                    'required' => 1,
-                    'display_format' => 'm/d/Y g:i a',
-                    'return_format' => 'Y-m-d H:i:s',
+                    'key'=>'field_alert_start_date',
+                    'label'=>'Alert Start Date/Time',
+                    'name'=>'alert_start_date',
+                    'type'=>'date_time_picker',
+                    'required'=>1,
+                    'display_format'=>'m/d/Y g:i a',
+                    'return_format'=>'Y-m-d H:i:s',
                 ],
 
                 [
-                    'key' => 'field_alert_end_date',
-                    'label' => 'Alert End Date/Time',
-                    'name' => 'alert_end_date',
-                    'type' => 'date_time_picker',
-                    'required' => 1,
-                    'instructions' => 'Date and time when the alert should stop being displayed.',
-                    'display_format' => 'm/d/Y g:i a',
-                    'return_format' => 'Y-m-d H:i:s',
-                ],
-
-            ],
-            'location' => [
-                [
-                    [
-                        'param' => 'post_type',
-                        'operator' => '==',
-                        'value' => self::CPT,
-                    ],
+                    'key'=>'field_alert_end_date',
+                    'label'=>'Alert End Date/Time',
+                    'name'=>'alert_end_date',
+                    'type'=>'date_time_picker',
+                    'required'=>1,
+                    'display_format'=>'m/d/Y g:i a',
+                    'return_format'=>'Y-m-d H:i:s',
                 ],
             ],
+            'location'=>[[['param'=>'post_type','operator'=>'==','value'=>self::CPT]]],
         ]);
     }
 
-    /* ---------------------------------------------
+    /* =============================================
        SHORTCODE
-    --------------------------------------------- */
+    ============================================= */
 
     public function register_shortcode() {
         add_shortcode(self::SHORTCODE, [$this, 'render_shortcode']);
@@ -181,124 +131,237 @@ final class Site_Alert_Bar_Plugin {
             self::SCRIPT_HANDLE,
             plugins_url('assets/site-alert-bar.js', __FILE__),
             [],
-            '1.2.0',
+            '1.3.0',
             true
         );
     }
 
-    /* ---------------------------------------------
+    /* =============================================
        ACTIVE ALERT
-    --------------------------------------------- */
+    ============================================= */
 
     private function get_active_alert_id(): int {
 
         if (!function_exists('get_field')) return 0;
 
-        $now_ts = current_time('timestamp');
-        $now_str = date('Y-m-d H:i:s', $now_ts);
+        $now = current_time('timestamp');
+        $now_str = date('Y-m-d H:i:s', $now);
 
         $q = new WP_Query([
-            'post_type'      => self::CPT,
-            'post_status'    => 'publish',
-            'posts_per_page' => 10,
-            'meta_key'       => 'alert_start_date',
-            'orderby'        => 'meta_value',
-            'order'          => 'DESC',
-            'meta_query'     => [
+            'post_type'=>self::CPT,
+            'post_status'=>'publish',
+            'meta_key'=>'alert_start_date',
+            'orderby'=>'meta_value',
+            'order'=>'DESC',
+            'meta_query'=>[
                 [
-                    'key'     => 'alert_start_date',
-                    'value'   => $now_str,
-                    'compare' => '<=',
-                    'type'    => 'DATETIME',
-                ],
-            ],
+                    'key'=>'alert_start_date',
+                    'value'=>$now_str,
+                    'compare'=>'<=',
+                    'type'=>'DATETIME'
+                ]
+            ]
         ]);
 
         foreach ($q->posts as $p) {
-            $start = get_field('alert_start_date', $p->ID);
-            $end   = get_field('alert_end_date', $p->ID);
+            $start = get_field('alert_start_date',$p->ID);
+            $end = get_field('alert_end_date',$p->ID);
 
-            if (!$start || !$end) continue;
-
-            if (strtotime($start) <= $now_ts && $now_ts < strtotime($end)) {
-                return (int) $p->ID;
+            if ($start && $end && strtotime($start)<= $now && $now < strtotime($end)) {
+                return $p->ID;
             }
         }
 
         return 0;
     }
 
-    /* ---------------------------------------------
+    /* =============================================
        RENDER
-    --------------------------------------------- */
+    ============================================= */
 
     public function render_shortcode(): string {
 
-        $alert_id = $this->get_active_alert_id();
-        if (!$alert_id) return '';
+        $id = $this->get_active_alert_id();
+        if (!$id) return '';
 
-        $desktop_text = get_field('alert_desktop_text', $alert_id);
-        $mobile_text  = get_field('alert_mobile_text', $alert_id);
-        $cta_text     = get_field('alert_cta_text', $alert_id);
-        $cta_url_raw  = get_field('alert_cta_url', $alert_id);
-        $cta_position = get_field('alert_cta_position', $alert_id) ?: 'before';
-        $open_new     = get_field('alert_cta_new_window', $alert_id);
+        $desktop = get_field('alert_desktop_text',$id);
+        $mobile = get_field('alert_mobile_text',$id);
+        $cta_text = get_field('alert_cta_text',$id);
+        $cta_url = esc_url(get_field('alert_cta_url',$id));
+        $position = get_field('alert_cta_position',$id) ?: 'before';
+        $new = get_field('alert_cta_new_window',$id);
 
-        if (!$desktop_text || !$mobile_text || !$cta_text || !$cta_url_raw) {
-            return '';
-        }
+        if (!$desktop || !$mobile || !$cta_text || !$cta_url) return '';
 
-        $cta_url = esc_url($cta_url_raw);
-
-        $target = $open_new ? '_blank' : '_self';
-        $rel    = $open_new ? 'noopener' : '';
+        $target = $new ? '_blank' : '_self';
+        $rel = $new ? 'noopener' : '';
 
         ob_start(); ?>
-
-        <div class="site-alert-bar" data-alert-id="<?php echo (int) $alert_id; ?>">
+        <div class="site-alert-bar" data-alert-id="<?php echo $id; ?>">
             <div class="site-alert-bar__inner">
                 <div class="site-alert-bar__message">
 
-                    <?php if ($cta_position === 'before'): ?>
-                        <a class="site-alert-bar__cta"
-                           href="<?php echo $cta_url; ?>"
-                           target="<?php echo esc_attr($target); ?>"
-                           <?php if ($rel) echo 'rel="' . esc_attr($rel) . '"'; ?>>
+                    <?php if ($position==='before'): ?>
+                        <a class="site-alert-bar__cta" href="<?php echo $cta_url; ?>" target="<?php echo esc_attr($target); ?>" <?php if($rel) echo 'rel="'.$rel.'"'; ?>>
                             <?php echo esc_html($cta_text); ?>
                         </a>
                     <?php endif; ?>
 
-                    <span class="site-alert-bar__text site-alert-bar__text--desktop">
-                        <?php echo esc_html($desktop_text); ?>
-                    </span>
+                    <span class="site-alert-bar__text site-alert-bar__text--desktop"><?php echo esc_html($desktop); ?></span>
+                    <span class="site-alert-bar__text site-alert-bar__text--mobile"><?php echo esc_html($mobile); ?></span>
 
-                    <span class="site-alert-bar__text site-alert-bar__text--mobile">
-                        <?php echo esc_html($mobile_text); ?>
-                    </span>
-
-                    <?php if ($cta_position === 'after'): ?>
-                        <a class="site-alert-bar__cta"
-                           href="<?php echo $cta_url; ?>"
-                           target="<?php echo esc_attr($target); ?>"
-                           <?php if ($rel) echo 'rel="' . esc_attr($rel) . '"'; ?>>
+                    <?php if ($position==='after'): ?>
+                        <a class="site-alert-bar__cta" href="<?php echo $cta_url; ?>" target="<?php echo esc_attr($target); ?>" <?php if($rel) echo 'rel="'.$rel.'"'; ?>>
                             <?php echo esc_html($cta_text); ?>
                         </a>
                     <?php endif; ?>
 
                 </div>
 
-                <button class="site-alert-bar__close" type="button" aria-label="Dismiss alert">
-                    &times;
-                </button>
+                <button class="site-alert-bar__close" type="button" aria-label="Dismiss alert">&times;</button>
             </div>
         </div>
-
         <?php
         return ob_get_clean();
     }
 
-    public function admin_columns($cols) { return $cols; }
-    public function admin_column_values($col, $post_id) {}
+    /* =============================================
+       ADMIN COLUMNS
+    ============================================= */
+
+    public function admin_columns($columns) {
+
+        $new = [];
+
+        foreach ($columns as $key => $value) {
+            $new[$key] = $value;
+
+            if ($key === 'title') {
+                $new['alert_start']  = 'Start Date/Time';
+                $new['alert_end']    = 'End Date/Time';
+                $new['alert_status'] = 'Status';
+            }
+        }
+
+        return $new;
+    }
+
+    public function admin_column_values($column, $post_id) {
+
+        $start = get_field('alert_start_date', $post_id);
+        $end   = get_field('alert_end_date', $post_id);
+
+        if ($column === 'alert_start') {
+            echo $start ? esc_html(date_i18n('M j, Y g:i a', strtotime($start))) : '—';
+        }
+
+        if ($column === 'alert_end') {
+            echo $end ? esc_html(date_i18n('M j, Y g:i a', strtotime($end))) : '—';
+        }
+
+        if ($column === 'alert_status') {
+
+            if (!$start || !$end) { echo '—'; return; }
+
+            $now = current_time('timestamp');
+            $start_ts = strtotime($start);
+            $end_ts = strtotime($end);
+
+            if ($now < $start_ts) {
+                echo '<span class="sab-badge sab-scheduled">Scheduled</span>';
+            } elseif ($start_ts <= $now && $now < $end_ts) {
+                echo '<span class="sab-badge sab-active">Active</span>';
+            } else {
+                echo '<span class="sab-badge sab-expired">Expired</span>';
+            }
+        }
+    }
+
+    public function make_columns_sortable($columns) {
+        $columns['alert_start'] = 'alert_start_date';
+        $columns['alert_end']   = 'alert_end_date';
+        return $columns;
+    }
+
+    public function handle_column_sorting($query) {
+
+        if (!is_admin() || !$query->is_main_query()) return;
+        if ($query->get('post_type') !== self::CPT) return;
+
+        if (!$query->get('orderby')) {
+            $query->set('meta_key', 'alert_start_date');
+            $query->set('orderby', 'meta_value');
+            $query->set('order', 'DESC');
+        }
+
+        if ($query->get('orderby') === 'alert_start_date') {
+            $query->set('meta_key', 'alert_start_date');
+            $query->set('orderby', 'meta_value');
+        }
+
+        if ($query->get('orderby') === 'alert_end_date') {
+            $query->set('meta_key', 'alert_end_date');
+            $query->set('orderby', 'meta_value');
+        }
+    }
+
+    public function admin_badge_styles() {
+
+        $screen = get_current_screen();
+        if (!$screen || $screen->post_type !== self::CPT) return;
+
+        ?>
+        <style>
+            .sab-badge{
+                display:inline-flex;
+                align-items:center;
+                gap:6px;
+                padding:4px 10px;
+                border-radius:999px;
+                font-size:12px;
+                font-weight:600;
+                border:1px solid rgba(0,0,0,.08);
+                background:#fff;
+            }
+            .sab-badge::before{
+                content:"";
+                width:8px;height:8px;border-radius:50%;
+            }
+            .sab-active{background:#e6f9ed;color:#0f5132;}
+            .sab-active::before{background:#28a745;}
+            .sab-scheduled{background:#fff8e1;color:#856404;}
+            .sab-scheduled::before{background:#f59e0b;}
+            .sab-expired{background:#f1f3f5;color:#383d41;}
+            .sab-expired::before{background:#6b7280;}
+
+            tr.type-site_alert.sab-current-active > th,
+            tr.type-site_alert.sab-current-active > td{
+                background:#f0fdf4 !important;
+            }
+            tr.type-site_alert.sab-current-active{
+                box-shadow: inset 4px 0 0 #28a745;
+            }
+        </style>
+        <?php
+
+        add_filter('post_class', function($classes,$class,$post_id){
+
+            if(get_post_type($post_id)!==self::CPT) return $classes;
+
+            $start=get_field('alert_start_date',$post_id);
+            $end=get_field('alert_end_date',$post_id);
+            if(!$start||!$end) return $classes;
+
+            $now=current_time('timestamp');
+
+            if(strtotime($start)<= $now && $now<strtotime($end)){
+                $classes[]='sab-current-active';
+            }
+
+            return $classes;
+
+        },10,3);
+    }
 }
 
 new Site_Alert_Bar_Plugin();
