@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Point One - Card Carousel
+ * Plugin Name: Point One Nav - Card Carousel
  * Description: Loads Slick + carousel assets on all front-end pages. No shortcode required.
  * Version:     0.4.3
  * Author:      Point One Navigation

@@ -12,6 +12,8 @@ plugins/*
 # But DO track these custom plugins:
 !plugins/pointone-card-carousel/
 !plugins/pointone-card-carousel/**
+!plugins/pointone-site-alert-bar/
+!plugins/pointone-site-alert-bar/**
 # (add more exceptions below)
 # !plugins/another-custom-plugin/
 # Ignore WP cache drop-in created by cache plugins
