@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const STORAGE_KEY = `siteAlertDismissed:${alertId}`;
     const TTL_MS = 30 * 24 * 60 * 60 * 1000;
 
-    // Check dismissal
+    // Check dismissal state from localStorage. If dismissed and not expired, hide the bar.
     try {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) {
