@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     } catch (e) {
-        // Storage blocked? Fail open (bar shows)
+        // Storage blocked? Fail open (bar shows as normal, but won't remember dismissal)
     }
 
     const closeBtn = bar.querySelector(".site-alert-bar__close");
