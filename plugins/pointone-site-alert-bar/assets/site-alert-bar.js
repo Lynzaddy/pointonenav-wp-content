@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const alertId = bar.getAttribute("data-alert-id");
     if (!alertId) return;
 
-    // Dismissed per alert ID, for 30 days
+    // Dismissed per alert ID, for 30 days no more
     const STORAGE_KEY = `siteAlertDismissed:${alertId}`;
     const TTL_MS = 30 * 24 * 60 * 60 * 1000;
 
