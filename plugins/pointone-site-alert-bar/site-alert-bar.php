@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Point One Nav - Site Alert Bar (ACF + Elementor)
  * Description: Date-based site-wide alert bar with dismiss (localStorage), admin enhancements, and clone support.
- * Version: 1.4.0
+ * Version: 1.4.1
  * Author: Point One Navigation
  */
 
