@@ -1,39 +1,44 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const bar = document.querySelector(".site-alert-bar");
-    if (!bar) return;
+    const alertBar = document.querySelector(".site-alert-bar");
 
-    const alertId = bar.getAttribute("data-alert-id");
-    if (!alertId) return;
+    if (!alertBar) return;
 
-    // Dismissed per alert ID, for 30 days no more
-    const STORAGE_KEY = `siteAlertDismissed:${alertId}`;
-    const TTL_MS = 30 * 24 * 60 * 60 * 1000;
+    const alertId = alertBar.dataset.alertId;
+    const storageKey = "siteAlertDismissed_" + alertId;
 
-    // Check dismissal state from localStorage. If dismissed and not expired, hide the bar.
-    try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) {
-            const data = JSON.parse(raw);
-            const ts = data && data.ts ? Number(data.ts) : 0;
+    const dismissed = localStorage.getItem(storageKey);
 
-            if (ts && Date.now() - ts < TTL_MS) {
-                bar.style.display = "none";
-                return;
-            } else {
-                localStorage.removeItem(STORAGE_KEY);
-            }
-        }
-    } catch (e) {
-        // Storage blocked? Fail open (bar shows as normal, but won't remember dismissal)
+    // If dismissed, remove immediately (no flicker)
+    if (dismissed) {
+        alertBar.remove();
+        return;
     }
 
-    const closeBtn = bar.querySelector(".site-alert-bar__close");
-    if (!closeBtn) return;
+    // Otherwise show it
+    alertBar.style.display = "block";
+
+    const closeBtn = alertBar.querySelector(".site-alert-bar__close");
 
     closeBtn.addEventListener("click", function () {
-        bar.style.display = "none";
-        try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify({ ts: Date.now() }));
-        } catch (e) {}
+        localStorage.setItem(storageKey, "true");
+
+        // Smooth collapse
+        alertBar.style.transition = "height 0.25s ease, opacity 0.25s ease";
+        alertBar.style.overflow = "hidden";
+        alertBar.style.opacity = "0";
+        alertBar.style.height = alertBar.offsetHeight + "px";
+
+        requestAnimationFrame(() => {
+            alertBar.style.height = "0px";
+        });
+
+        setTimeout(() => {
+            alertBar.remove();
+
+            // Force Elementor sticky recalculation
+            if (window.elementorFrontend) {
+                window.dispatchEvent(new Event("resize"));
+            }
+        }, 300);
     });
 });
