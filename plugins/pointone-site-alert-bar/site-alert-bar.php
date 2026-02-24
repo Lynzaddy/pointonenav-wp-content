@@ -150,6 +150,7 @@ final class Site_Alert_Bar_Plugin {
                     'name' => 'alert_end_date',
                     'type' => 'date_time_picker',
                     'required' => 1,
+                    'instructions' => 'Date and time when the alert should stop being displayed.',
                     'display_format' => 'm/d/Y g:i a',
                     'return_format' => 'Y-m-d H:i:s',
                 ],
