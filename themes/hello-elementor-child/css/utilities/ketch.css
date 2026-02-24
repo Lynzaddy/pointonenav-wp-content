@@ -1,0 +1,53 @@
+/* 
+==================================================
+    KETCH.CSS
+    Description: Styles specific to Ketch consent banner, overriding default styles to ensure proper display and responsiveness.
+
+    Table of Contents:
+    - Banner Positioning and Sizing
+==================================================  
+*/
+
+#ketch-banner {
+    position: fixed !important;
+
+    /* Anchor bottom-left */
+    left: 16px !important;
+    right: auto !important;
+    bottom: 16px !important;
+
+    /* Stable card width */
+    width: auto !important;
+    max-width: 420px !important;
+    min-width: 320px;
+
+    box-sizing: border-box !important;
+
+    /* Kill responsive resizing */
+    transform: none !important;
+}
+
+/* Override Ketch breakpoint max-width utilities */
+#ketch-banner[class*="ketch-max-w"],
+#ketch-banner[class*="sm:ketch-max-w"],
+#ketch-banner[class*="!ketch-max-w"] {
+    max-width: 420px !important;
+}
+
+/* Ensure inner container respects card width */
+#ketch-consent-banner {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* Allow natural wrapping (prevents clipping) */
+#ketch-banner p,
+#ketch-banner span {
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+}
+
+/* Buttons stay inside card */
+#ketch-banner button {
+    max-width: 100% !important;
+}
