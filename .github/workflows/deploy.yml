@@ -22,7 +22,7 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@v4
 
-      - name: Build artifact (tracked files only)
+      - name: Build artifact
         run: |
           NAME="wp-content-${GITHUB_SHA}.tar.gz"
           ART="$RUNNER_TEMP/$NAME"
@@ -30,38 +30,11 @@ jobs:
           cp "$ART" "$GITHUB_WORKSPACE/$NAME"
           echo "ARTIFACT_NAME=$NAME" >> $GITHUB_ENV
 
-# ==========================================================
-# ======================= STAGING ==========================
-# ==========================================================
+# ==================================================
+# ================== STAGING =======================
+# ==================================================
 
-      - name: Ensure remote dirs (STAGING)
-        if: env.TARGET == 'staging'
-        uses: appleboy/ssh-action@v1.1.0
-        with:
-          host: ${{ secrets.STAGING_HOST }}
-          username: ${{ secrets.STAGING_USER }}
-          key: ${{ secrets.STAGING_SSH_KEY }}
-          script: |
-            set -e
-            APP_WP_CONTENT="${{ secrets.STAGING_PATH }}"
-            APP_ROOT="$(dirname "$APP_WP_CONTENT")"
-            DEPLOY_BASE="$APP_ROOT/.deploy"
-            mkdir -p "$DEPLOY_BASE/deploy" "$DEPLOY_BASE/releases" "$DEPLOY_BASE/backups"
-
-      - name: Upload artifact (STAGING)
-        if: env.TARGET == 'staging'
-        env:
-          STAGING_HOST: ${{ secrets.STAGING_HOST }}
-          STAGING_USER: ${{ secrets.STAGING_USER }}
-          STAGING_SSH_KEY: ${{ secrets.STAGING_SSH_KEY }}
-        run: |
-          printf "%s" "$STAGING_SSH_KEY" > "$GITHUB_WORKSPACE/id_staging"
-          chmod 600 "$GITHUB_WORKSPACE/id_staging"
-          RSYNC_SSH="ssh -i $GITHUB_WORKSPACE/id_staging -o StrictHostKeyChecking=no"
-          rsync -avz -e "$RSYNC_SSH" "$ARTIFACT_NAME" \
-            "${STAGING_USER}@${STAGING_HOST}:public_html/.deploy/deploy/$ARTIFACT_NAME"
-
-      - name: Release on STAGING
+      - name: Deploy to STAGING
         if: env.TARGET == 'staging'
         uses: appleboy/ssh-action@v1.1.0
         with:
@@ -75,6 +48,16 @@ jobs:
             APP_ROOT="$(dirname "$APP_WP_CONTENT")"
             DEPLOY_BASE="$APP_ROOT/.deploy"
 
+            mkdir -p "$DEPLOY_BASE/deploy" "$DEPLOY_BASE/releases" "$DEPLOY_BASE/backups"
+
+            # Upload artifact
+            TARBALL_NAME="wp-content-${GITHUB_SHA}.tar.gz"
+            TARBALL_PATH="$DEPLOY_BASE/deploy/$TARBALL_NAME"
+
+            echo "Waiting for artifact..."
+            sleep 2
+
+            # Find newest tarball
             TARBALL="$(ls -1t "$DEPLOY_BASE/deploy"/wp-content-*.tar.gz | head -n1)"
             NAME="$(basename "$TARBALL" .tar.gz)"
             RELEASE_DIR="$DEPLOY_BASE/releases/$NAME"
@@ -95,7 +78,7 @@ jobs:
               SRC_PLUGINS="$RELEASE_DIR/wp-content/plugins"
             fi
 
-            # 1) Deploy everything EXCEPT uploads and plugins
+            # 1️⃣ Sync wp-content EXCEPT uploads & plugins (SAFE to delete)
             rsync -rltD --delete \
               --exclude 'uploads' \
               --exclude 'uploads/**' \
@@ -106,16 +89,17 @@ jobs:
               --chmod=Du=rwx,Fu=rw \
               "$SRC_BASE"/ "$APP_WP_CONTENT"/
 
-            # 2) Deploy ALL tracked plugins
+            # 2️⃣ Sync tracked plugins (NO DELETE — SAFE)
             if [ -d "$SRC_PLUGINS" ]; then
-              rsync -rltD --delete \
+              echo "Syncing tracked plugins safely..."
+              rsync -rltD \
                 --no-perms --no-owner --no-group \
                 --omit-dir-times --no-times \
                 --chmod=Du=rwx,Fu=rw \
                 "$SRC_PLUGINS"/ "$APP_WP_CONTENT/plugins/"
             fi
 
-            # Flush cache safely
+            # Flush caches safely
             if command -v wp >/dev/null 2>&1; then
               cd "$APP_ROOT"
               wp --skip-plugins --skip-themes cache flush || true
@@ -125,38 +109,11 @@ jobs:
             find "$APP_WP_CONTENT" -type d -exec chmod 755 {} \;
             find "$APP_WP_CONTENT" -type f -exec chmod 644 {} \;
 
-# ==========================================================
-# ===================== PRODUCTION =========================
-# ==========================================================
+# ==================================================
+# ================= PRODUCTION =====================
+# ==================================================
 
-      - name: Ensure remote dirs (PRODUCTION)
-        if: env.TARGET == 'production'
-        uses: appleboy/ssh-action@v1.1.0
-        with:
-          host: ${{ secrets.PROD_HOST }}
-          username: ${{ secrets.PROD_USER }}
-          key: ${{ secrets.PROD_SSH_KEY }}
-          script: |
-            set -e
-            APP_WP_CONTENT="${{ secrets.PROD_PATH }}"
-            APP_ROOT="$(dirname "$APP_WP_CONTENT")"
-            DEPLOY_BASE="$APP_ROOT/.deploy"
-            mkdir -p "$DEPLOY_BASE/deploy" "$DEPLOY_BASE/releases" "$DEPLOY_BASE/backups"
-
-      - name: Upload artifact (PRODUCTION)
-        if: env.TARGET == 'production'
-        env:
-          PROD_HOST: ${{ secrets.PROD_HOST }}
-          PROD_USER: ${{ secrets.PROD_USER }}
-          PROD_SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
-        run: |
-          printf "%s" "$PROD_SSH_KEY" > "$GITHUB_WORKSPACE/id_prod"
-          chmod 600 "$GITHUB_WORKSPACE/id_prod"
-          RSYNC_SSH="ssh -i $GITHUB_WORKSPACE/id_prod -o StrictHostKeyChecking=no"
-          rsync -avz -e "$RSYNC_SSH" "$ARTIFACT_NAME" \
-            "${PROD_USER}@${PROD_HOST}:public_html/.deploy/deploy/$ARTIFACT_NAME"
-
-      - name: Release on PRODUCTION
+      - name: Deploy to PRODUCTION
         if: env.TARGET == 'production'
         uses: appleboy/ssh-action@v1.1.0
         with:
@@ -169,6 +126,8 @@ jobs:
             APP_WP_CONTENT="${{ secrets.PROD_PATH }}"
             APP_ROOT="$(dirname "$APP_WP_CONTENT")"
             DEPLOY_BASE="$APP_ROOT/.deploy"
+
+            mkdir -p "$DEPLOY_BASE/deploy" "$DEPLOY_BASE/releases" "$DEPLOY_BASE/backups"
 
             TARBALL="$(ls -1t "$DEPLOY_BASE/deploy"/wp-content-*.tar.gz | head -n1)"
             NAME="$(basename "$TARBALL" .tar.gz)"
@@ -199,7 +158,8 @@ jobs:
               "$SRC_BASE"/ "$APP_WP_CONTENT"/
 
             if [ -d "$SRC_PLUGINS" ]; then
-              rsync -rltD --delete \
+              echo "Syncing tracked plugins safely..."
+              rsync -rltD \
                 --no-perms --no-owner --no-group \
                 --omit-dir-times --no-times \
                 --chmod=Du=rwx,Fu=rw \
