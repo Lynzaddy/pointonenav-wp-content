@@ -155,11 +155,6 @@
         padding: 0 var(--side-padding-narrow);
         /* background-color: #f90;  Light green for testing */
     }
-    .section-container-inner.margin-zero {
-        margin: var(--vertical-padding-desktop) auto;
-        padding: 0 0 !important;
-        /* background-color: #f90;  Light green for testing */
-    }
 }
 
 /* ===== TABLET (≤1024px) ===== */
