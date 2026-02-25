@@ -181,15 +181,6 @@
     }
 }
 
-/* === Newsletter CTA Padding Fix Removes 20px side padding between 1160px and 1366px only === */
-@media (min-width: 1190px) and (max-width: 1366px) {
-    .newsletter-cta .section-container-inner,
-    .newsletter-cta .section-container-inner > .e-con-inner {
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-    }
-}
-
 /* ==================================================
    BACKGROUND VARIANTS
    Description: Utility classes that can be applied to either 
