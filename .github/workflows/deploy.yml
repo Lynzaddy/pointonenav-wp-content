@@ -18,7 +18,6 @@ jobs:
           git archive --format=tar.gz -o "$NAME" HEAD
           echo "ARTIFACT_NAME=$NAME" >> $GITHUB_ENV
           echo "Built artifact: $NAME"
-          tar -tzf "$NAME" | grep foo || true
 
       - name: Upload artifact
         uses: appleboy/scp-action@v0.1.7
@@ -27,7 +26,7 @@ jobs:
           username: ${{ github.ref_name == 'main' && secrets.PROD_USER || secrets.STAGING_USER }}
           key: ${{ github.ref_name == 'main' && secrets.PROD_SSH_KEY || secrets.STAGING_SSH_KEY }}
           source: "${{ env.ARTIFACT_NAME }}"
-          target: "public_html/"
+          target: "./"
 
       - name: Extract and deploy
         uses: appleboy/ssh-action@v1.1.0
@@ -40,10 +39,13 @@ jobs:
           script: |
             set -e
 
-            echo "Extracting $ARTIFACT_NAME into public_html..."
-            tar -xzf public_html/$ARTIFACT_NAME -C public_html/
+            echo "Extracting artifact..."
+            tar -xzf "$ARTIFACT_NAME"
 
-            echo "Verifying foo.css exists..."
-            ls -lah public_html/wp-content/themes/hello-elementor-child/css/ || true
+            echo "Removing artifact..."
+            rm "$ARTIFACT_NAME"
+
+            echo "Verifying foo.css:"
+            ls -lah wp-content/themes/hello-elementor-child/css/ || true
 
             echo "Deploy complete."
