@@ -1,4 +1,4 @@
-name: Deploy wp-content to Cloudways
+name: Deploy wp-content (Cloudways)
 
 on:
   push:
@@ -8,40 +8,30 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    env:
-      TARGET: ${{ github.ref_name == 'main' && 'production' || 'staging' }}
-
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build artifact
-        run: |
-          NAME="wp-content-${GITHUB_SHA}.tar.gz"
-          git archive --format=tar.gz -o "$NAME" HEAD
-          echo "ARTIFACT_NAME=$NAME" >> $GITHUB_ENV
-
-# ================= STAGING =================
-
-      - name: Deploy to STAGING
-        if: env.TARGET == 'staging'
-        uses: appleboy/ssh-action@v1.1.0
+      - name: Deploy via rsync over SSH
         env:
-          ARTIFACT_NAME: ${{ env.ARTIFACT_NAME }}
-        with:
-          host: ${{ secrets.STAGING_HOST }}
-          username: ${{ secrets.STAGING_USER }}
-          key: ${{ secrets.STAGING_SSH_KEY }}
-          script: |
-            set -e
+          HOST: ${{ github.ref_name == 'main' && secrets.PROD_HOST || secrets.STAGING_HOST }}
+          USER: ${{ github.ref_name == 'main' && secrets.PROD_USER || secrets.STAGING_USER }}
+          KEY:  ${{ github.ref_name == 'main' && secrets.PROD_SSH_KEY || secrets.STAGING_SSH_KEY }}
+        run: |
+          printf "%s" "$KEY" > id_rsa
+          chmod 600 id_rsa
 
-            APP_WP_CONTENT="${{ secrets.STAGING_PATH }}"
-            APP_ROOT="$(dirname "$APP_WP_CONTENT")"
-            DEPLOY_BASE="$APP_ROOT/.deploy"
+          RSYNC_SSH="ssh -i id_rsa -o StrictHostKeyChecking=no"
 
-            mkdir -p "$DEPLOY_BASE/deploy"
-            mkdir -p "$DEPLOY_BASE/releases"
-            mkdir -p "$DEPLOY_BASE/backups"
+          echo "Deploying to $HOST..."
 
-            echo "Uploading artifact..."
-            exit 0
+          rsync -az --delete \
+            --exclude ".git" \
+            --exclude ".github" \
+            --exclude "uploads" \
+            --exclude "uploads/**" \
+            -e "$RSYNC_SSH" \
+            ./ \
+            "$USER@$HOST:public_html/wp-content/"
+
+          echo "Deployment complete."
