@@ -1,24 +1,49 @@
-name: Debug Deploy
+name: Deploy wp-content
 
 on:
   push:
-    branches: ["staging"]
+    branches: ["staging", "main"]
 
 jobs:
-  debug:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Test SSH location
-        uses: appleboy/ssh-action@v1.1.0
+      - name: Build artifact
+        run: |
+          NAME="wp-content-${GITHUB_SHA}.tar.gz"
+          git archive --format=tar.gz -o "$NAME" HEAD
+          echo "ARTIFACT_NAME=$NAME" >> $GITHUB_ENV
+
+      - name: Upload artifact
+        uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ secrets.STAGING_HOST }}
-          username: ${{ secrets.STAGING_USER }}
-          key: ${{ secrets.STAGING_SSH_KEY }}
+          host: ${{ github.ref_name == 'main' && secrets.PROD_HOST || secrets.STAGING_HOST }}
+          username: ${{ github.ref_name == 'main' && secrets.PROD_USER || secrets.STAGING_USER }}
+          key: ${{ github.ref_name == 'main' && secrets.PROD_SSH_KEY || secrets.STAGING_SSH_KEY }}
+          source: "${{ env.ARTIFACT_NAME }}"
+          target: "public_html/"
+
+      - name: Extract and deploy
+        uses: appleboy/ssh-action@v1.1.0
+        env:
+          ARTIFACT_NAME: ${{ env.ARTIFACT_NAME }}
+        with:
+          host: ${{ github.ref_name == 'main' && secrets.PROD_HOST || secrets.STAGING_HOST }}
+          username: ${{ github.ref_name == 'main' && secrets.PROD_USER || secrets.STAGING_USER }}
+          key: ${{ github.ref_name == 'main' && secrets.PROD_SSH_KEY || secrets.STAGING_SSH_KEY }}
           script: |
-            echo "PWD:"
-            pwd
-            echo "LIST:"
-            ls -lah
+            set -e
+
+            cd public_html
+
+            echo "Extracting..."
+            tar -xzf "$ARTIFACT_NAME"
+
+            echo "Cleaning up..."
+            rm "$ARTIFACT_NAME"
+
+            echo "Done."
