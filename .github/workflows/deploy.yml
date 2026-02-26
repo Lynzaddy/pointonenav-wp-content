@@ -71,7 +71,7 @@ jobs:
           username: ${{ secrets.STAGING_USER }}
           key: ${{ secrets.STAGING_SSH_KEY }}
           script: |
-            set -euo pipefail
+            set -eo pipefail
             APP_WP_CONTENT="${{ secrets.STAGING_PATH }}"
             APP_ROOT="$(dirname "$APP_WP_CONTENT")"
             DEPLOY_BASE="$APP_ROOT/.deploy"
@@ -162,7 +162,7 @@ jobs:
           username: ${{ secrets.PROD_USER }}
           key: ${{ secrets.PROD_SSH_KEY }}
           script: |
-            set -euo pipefail
+            set -eo pipefail
             APP_WP_CONTENT="${{ secrets.PROD_PATH }}"
             APP_ROOT="$(dirname "$APP_WP_CONTENT")"
             DEPLOY_BASE="$APP_ROOT/.deploy"
