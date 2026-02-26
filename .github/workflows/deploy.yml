@@ -54,13 +54,18 @@ jobs:
           HOST: ${{ secrets.STAGING_HOST }}
           USER: ${{ secrets.STAGING_USER }}
           KEY: ${{ secrets.STAGING_SSH_KEY }}
-          PATH_REMOTE: ${{ secrets.STAGING_PATH }}
+          WP_CONTENT: ${{ secrets.STAGING_PATH }}
         run: |
           printf "%s" "$KEY" > id_staging
           chmod 600 id_staging
+
+          APP_ROOT="$(dirname "$WP_CONTENT")"
+          DEPLOY_DIR="$APP_ROOT/.deploy/deploy"
+
           RSYNC_SSH="ssh -i id_staging -o StrictHostKeyChecking=no"
+
           rsync -avz -e "$RSYNC_SSH" "$ARTIFACT_NAME" \
-            "${USER}@${HOST}:$(dirname "$PATH_REMOTE")/.deploy/deploy/$ARTIFACT_NAME"
+            "${USER}@${HOST}:${DEPLOY_DIR}/$ARTIFACT_NAME"
 
       - name: Release on STAGING
         if: env.TARGET == 'staging'
@@ -168,13 +173,18 @@ jobs:
           HOST: ${{ secrets.PROD_HOST }}
           USER: ${{ secrets.PROD_USER }}
           KEY: ${{ secrets.PROD_SSH_KEY }}
-          PATH_REMOTE: ${{ secrets.PROD_PATH }}
+          WP_CONTENT: ${{ secrets.PROD_PATH }}
         run: |
           printf "%s" "$KEY" > id_prod
           chmod 600 id_prod
+
+          APP_ROOT="$(dirname "$WP_CONTENT")"
+          DEPLOY_DIR="$APP_ROOT/.deploy/deploy"
+
           RSYNC_SSH="ssh -i id_prod -o StrictHostKeyChecking=no"
+
           rsync -avz -e "$RSYNC_SSH" "$ARTIFACT_NAME" \
-            "${USER}@${HOST}:$(dirname "$PATH_REMOTE")/.deploy/deploy/$ARTIFACT_NAME"
+            "${USER}@${HOST}:${DEPLOY_DIR}/$ARTIFACT_NAME"
 
       - name: Release on PRODUCTION
         if: env.TARGET == 'production'
