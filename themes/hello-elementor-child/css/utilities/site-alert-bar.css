@@ -1,0 +1,111 @@
+/* 
+==================================================
+    SITE-ALERT-BAR.CSS
+    Description: Styles specific to the site alert bar, ensuring consistent appearance, responsive behavior, and proper spacing across devices.
+
+    Table of Contents:
+    - Banner Positioning and Sizing
+==================================================  
+*/
+
+.site-alert-bar {
+    width: 100%;
+    background-color: #37cc74;
+}
+
+.site-alert-bar__inner {
+    position: relative;
+    display: flex;
+    align-items: center; /* Perfect vertical centering */
+    justify-content: center;
+    padding: 10px 48px; /* 2px added top & bottom */
+    min-height: 40px; /* Slightly increased to match padding */
+    text-align: center;
+}
+
+/* =========================================
+   Unified Typography
+========================================= */
+
+.site-alert-bar__message {
+    display: inline;
+    font-family: "Instrument Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #141413;
+    line-height: 1.2; /* Optical balance */
+}
+
+/* Ensure children inherit */
+.site-alert-bar__message a,
+.site-alert-bar__message span {
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    color: inherit;
+    line-height: inherit;
+}
+
+/* CTA styling (only underline differs) */
+.site-alert-bar__cta {
+    text-decoration: underline;
+}
+
+/* Desktop spacing */
+.site-alert-bar__cta + .site-alert-bar__text,
+.site-alert-bar__text + .site-alert-bar__cta {
+    margin-left: 0.35em;
+}
+
+/* =========================================
+   Close Button
+========================================= */
+
+.site-alert-bar__close {
+    position: absolute;
+    right: 16px;
+    border: none;
+    background: transparent !important;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    color: #141413;
+    transition: color 0.2s ease;
+}
+
+.site-alert-bar__close:hover,
+.site-alert-bar__close:focus {
+    background: transparent !important;
+    box-shadow: none !important;
+    outline: none;
+    color: linear-gradient(0deg, var(--states-hover-inverse, rgba(255, 255, 255, 0.1)) 0%, var(--states-hover-inverse, rgba(255, 255, 255, 0.1)) 100%), var(--background-primary-inverse, #141413);
+}
+
+/* =========================================
+   Responsive Text Switching
+========================================= */
+
+.site-alert-bar__text--mobile {
+    display: none;
+}
+
+@media (max-width: 767px) {
+    /* Slightly more breathing room on mobile */
+    .site-alert-bar__cta + .site-alert-bar__text,
+    .site-alert-bar__text + .site-alert-bar__cta {
+        margin-left: 0.5em;
+    }
+
+    .site-alert-bar__text--desktop {
+        display: none !important;
+    }
+
+    .site-alert-bar__text--mobile {
+        display: inline !important;
+    }
+}
+/* Prevent alert flicker */
+.site-alert-bar {
+    display: none;
+}
