@@ -1,4 +1,4 @@
-name: Deploy wp-content
+name: Deploy wp-content (Cloudways .deploy)
 
 on:
   push:
@@ -18,16 +18,16 @@ jobs:
           git archive --format=tar.gz -o "$NAME" HEAD
           echo "ARTIFACT_NAME=$NAME" >> $GITHUB_ENV
 
-      - name: Upload to tmp directory
+      - name: Upload artifact to .deploy
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ github.ref_name == 'main' && secrets.PROD_HOST || secrets.STAGING_HOST }}
           username: ${{ github.ref_name == 'main' && secrets.PROD_USER || secrets.STAGING_USER }}
           key: ${{ github.ref_name == 'main' && secrets.PROD_SSH_KEY || secrets.STAGING_SSH_KEY }}
           source: "${{ env.ARTIFACT_NAME }}"
-          target: "tmp/"
+          target: "public_html/.deploy/deploy/"
 
-      - name: Move and deploy
+      - name: Extract and deploy
         uses: appleboy/ssh-action@v1.1.0
         env:
           ARTIFACT_NAME: ${{ env.ARTIFACT_NAME }}
@@ -38,15 +38,12 @@ jobs:
           script: |
             set -e
 
-            echo "Moving artifact into public_html..."
-            mv tmp/$ARTIFACT_NAME public_html/
-
             cd public_html
 
-            echo "Extracting..."
-            tar -xzf "$ARTIFACT_NAME"
+            echo "Extracting artifact..."
+            tar -xzf ".deploy/deploy/$ARTIFACT_NAME"
 
-            echo "Cleaning up..."
-            rm "$ARTIFACT_NAME"
+            echo "Cleaning up artifact..."
+            rm ".deploy/deploy/$ARTIFACT_NAME"
 
-            echo "Deploy complete."
+            echo "Deployment complete."
