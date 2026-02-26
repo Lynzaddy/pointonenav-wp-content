@@ -65,9 +65,9 @@ jobs:
                   cp "$ART" "$GITHUB_WORKSPACE/$NAME"
                   echo "ARTIFACT_NAME=$NAME" >> $GITHUB_ENV
 
-# ==================================================
-# =================== STAGING ======================
-# ==================================================
+            # ==================================================
+            # =================== STAGING ======================
+            # ==================================================
 
             - name: Ensure remote dirs (STAGING)
               if: env.TARGET == 'staging'
@@ -127,7 +127,6 @@ jobs:
                         SRC_PLUGINS_DIR="$RELEASE_DIR/wp-content/plugins"
                       fi
 
-                      # Sync wp-content except uploads + plugins
                       rsync -rltD \
                         --exclude 'uploads' \
                         --exclude 'uploads/**' \
@@ -138,21 +137,15 @@ jobs:
                         --chmod=Du=rwx,Fu=rw \
                         "$SRC_BASE"/ "$APP_WP_CONTENT"/
 
-                      # Deploy pointone-card-carousel
                       if [ -d "$SRC_PLUGINS_DIR/pointone-card-carousel" ]; then
-                        rsync -rltD \
-                          --no-perms --no-owner --no-group \
-                          --omit-dir-times --no-times \
+                        rsync -rltD --no-perms --no-owner --no-group --omit-dir-times --no-times \
                           --chmod=Du=rwx,Fu=rw \
                           "$SRC_PLUGINS_DIR/pointone-card-carousel/" \
                           "$APP_WP_CONTENT/plugins/pointone-card-carousel/"
                       fi
 
-                      # Deploy pointone-site-alert-bar
                       if [ -d "$SRC_PLUGINS_DIR/pointone-site-alert-bar" ]; then
-                        rsync -rltD \
-                          --no-perms --no-owner --no-group \
-                          --omit-dir-times --no-times \
+                        rsync -rltD --no-perms --no-owner --no-group --omit-dir-times --no-times \
                           --chmod=Du=rwx,Fu=rw \
                           "$SRC_PLUGINS_DIR/pointone-site-alert-bar/" \
                           "$APP_WP_CONTENT/plugins/pointone-site-alert-bar/"
@@ -167,9 +160,9 @@ jobs:
                       find "$APP_WP_CONTENT" -type d -exec chmod 755 {} \;
                       find "$APP_WP_CONTENT" -type f -exec chmod 644 {} \;
 
-# ==================================================
-# ================= PRODUCTION =====================
-# ==================================================
+            # ==================================================
+            # ================= PRODUCTION =====================
+            # ==================================================
 
             - name: Ensure remote dirs (PRODUCTION)
               if: env.TARGET == 'production'
@@ -240,18 +233,14 @@ jobs:
                         "$SRC_BASE"/ "$APP_WP_CONTENT"/
 
                       if [ -d "$SRC_PLUGINS_DIR/pointone-card-carousel" ]; then
-                        rsync -rltD \
-                          --no-perms --no-owner --no-group \
-                          --omit-dir-times --no-times \
+                        rsync -rltD --no-perms --no-owner --no-group --omit-dir-times --no-times \
                           --chmod=Du=rwx,Fu=rw \
                           "$SRC_PLUGINS_DIR/pointone-card-carousel/" \
                           "$APP_WP_CONTENT/plugins/pointone-card-carousel/"
                       fi
 
                       if [ -d "$SRC_PLUGINS_DIR/pointone-site-alert-bar" ]; then
-                        rsync -rltD \
-                          --no-perms --no-owner --no-group \
-                          --omit-dir-times --no-times \
+                        rsync -rltD --no-perms --no-owner --no-group --omit-dir-times --no-times \
                           --chmod=Du=rwx,Fu=rw \
                           "$SRC_PLUGINS_DIR/pointone-site-alert-bar/" \
                           "$APP_WP_CONTENT/plugins/pointone-site-alert-bar/"
