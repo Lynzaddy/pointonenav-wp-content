@@ -1,4 +1,4 @@
-name: Deploy wp-content (rsync)
+name: Deploy wp-content (Cloudways)
 
 on:
   push:
@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Deploy via rsync over SSH
@@ -23,8 +23,15 @@ jobs:
 
           RSYNC_SSH="ssh -i id_rsa -o StrictHostKeyChecking=no"
 
+          echo "Deploying to $HOST..."
+
           rsync -az --delete \
             --exclude ".git" \
+            --exclude ".github" \
+            --exclude "uploads" \
+            --exclude "uploads/**" \
             -e "$RSYNC_SSH" \
             ./ \
             "$USER@$HOST:public_html/wp-content/"
+
+          echo "Deployment complete."
