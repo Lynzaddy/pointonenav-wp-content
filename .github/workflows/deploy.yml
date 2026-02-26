@@ -1,30 +1,39 @@
-name: Deploy wp-content to Cloudways
+name: Debug Deploy
 
 on:
   push:
-    branches: ["staging", "main"]
+    branches: ["staging"]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    env:
-      TARGET: ${{ github.ref_name == 'main' && 'production' || 'staging' }}
-
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+
+      - name: Show current commit
+        run: |
+          echo "Current SHA: $GITHUB_SHA"
+          git log -1 --name-only
 
       - name: Build artifact
         run: |
           NAME="wp-content-${GITHUB_SHA}.tar.gz"
           git archive --format=tar.gz -o "$NAME" HEAD
           echo "ARTIFACT_NAME=$NAME" >> $GITHUB_ENV
+          echo "Checking if foo.css exists in artifact:"
+          tar -tzf "$NAME" | grep foo || echo "foo.css NOT FOUND in artifact"
 
-# ================= STAGING =================
+      - name: Upload artifact to STAGING
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.STAGING_HOST }}
+          username: ${{ secrets.STAGING_USER }}
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          source: "${{ env.ARTIFACT_NAME }}"
+          target: "public_html/"
 
-      - name: Deploy to STAGING
-        if: env.TARGET == 'staging'
+      - name: Extract on STAGING
         uses: appleboy/ssh-action@v1.1.0
         env:
           ARTIFACT_NAME: ${{ env.ARTIFACT_NAME }}
@@ -35,13 +44,14 @@ jobs:
           script: |
             set -e
 
-            APP_WP_CONTENT="${{ secrets.STAGING_PATH }}"
-            APP_ROOT="$(dirname "$APP_WP_CONTENT")"
-            DEPLOY_BASE="$APP_ROOT/.deploy"
+            echo "Listing uploaded tarball:"
+            ls -lah public_html/${ARTIFACT_NAME}
 
-            mkdir -p "$DEPLOY_BASE/deploy"
-            mkdir -p "$DEPLOY_BASE/releases"
-            mkdir -p "$DEPLOY_BASE/backups"
+            echo "Checking if foo.css exists inside tarball:"
+            tar -tzf public_html/${ARTIFACT_NAME} | grep foo || echo "foo.css NOT FOUND in remote tarball"
 
-            echo "Uploading artifact..."
-            exit 0
+            echo "Extracting directly into wp-content..."
+            tar -xzf public_html/${ARTIFACT_NAME} -C public_html/
+
+            echo "Checking if foo.css now exists on server:"
+            ls -lah public_html/wp-content/themes/hello-elementor-child/css/ || true
