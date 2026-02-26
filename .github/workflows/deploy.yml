@@ -1,20 +1,55 @@
 name: Deploy wp-content to Cloudways
 
 on:
-    push:
-        branches: ["staging", "main"]
-    workflow_dispatch:
-        inputs:
-            target:
-                description: "Where to deploy"
-                required: true
-                type: choice
-                options: ["staging", "production"]
+  push:
+    branches: ["staging", "main"]
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Where to deploy"
+        required: true
+        type: choice
+        options: ["staging", "production"]
 
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-latest
 
+    env:
+      TARGET: ${{ github.ref_name == 'main' && 'production' || github.ref_name == 'staging' && 'staging' || inputs.target }}
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Build artifact (tracked files only)
+        run: |
+          NAME="wp-content-${GITHUB_SHA}.tar.gz"
+          ART="$RUNNER_TEMP/$NAME"
+          git archive --format=tar.gz -o "$ART" HEAD
+          cp "$ART" "$GITHUB_WORKSPACE/$NAME"
+          echo "ARTIFACT_NAME=$NAME" >> $GITHUB_ENV
+
+# ==========================================================
+# ======================= STAGING ==========================
+# ==========================================================
+
+      - name: Ensure remote dirs (STAGING)
+        if: env.TARGET == 'staging'
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.STAGING_HOST }}
+          username: ${{ secrets.STAGING_USER }}
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          script: |
+            set -e
+            APP_WP_CONTENT="${{ secrets.STAGING_PATH }}"
+            APP_ROOT="$(dirname "$APP_WP_CONTENT")"
+            DEPLOY_BASE="$APP_ROOT/.deploy"
+            mkdir -p "$DEPLOY_BASE/deploy" "$DEPLOY_BASE/releases" "$DEPLOY_BASE/backups"
+
+      - name: Upload artifact (STAGING)
+        if: env.TARGET == 'staging'
         env:
             TARGET: ${{ github.ref_name == 'main' && 'production' || github.ref_name == 'staging' && 'staging' || inputs.target }}
 
