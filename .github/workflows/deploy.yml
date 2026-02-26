@@ -26,5 +26,5 @@ jobs:
           rsync -az --delete \
             --exclude ".git" \
             -e "$RSYNC_SSH" \
-            wp-content/ \
+            ./ \
             "$USER@$HOST:public_html/wp-content/"
