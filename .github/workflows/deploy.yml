@@ -1,51 +1,24 @@
-name: Simple Deploy wp-content
+name: Debug Deploy
 
 on:
   push:
-    branches: ["staging", "main"]
+    branches: ["staging"]
 
 jobs:
-  deploy:
+  debug:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Build artifact
-        run: |
-          NAME="wp-content-${GITHUB_SHA}.tar.gz"
-          git archive --format=tar.gz -o "$NAME" HEAD
-          echo "ARTIFACT_NAME=$NAME" >> $GITHUB_ENV
-          echo "Built artifact: $NAME"
-
-      - name: Upload artifact
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ github.ref_name == 'main' && secrets.PROD_HOST || secrets.STAGING_HOST }}
-          username: ${{ github.ref_name == 'main' && secrets.PROD_USER || secrets.STAGING_USER }}
-          key: ${{ github.ref_name == 'main' && secrets.PROD_SSH_KEY || secrets.STAGING_SSH_KEY }}
-          source: "${{ env.ARTIFACT_NAME }}"
-          target: "./"
-
-      - name: Extract and deploy
+      - name: Test SSH location
         uses: appleboy/ssh-action@v1.1.0
-        env:
-          ARTIFACT_NAME: ${{ env.ARTIFACT_NAME }}
         with:
-          host: ${{ github.ref_name == 'main' && secrets.PROD_HOST || secrets.STAGING_HOST }}
-          username: ${{ github.ref_name == 'main' && secrets.PROD_USER || secrets.STAGING_USER }}
-          key: ${{ github.ref_name == 'main' && secrets.PROD_SSH_KEY || secrets.STAGING_SSH_KEY }}
+          host: ${{ secrets.STAGING_HOST }}
+          username: ${{ secrets.STAGING_USER }}
+          key: ${{ secrets.STAGING_SSH_KEY }}
           script: |
-            set -e
-
-            echo "Extracting artifact..."
-            tar -xzf "$ARTIFACT_NAME"
-
-            echo "Removing artifact..."
-            rm "$ARTIFACT_NAME"
-
-            echo "Verifying foo.css:"
-            ls -lah wp-content/themes/hello-elementor-child/css/ || true
-
-            echo "Deploy complete."
+            echo "PWD:"
+            pwd
+            echo "LIST:"
+            ls -lah
