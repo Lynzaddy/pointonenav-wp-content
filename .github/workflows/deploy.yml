@@ -1,4 +1,4 @@
-name: Deploy wp-content (Cloudways .deploy)
+name: Deploy wp-content (rsync)
 
 on:
   push:
@@ -12,38 +12,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build artifact
-        run: |
-          NAME="wp-content-${GITHUB_SHA}.tar.gz"
-          git archive --format=tar.gz -o "$NAME" HEAD
-          echo "ARTIFACT_NAME=$NAME" >> $GITHUB_ENV
-
-      - name: Upload artifact to .deploy
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ github.ref_name == 'main' && secrets.PROD_HOST || secrets.STAGING_HOST }}
-          username: ${{ github.ref_name == 'main' && secrets.PROD_USER || secrets.STAGING_USER }}
-          key: ${{ github.ref_name == 'main' && secrets.PROD_SSH_KEY || secrets.STAGING_SSH_KEY }}
-          source: "${{ env.ARTIFACT_NAME }}"
-          target: "public_html/.deploy/deploy/"
-
-      - name: Extract and deploy
-        uses: appleboy/ssh-action@v1.1.0
+      - name: Deploy via rsync over SSH
         env:
-          ARTIFACT_NAME: ${{ env.ARTIFACT_NAME }}
-        with:
-          host: ${{ github.ref_name == 'main' && secrets.PROD_HOST || secrets.STAGING_HOST }}
-          username: ${{ github.ref_name == 'main' && secrets.PROD_USER || secrets.STAGING_USER }}
-          key: ${{ github.ref_name == 'main' && secrets.PROD_SSH_KEY || secrets.STAGING_SSH_KEY }}
-          script: |
-            set -e
+          HOST: ${{ github.ref_name == 'main' && secrets.PROD_HOST || secrets.STAGING_HOST }}
+          USER: ${{ github.ref_name == 'main' && secrets.PROD_USER || secrets.STAGING_USER }}
+          KEY:  ${{ github.ref_name == 'main' && secrets.PROD_SSH_KEY || secrets.STAGING_SSH_KEY }}
+        run: |
+          printf "%s" "$KEY" > id_rsa
+          chmod 600 id_rsa
 
-            cd public_html
+          RSYNC_SSH="ssh -i id_rsa -o StrictHostKeyChecking=no"
 
-            echo "Extracting artifact..."
-            tar -xzf ".deploy/deploy/$ARTIFACT_NAME"
-
-            echo "Cleaning up artifact..."
-            rm ".deploy/deploy/$ARTIFACT_NAME"
-
-            echo "Deployment complete."
+          rsync -az --delete \
+            --exclude ".git" \
+            -e "$RSYNC_SSH" \
+            wp-content/ \
+            "$USER@$HOST:public_html/wp-content/"
