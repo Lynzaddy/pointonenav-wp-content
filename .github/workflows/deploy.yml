@@ -3,65 +3,27 @@ name: Deploy wp-content to Cloudways
 on:
   push:
     branches: ["staging", "main"]
-  workflow_dispatch:
-    inputs:
-      target:
-        description: "Where to deploy"
-        required: true
-        type: choice
-        options: ["staging", "production"]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     env:
-      TARGET: ${{ github.ref_name == 'main' && 'production' || github.ref_name == 'staging' && 'staging' || inputs.target }}
+      TARGET: ${{ github.ref_name == 'main' && 'production' || 'staging' }}
 
     steps:
-      - name: Check out repo
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Build artifact (tracked files only)
+      - name: Build artifact
         run: |
           NAME="wp-content-${GITHUB_SHA}.tar.gz"
-          ART="$RUNNER_TEMP/$NAME"
-          git archive --format=tar.gz -o "$ART" HEAD
-          cp "$ART" "$GITHUB_WORKSPACE/$NAME"
+          git archive --format=tar.gz -o "$NAME" HEAD
           echo "ARTIFACT_NAME=$NAME" >> $GITHUB_ENV
 
-# ============================
-# STAGING
-# ============================
+# ================= STAGING =================
 
-      - name: Ensure remote dirs (STAGING)
-        if: env.TARGET == 'staging'
-        uses: appleboy/ssh-action@v1.1.0
-        with:
-          host: ${{ secrets.STAGING_HOST }}
-          username: ${{ secrets.STAGING_USER }}
-          key: ${{ secrets.STAGING_SSH_KEY }}
-          script: |
-            set -e
-            APP_WP_CONTENT="${{ secrets.STAGING_PATH }}"
-            APP_ROOT="$(dirname "$APP_WP_CONTENT")"
-            DEPLOY_BASE="$APP_ROOT/.deploy"
-            mkdir -p "$DEPLOY_BASE/deploy" "$DEPLOY_BASE/releases" "$DEPLOY_BASE/backups"
-
-      - name: Upload artifact (STAGING)
-        if: env.TARGET == 'staging'
-        env:
-          HOST: ${{ secrets.STAGING_HOST }}
-          USER: ${{ secrets.STAGING_USER }}
-          KEY: ${{ secrets.STAGING_SSH_KEY }}
-        run: |
-          printf "%s" "$KEY" > id_staging
-          chmod 600 id_staging
-          RSYNC_SSH="ssh -i id_staging -o StrictHostKeyChecking=no"
-          rsync -avz -e "$RSYNC_SSH" "$ARTIFACT_NAME" \
-            "${USER}@${HOST}:public_html/.deploy/deploy/$ARTIFACT_NAME"
-
-      - name: Release on STAGING
+      - name: Deploy to STAGING
         if: env.TARGET == 'staging'
         uses: appleboy/ssh-action@v1.1.0
         env:
@@ -71,143 +33,15 @@ jobs:
           username: ${{ secrets.STAGING_USER }}
           key: ${{ secrets.STAGING_SSH_KEY }}
           script: |
-            set -eo pipefail
+            set -e
+
             APP_WP_CONTENT="${{ secrets.STAGING_PATH }}"
             APP_ROOT="$(dirname "$APP_WP_CONTENT")"
             DEPLOY_BASE="$APP_ROOT/.deploy"
 
-            TARBALL="$DEPLOY_BASE/deploy/$ARTIFACT_NAME"
-            [ -f "$TARBALL" ] || { echo "Tarball missing"; exit 1; }
+            mkdir -p "$DEPLOY_BASE/deploy"
+            mkdir -p "$DEPLOY_BASE/releases"
+            mkdir -p "$DEPLOY_BASE/backups"
 
-            NAME="$(basename "$TARBALL" .tar.gz)"
-            RELEASE_DIR="$DEPLOY_BASE/releases/$NAME"
-
-            tar -czf "$DEPLOY_BASE/backups/${NAME}-backup-$(date +%F-%H%M).tgz" \
-              -C "$APP_WP_CONTENT" --exclude='uploads' .
-
-            mkdir -p "$RELEASE_DIR"
-            tar -xzf "$TARBALL" -C "$RELEASE_DIR"
-
-            if [ -d "$RELEASE_DIR/plugins" ]; then
-              SRC_BASE="$RELEASE_DIR"
-              SRC_PLUGINS_DIR="$RELEASE_DIR/plugins"
-            else
-              SRC_BASE="$RELEASE_DIR/wp-content"
-              SRC_PLUGINS_DIR="$RELEASE_DIR/wp-content/plugins"
-            fi
-
-            rsync -rltD --delete \
-              --exclude 'uploads' \
-              --exclude 'uploads/**' \
-              --exclude 'plugins' \
-              --exclude 'plugins/**' \
-              --no-perms --no-owner --no-group \
-              --omit-dir-times --no-times \
-              --chmod=Du=rwx,Fu=rw \
-              "$SRC_BASE"/ "$APP_WP_CONTENT"/
-
-            if [ -d "$SRC_PLUGINS_DIR/pointone-card-carousel" ]; then
-              rsync -rltD --delete \
-                --no-perms --no-owner --no-group \
-                --omit-dir-times --no-times \
-                --chmod=Du=rwx,Fu=rw \
-                "$SRC_PLUGINS_DIR/pointone-card-carousel/" \
-                "$APP_WP_CONTENT/plugins/pointone-card-carousel/"
-            fi
-
-            if command -v wp >/dev/null 2>&1; then
-              cd "$APP_ROOT"
-              wp --skip-plugins --skip-themes cache flush || true
-              wp --skip-themes elementor flush_css || true
-            fi
-
-# ============================
-# PRODUCTION
-# ============================
-
-      - name: Ensure remote dirs (PRODUCTION)
-        if: env.TARGET == 'production'
-        uses: appleboy/ssh-action@v1.1.0
-        with:
-          host: ${{ secrets.PROD_HOST }}
-          username: ${{ secrets.PROD_USER }}
-          key: ${{ secrets.PROD_SSH_KEY }}
-          script: |
-            set -e
-            APP_WP_CONTENT="${{ secrets.PROD_PATH }}"
-            APP_ROOT="$(dirname "$APP_WP_CONTENT")"
-            DEPLOY_BASE="$APP_ROOT/.deploy"
-            mkdir -p "$DEPLOY_BASE/deploy" "$DEPLOY_BASE/releases" "$DEPLOY_BASE/backups"
-
-      - name: Upload artifact (PRODUCTION)
-        if: env.TARGET == 'production'
-        env:
-          HOST: ${{ secrets.PROD_HOST }}
-          USER: ${{ secrets.PROD_USER }}
-          KEY: ${{ secrets.PROD_SSH_KEY }}
-        run: |
-          printf "%s" "$KEY" > id_prod
-          chmod 600 id_prod
-          RSYNC_SSH="ssh -i id_prod -o StrictHostKeyChecking=no"
-          rsync -avz -e "$RSYNC_SSH" "$ARTIFACT_NAME" \
-            "${USER}@${HOST}:public_html/.deploy/deploy/$ARTIFACT_NAME"
-
-      - name: Release on PRODUCTION
-        if: env.TARGET == 'production'
-        uses: appleboy/ssh-action@v1.1.0
-        env:
-          ARTIFACT_NAME: ${{ env.ARTIFACT_NAME }}
-        with:
-          host: ${{ secrets.PROD_HOST }}
-          username: ${{ secrets.PROD_USER }}
-          key: ${{ secrets.PROD_SSH_KEY }}
-          script: |
-            set -eo pipefail
-            APP_WP_CONTENT="${{ secrets.PROD_PATH }}"
-            APP_ROOT="$(dirname "$APP_WP_CONTENT")"
-            DEPLOY_BASE="$APP_ROOT/.deploy"
-
-            TARBALL="$DEPLOY_BASE/deploy/$ARTIFACT_NAME"
-            [ -f "$TARBALL" ] || { echo "Tarball missing"; exit 1; }
-
-            NAME="$(basename "$TARBALL" .tar.gz)"
-            RELEASE_DIR="$DEPLOY_BASE/releases/$NAME"
-
-            tar -czf "$DEPLOY_BASE/backups/${NAME}-backup-$(date +%F-%H%M).tgz" \
-              -C "$APP_WP_CONTENT" --exclude='uploads' .
-
-            mkdir -p "$RELEASE_DIR"
-            tar -xzf "$TARBALL" -C "$RELEASE_DIR"
-
-            if [ -d "$RELEASE_DIR/plugins" ]; then
-              SRC_BASE="$RELEASE_DIR"
-              SRC_PLUGINS_DIR="$RELEASE_DIR/plugins"
-            else
-              SRC_BASE="$RELEASE_DIR/wp-content"
-              SRC_PLUGINS_DIR="$RELEASE_DIR/wp-content/plugins"
-            fi
-
-            rsync -rltD --delete \
-              --exclude 'uploads' \
-              --exclude 'uploads/**' \
-              --exclude 'plugins' \
-              --exclude 'plugins/**' \
-              --no-perms --no-owner --no-group \
-              --omit-dir-times --no-times \
-              --chmod=Du=rwx,Fu=rw \
-              "$SRC_BASE"/ "$APP_WP_CONTENT"/
-
-            if [ -d "$SRC_PLUGINS_DIR/pointone-card-carousel" ]; then
-              rsync -rltD --delete \
-                --no-perms --no-owner --no-group \
-                --omit-dir-times --no-times \
-                --chmod=Du=rwx,Fu=rw \
-                "$SRC_PLUGINS_DIR/pointone-card-carousel/" \
-                "$APP_WP_CONTENT/plugins/pointone-card-carousel/"
-            fi
-
-            if command -v wp >/dev/null 2>&1; then
-              cd "$APP_ROOT"
-              wp --skip-plugins --skip-themes cache flush || true
-              wp --skip-themes elementor flush_css || true
-            fi
+            echo "Uploading artifact..."
+            exit 0
