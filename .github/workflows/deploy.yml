@@ -1,8 +1,10 @@
-name: Deploy wp-content (Cloudways)
+name: Deploy wp-content (Safe WordPress Deploy)
 
 on:
   push:
-    branches: ["staging", "main"]
+    branches:
+      - staging
+      - main
 
 jobs:
   deploy:
@@ -12,7 +14,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Deploy via rsync over SSH
+      - name: Deploy themes and custom plugins safely
         env:
           HOST: ${{ github.ref_name == 'main' && secrets.PROD_HOST || secrets.STAGING_HOST }}
           USER: ${{ github.ref_name == 'main' && secrets.PROD_USER || secrets.STAGING_USER }}
@@ -23,15 +25,30 @@ jobs:
 
           RSYNC_SSH="ssh -i id_rsa -o StrictHostKeyChecking=no"
 
-          echo "Deploying to $HOST..."
+          echo "Deploying to $HOST"
 
+          # -------------------------------------------------
+          # Deploy THEMES (mirror safely)
+          # -------------------------------------------------
+          echo "Syncing themes..."
           rsync -az --delete \
-            --exclude ".git" \
-            --exclude ".github" \
-            --exclude "uploads" \
-            --exclude "uploads/**" \
             -e "$RSYNC_SSH" \
-            ./ \
-            "$USER@$HOST:public_html/wp-content/"
+            themes/ \
+            "$USER@$HOST:public_html/wp-content/themes/"
+
+          # -------------------------------------------------
+          # Deploy CUSTOM PLUGINS ONLY
+          # -------------------------------------------------
+          echo "Syncing pointone-card-carousel..."
+          rsync -az --delete \
+            -e "$RSYNC_SSH" \
+            plugins/pointone-card-carousel/ \
+            "$USER@$HOST:public_html/wp-content/plugins/pointone-card-carousel/"
+
+          echo "Syncing pointone-site-alert-bar..."
+          rsync -az --delete \
+            -e "$RSYNC_SSH" \
+            plugins/pointone-site-alert-bar/ \
+            "$USER@$HOST:public_html/wp-content/plugins/pointone-site-alert-bar/"
 
           echo "Deployment complete."
