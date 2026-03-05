@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Point One Events
  * Description: Custom Events system for Point One including CPT, ACF fields, admin indicators, Elementor helpers, validation, and automatic section visibility.
- * Version: 1.4
+ * Version: 1.5
  */
 
 if (!defined('ABSPATH')) exit;
@@ -140,7 +140,7 @@ add_filter('acf/validate_value/name=event_end_date', function ($valid, $value) {
 
     if (!$start || !$value) return $valid;
 
-    if ($value < $start) {
+    if ((int)$value < (int)$start) {
         return 'End Date must be the same as or later than the Start Date.';
     }
 
@@ -198,8 +198,8 @@ add_action('manage_event_posts_custom_column', function ($column, $post_id) {
 
     if ($column === 'event_status') {
 
-        $end = get_field('event_end_date', $post_id);
-        $today = date('Ymd');
+        $end = (int)get_field('event_end_date', $post_id);
+        $today = (int)date('Ymd');
 
         if ($end >= $today) {
 
@@ -224,8 +224,7 @@ add_action('pre_get_posts', function ($query) {
     if (!$query->get('orderby')) {
 
         $query->set('meta_key', 'event_start_date');
-        $query->set('orderby', 'meta_value');
-        $query->set('meta_type', 'NUMERIC');
+        $query->set('orderby', 'meta_value_num');
         $query->set('order', 'DESC');
     }
 });
