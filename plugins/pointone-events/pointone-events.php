@@ -2,11 +2,12 @@
 
 /**
  * Plugin Name: Point One Events
- * Description: Custom Events system for Point One including CPT, ACF fields, admin indicators, Elementor helpers, and automatic section visibility.
- * Version: 1.2
+ * Description: Custom Events system for Point One including CPT, ACF fields, admin indicators, Elementor helpers, validation, and automatic section visibility.
+ * Version: 1.3
  */
 
 if (!defined('ABSPATH')) exit;
+
 
 /*--------------------------------------------------------------
 REGISTER CUSTOM POST TYPE
@@ -129,7 +130,7 @@ add_action('acf/init', function () {
 
 
 /*--------------------------------------------------------------
-VALIDATE START/END DATE ORDER
+VALIDATE START / END DATE ORDER
 --------------------------------------------------------------*/
 
 add_filter('acf/validate_value/name=event_end_date', function ($valid, $value, $field, $input) {
@@ -141,7 +142,6 @@ add_filter('acf/validate_value/name=event_end_date', function ($valid, $value, $
     if (!$start || !$value) return $valid;
 
     if ($value < $start) {
-
         return 'End Date must be the same as or later than the Start Date.';
     }
 
@@ -311,18 +311,27 @@ function pointone_format_admin_date($date)
 
 
 /*--------------------------------------------------------------
-ADMIN COLUMNS
+ADMIN COLUMN ORDER
 --------------------------------------------------------------*/
 
 add_filter('manage_event_posts_columns', function ($columns) {
 
-    $columns['event_start'] = 'Start Date';
-    $columns['event_end'] = 'End Date';
-    $columns['event_status'] = 'Status';
+    return [
 
-    return $columns;
+        'cb' => $columns['cb'],
+        'title' => 'Title',
+        'event_start' => 'Start Date',
+        'event_end' => 'End Date',
+        'event_status' => 'Status',
+        'date' => 'Date'
+
+    ];
 });
 
+
+/*--------------------------------------------------------------
+POPULATE ADMIN COLUMNS
+--------------------------------------------------------------*/
 
 add_action('manage_event_posts_custom_column', function ($column, $post_id) {
 
@@ -345,26 +354,36 @@ add_action('manage_event_posts_custom_column', function ($column, $post_id) {
 
         if ($end >= $today) {
 
-            echo '<span style="background:#e6f7ed;color:#1d7a3e;padding:4px 10px;border-radius:20px;font-weight:600;">Active</span>';
+            echo '<span style="display:inline-flex;align-items:center;gap:6px;">
+                    <span style="width:8px;height:8px;background:#2ecc71;border-radius:50%;display:inline-block;"></span>
+                    Active
+                  </span>';
         } else {
 
-            echo '<span style="background:#eee;color:#666;padding:4px 10px;border-radius:20px;font-weight:600;">Expired</span>';
+            echo '<span style="display:inline-flex;align-items:center;gap:6px;color:#666;">
+                    <span style="width:8px;height:8px;background:#999;border-radius:50%;display:inline-block;"></span>
+                    Expired
+                  </span>';
         }
     }
 }, 10, 2);
 
 
 /*--------------------------------------------------------------
-DEFAULT ADMIN SORTING
+DEFAULT ADMIN SORTING BY START DATE
 --------------------------------------------------------------*/
 
 add_action('pre_get_posts', function ($query) {
 
     if (!is_admin() || !$query->is_main_query()) return;
+
     if ($query->get('post_type') != 'event') return;
 
-    $query->set('meta_key', 'event_start_date');
-    $query->set('orderby', 'meta_value');
-    $query->set('meta_type', 'NUMERIC');
-    $query->set('order', 'DESC');
+    if (!$query->get('orderby')) {
+
+        $query->set('meta_key', 'event_start_date');
+        $query->set('orderby', 'meta_value');
+        $query->set('meta_type', 'NUMERIC');
+        $query->set('order', 'DESC');
+    }
 });
