@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Point One Events
  * Description: Custom Events system for Point One including CPT, ACF fields, admin indicators, Elementor helpers, and automatic section visibility.
- * Version: 1.1
+ * Version: 1.2
  */
 
 if (!defined('ABSPATH')) exit;
@@ -126,6 +126,27 @@ add_action('acf/init', function () {
         ]);
     }
 });
+
+
+/*--------------------------------------------------------------
+VALIDATE START/END DATE ORDER
+--------------------------------------------------------------*/
+
+add_filter('acf/validate_value/name=event_end_date', function ($valid, $value, $field, $input) {
+
+    if (!$valid) return $valid;
+
+    $start = $_POST['acf']['event_start_date'] ?? '';
+
+    if (!$start || !$value) return $valid;
+
+    if ($value < $start) {
+
+        return 'End Date must be the same as or later than the Start Date.';
+    }
+
+    return $valid;
+}, 10, 4);
 
 
 /*--------------------------------------------------------------
