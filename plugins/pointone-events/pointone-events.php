@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Plugin Name: Point One Nav - Events
+ * Plugin Name: Point One Events
  * Description: Custom Events system for Point One including CPT, ACF fields, admin indicators, Elementor helpers, and automatic section visibility.
- * Version: 1.0
+ * Version: 1.1
  */
 
 if (!defined('ABSPATH')) exit;
@@ -217,7 +217,7 @@ add_shortcode('event_cta_text', 'pointone_event_cta_text');
 
 
 /*--------------------------------------------------------------
-EVENT COUNT SHORTCODES (FOR HIDING SECTIONS)
+EVENT COUNT SHORTCODES
 --------------------------------------------------------------*/
 
 function pointone_current_events_count()
@@ -273,6 +273,23 @@ add_shortcode('past_events_count', 'pointone_past_events_count');
 
 
 /*--------------------------------------------------------------
+FORMAT DATE FOR ADMIN DISPLAY
+--------------------------------------------------------------*/
+
+function pointone_format_admin_date($date)
+{
+
+    if (!$date) return '';
+
+    $date_obj = DateTime::createFromFormat('Ymd', $date);
+
+    if (!$date_obj) return $date;
+
+    return $date_obj->format('m-d-Y');
+}
+
+
+/*--------------------------------------------------------------
 ADMIN COLUMNS
 --------------------------------------------------------------*/
 
@@ -289,11 +306,15 @@ add_filter('manage_event_posts_columns', function ($columns) {
 add_action('manage_event_posts_custom_column', function ($column, $post_id) {
 
     if ($column == 'event_start') {
-        echo get_field('event_start_date', $post_id);
+
+        $date = get_field('event_start_date', $post_id);
+        echo pointone_format_admin_date($date);
     }
 
     if ($column == 'event_end') {
-        echo get_field('event_end_date', $post_id);
+
+        $date = get_field('event_end_date', $post_id);
+        echo pointone_format_admin_date($date);
     }
 
     if ($column == 'event_status') {
