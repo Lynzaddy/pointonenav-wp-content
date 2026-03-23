@@ -17,5 +17,8 @@ wp-rocket-config/
 !/plugins/pointone-site-alert-bar/
 !/plugins/pointone-site-alert-bar/**
 
+!/plugins/pointone-events/
+!/plugins/pointone-events/**
+
 # Ignore WP cache drop-in created by cache plugins
 advanced-cache.php
