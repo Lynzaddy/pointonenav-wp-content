@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Point One Events
  * Description: Custom Events system for Point One including CPT, ACF fields, admin indicators, Elementor helpers, validation, section counts, and Elementor Query IDs.
- * Version: 1.6
+ * Version: 1.6.1
  */
 
 if (!defined('ABSPATH')) exit;
@@ -132,7 +132,6 @@ add_filter('acf/validate_value/name=event_end_date', function ($valid, $value) {
 
     if (!$valid) return $valid;
 
-    // IMPORTANT: these field keys are the ACF "name" values because we created the field group in code.
     $start = $_POST['acf']['event_start_date'] ?? '';
 
     if (!$start || !$value) return $valid;
@@ -151,7 +150,6 @@ HELPERS
 
 function pointone_events_today_ymd(): int
 {
-    // WordPress timezone-aware
     return (int) current_time('Ymd');
 }
 
@@ -185,11 +183,9 @@ function pointone_event_date_display(): string
     if ($end_obj && (string)$start !== (string)$end) {
 
         if ($start_obj->format('F Y') === $end_obj->format('F Y')) {
-            // Same month/year: March 1–3, 2026
             return esc_html($start_obj->format('F j') . '–' . $end_obj->format('j, Y'));
         }
 
-        // Different month/year: March 30, 2026 – April 2, 2026
         return esc_html($start_obj->format('F j, Y') . ' – ' . $end_obj->format('F j, Y'));
     }
 
@@ -358,7 +354,6 @@ add_action('pre_get_posts', function ($query) {
     if (!is_admin() || !$query->is_main_query()) return;
     if ($query->get('post_type') !== 'event') return;
 
-    // Only set default if the user has not chosen a column sort
     if (!$query->get('orderby')) {
         $query->set('meta_key', 'event_start_date');
         $query->set('orderby', 'meta_value_num');
@@ -426,7 +421,8 @@ ELEMENTOR QUERY IDs
  *
  * Rules:
  * - event_end_date >= today
- * - order by event_start_date DESC
+ * - order by event_start_date ASC
+ * - closest upcoming/current event first
  */
 add_action('elementor/query/pointone_current_events', function ($query) {
 
@@ -437,7 +433,7 @@ add_action('elementor/query/pointone_current_events', function ($query) {
 
     $query->set('meta_key', 'event_start_date');
     $query->set('orderby', 'meta_value_num');
-    $query->set('order', 'DESC');
+    $query->set('order', 'ASC');
 
     $query->set('meta_query', [
         [
@@ -456,6 +452,7 @@ add_action('elementor/query/pointone_current_events', function ($query) {
  * Rules:
  * - event_end_date < today
  * - order by event_start_date DESC
+ * - most recent past event first
  */
 add_action('elementor/query/pointone_past_events', function ($query) {
 
