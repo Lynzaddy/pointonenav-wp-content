@@ -2,8 +2,8 @@
 
 /**
  * Plugin Name: Point One Nav - Point One Events
- * Description: Custom Events system for Point One including CPT, ACF fields, admin indicators, Elementor helpers, validation, section counts, Elementor Query IDs, and plugin-managed CSS.
- * Version: 1.7.2
+ * Description: Custom Events system for Point One including CPT, ACF fields, admin indicators, Elementor helpers, validation, section counts, Elementor Query IDs, plugin-managed CSS, and default featured image handling.
+ * Version: 1.7.3
  */
 
 if (!defined('ABSPATH')) exit;
@@ -52,7 +52,7 @@ add_action('wp_enqueue_scripts', function () {
         'pointone-events',
         plugins_url('assets/pointone-events.css', __FILE__),
         [],
-        '1.7.1'
+        '1.7.3'
     );
 });
 
@@ -77,6 +77,7 @@ add_action('acf/init', function () {
                 'label' => 'Event Location',
                 'name' => 'event_location',
                 'type' => 'text',
+                'required' => 1,
                 'wrapper' => [
                     'width' => '100'
                 ]
@@ -87,6 +88,7 @@ add_action('acf/init', function () {
                 'label' => 'Event Start Date (First day of event)',
                 'name' => 'event_start_date',
                 'type' => 'date_picker',
+                'required' => 1,
                 'display_format' => 'F j, Y',
                 'return_format' => 'Ymd',
                 'wrapper' => [
@@ -99,6 +101,7 @@ add_action('acf/init', function () {
                 'label' => 'Event End Date (Last day of event, can be same as start date for single-day events)',
                 'name' => 'event_end_date',
                 'type' => 'date_picker',
+                'required' => 1,
                 'display_format' => 'F j, Y',
                 'return_format' => 'Ymd',
                 'wrapper' => [
@@ -173,11 +176,66 @@ add_filter('acf/validate_value/name=event_end_date', function ($valid, $value) {
     if (!$start || !$value) return $valid;
 
     if ((int) $value < (int) $start) {
-        return 'End Date must be the same as or later than the Start Date.';
+        return 'Event End Date must be the same as or later than the Event Start Date.';
     }
 
     return $valid;
 }, 10, 4);
+
+
+/*--------------------------------------------------------------
+DEFAULT FEATURED IMAGE
+--------------------------------------------------------------*/
+
+function pointone_events_get_default_image_id(): int
+{
+    static $attachment_id = null;
+
+    if ($attachment_id !== null) {
+        return $attachment_id;
+    }
+
+    $relative_path = '2026/03/PointOneNav-Generic-Image3x.png';
+
+    $existing = get_posts([
+        'post_type' => 'attachment',
+        'post_status' => 'inherit',
+        'posts_per_page' => 1,
+        'fields' => 'ids',
+        'meta_query' => [
+            [
+                'key' => '_wp_attached_file',
+                'value' => $relative_path,
+                'compare' => '='
+            ]
+        ]
+    ]);
+
+    if (!empty($existing)) {
+        $attachment_id = (int) $existing[0];
+        return $attachment_id;
+    }
+
+    $full_url = home_url('/wp-content/uploads/' . $relative_path);
+    $attachment_id = (int) attachment_url_to_postid($full_url);
+
+    return $attachment_id;
+}
+
+add_action('save_post_event', function ($post_id, $post, $update) {
+
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+    if (wp_is_post_revision($post_id)) return;
+    if (!current_user_can('edit_post', $post_id)) return;
+
+    if (has_post_thumbnail($post_id)) return;
+
+    $default_image_id = pointone_events_get_default_image_id();
+
+    if ($default_image_id) {
+        set_post_thumbnail($post_id, $default_image_id);
+    }
+}, 10, 3);
 
 
 /*--------------------------------------------------------------
