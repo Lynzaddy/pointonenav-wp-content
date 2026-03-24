@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Point One Nav - Point One Events
  * Description: Custom Events system for Point One including CPT, ACF fields, admin indicators, Elementor helpers, validation, section counts, Elementor Query IDs, and plugin-managed CSS.
- * Version: 1.7.1
+ * Version: 1.7.2
  */
 
 if (!defined('ABSPATH')) exit;
@@ -74,7 +74,7 @@ add_action('acf/init', function () {
 
             [
                 'key' => 'event_location',
-                'label' => 'Location',
+                'label' => 'Event Location',
                 'name' => 'event_location',
                 'type' => 'text',
                 'wrapper' => [
@@ -84,7 +84,7 @@ add_action('acf/init', function () {
 
             [
                 'key' => 'event_start_date',
-                'label' => 'Event Start Date',
+                'label' => 'Event Start Date (First day of event)',
                 'name' => 'event_start_date',
                 'type' => 'date_picker',
                 'display_format' => 'F j, Y',
@@ -96,7 +96,7 @@ add_action('acf/init', function () {
 
             [
                 'key' => 'event_end_date',
-                'label' => 'Event End Date',
+                'label' => 'Event End Date (Last day of event, can be same as start date for single-day events)',
                 'name' => 'event_end_date',
                 'type' => 'date_picker',
                 'display_format' => 'F j, Y',
