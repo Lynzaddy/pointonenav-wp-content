@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Plugin Name: Point One Events
+ * Plugin Name: Point One Nav - Events Plugin
  * Description: Custom Events system for Point One including CPT, ACF fields, admin indicators, Elementor helpers, validation, section counts, and Elementor Query IDs.
- * Version: 1.6.1
+ * Version: 1.6.2
  */
 
 if (!defined('ABSPATH')) exit;
@@ -235,14 +235,25 @@ function pointone_event_cta_text(): string
     if (!$end) return '';
 
     if ($end >= $today) {
-        $text = (string) get_field('registration_link_text');
-        $text = trim($text);
-        return esc_html($text !== '' ? $text : 'Register');
+        $url = trim((string) get_field('registration_link_url'));
+        if ($url === '') return '';
+
+        $text = trim((string) get_field('registration_link_text'));
+        if ($text === '') {
+            $text = 'Register';
+        }
+
+        return '<span class="pointone-event-card__cta-text">' . esc_html($text) . '</span>';
     }
 
-    $text = (string) get_field('recording_link_text');
-    $text = trim($text);
-    return esc_html($text !== '' ? $text : 'View Recording');
+    $url = trim((string) get_field('recording_link_url'));
+    $text = trim((string) get_field('recording_link_text'));
+
+    if ($url === '' || $text === '') {
+        return '';
+    }
+
+    return '<span class="pointone-event-card__cta-text">' . esc_html($text) . '</span>';
 }
 add_shortcode('event_cta_text', 'pointone_event_cta_text');
 
