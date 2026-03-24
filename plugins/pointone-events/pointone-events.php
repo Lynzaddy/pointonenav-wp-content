@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Point One Nav - Point One Events
  * Description: Custom Events system for Point One including CPT, ACF fields, admin indicators, Elementor helpers, validation, section counts, Elementor Query IDs, and plugin-managed CSS.
- * Version: 1.7.0
+ * Version: 1.7.1
  */
 
 if (!defined('ABSPATH')) exit;
@@ -52,7 +52,7 @@ add_action('wp_enqueue_scripts', function () {
         'pointone-events',
         plugins_url('assets/pointone-events.css', __FILE__),
         [],
-        '1.7.0'
+        '1.7.1'
     );
 });
 
@@ -73,12 +73,25 @@ add_action('acf/init', function () {
         'fields' => [
 
             [
+                'key' => 'event_location',
+                'label' => 'Location',
+                'name' => 'event_location',
+                'type' => 'text',
+                'wrapper' => [
+                    'width' => '100'
+                ]
+            ],
+
+            [
                 'key' => 'event_start_date',
                 'label' => 'Event Start Date',
                 'name' => 'event_start_date',
                 'type' => 'date_picker',
                 'display_format' => 'F j, Y',
-                'return_format' => 'Ymd'
+                'return_format' => 'Ymd',
+                'wrapper' => [
+                    'width' => '50'
+                ]
             ],
 
             [
@@ -87,42 +100,50 @@ add_action('acf/init', function () {
                 'name' => 'event_end_date',
                 'type' => 'date_picker',
                 'display_format' => 'F j, Y',
-                'return_format' => 'Ymd'
-            ],
-
-            [
-                'key' => 'event_location',
-                'label' => 'Location',
-                'name' => 'event_location',
-                'type' => 'text'
+                'return_format' => 'Ymd',
+                'wrapper' => [
+                    'width' => '50'
+                ]
             ],
 
             [
                 'key' => 'registration_link_text',
                 'label' => 'Registration Link Text',
                 'name' => 'registration_link_text',
-                'type' => 'text'
+                'type' => 'text',
+                'wrapper' => [
+                    'width' => '50'
+                ]
             ],
 
             [
                 'key' => 'registration_link_url',
                 'label' => 'Registration Link URL',
                 'name' => 'registration_link_url',
-                'type' => 'text'
+                'type' => 'text',
+                'wrapper' => [
+                    'width' => '50'
+                ]
             ],
 
             [
                 'key' => 'recording_link_text',
                 'label' => 'Recording Link Text',
                 'name' => 'recording_link_text',
-                'type' => 'text'
+                'type' => 'text',
+                'wrapper' => [
+                    'width' => '50'
+                ]
             ],
 
             [
                 'key' => 'recording_link_url',
                 'label' => 'Recording Link URL',
                 'name' => 'recording_link_url',
-                'type' => 'text'
+                'type' => 'text',
+                'wrapper' => [
+                    'width' => '50'
+                ]
             ]
         ],
 
