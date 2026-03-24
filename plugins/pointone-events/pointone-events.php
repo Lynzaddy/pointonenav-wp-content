@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Point One Nav - Point One Events
  * Description: Custom Events system for Point One including CPT, ACF fields, admin indicators, Elementor helpers, validation, section counts, Elementor Query IDs, plugin-managed CSS, default featured image handling, and author support.
- * Version: 1.7.4
+ * Version: 1.7.5
  */
 
 if (!defined('ABSPATH')) exit;
@@ -17,10 +17,27 @@ add_action('init', function () {
     register_post_type('event', [
 
         'labels' => [
-            'name' => 'Events',
-            'singular_name' => 'Event',
-            'add_new_item' => 'Add Event',
-            'edit_item' => 'Edit Event'
+            'name'                  => 'Events',
+            'singular_name'         => 'Event',
+            'menu_name'             => 'Events',
+            'name_admin_bar'        => 'Event',
+            'add_new'               => 'Add New',
+            'add_new_item'          => 'Add Event',
+            'new_item'              => 'New Event',
+            'edit_item'             => 'Edit Event',
+            'view_item'             => 'View Event',
+            'view_items'            => 'View Events',
+            'all_items'             => 'All Events',
+            'search_items'          => 'Search Events',
+            'not_found'             => 'No events found.',
+            'not_found_in_trash'    => 'No events found in Trash.',
+            'archives'              => 'Events',
+            'attributes'            => 'Event Attributes',
+            'insert_into_item'      => 'Insert into event',
+            'uploaded_to_this_item' => 'Uploaded to this event',
+            'filter_items_list'     => 'Filter events list',
+            'items_list_navigation' => 'Events list navigation',
+            'items_list'            => 'Events list',
         ],
 
         'public' => true,
@@ -53,7 +70,7 @@ add_action('wp_enqueue_scripts', function () {
         'pointone-events',
         plugins_url('assets/pointone-events.css', __FILE__),
         [],
-        '1.7.4'
+        '1.7.5'
     );
 });
 
