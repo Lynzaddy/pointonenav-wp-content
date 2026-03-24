@@ -1,0 +1,40 @@
+/* =========================================================
+   Point One Events - Frontend Styles
+   Loaded by the pointone-events plugin
+========================================================= */
+
+/* -----------------------------------------
+   Reset the clickable card so all text
+   does not inherit anchor underline styles
+------------------------------------------ */
+a.pointone-event-card {
+    text-decoration: none !important;
+}
+
+/* Keep regular text inside the card clean */
+.pointone-event-card h1,
+.pointone-event-card h2,
+.pointone-event-card h3,
+.pointone-event-card h4,
+.pointone-event-card h5,
+.pointone-event-card h6,
+.pointone-event-card p,
+.pointone-event-card div,
+.pointone-event-card span {
+    text-decoration: none;
+}
+
+/* -----------------------------------------
+   Only underline the CTA text inside
+   the widget/container class card-link
+------------------------------------------ */
+.pointone-event-card .card-link .pointone-event-card__cta-text {
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+    transition: text-decoration 0.2s ease;
+}
+
+/* Remove CTA underline when hovering anywhere on the card */
+.pointone-event-card:hover .card-link .pointone-event-card__cta-text {
+    text-decoration: none;
+}

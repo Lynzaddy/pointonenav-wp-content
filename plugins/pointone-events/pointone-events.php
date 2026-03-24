@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Plugin Name: Point One Nav - Events Plugin
- * Description: Custom Events system for Point One including CPT, ACF fields, admin indicators, Elementor helpers, validation, section counts, and Elementor Query IDs.
- * Version: 1.6.2
+ * Plugin Name: Point One Nav - Point One Events
+ * Description: Custom Events system for Point One including CPT, ACF fields, admin indicators, Elementor helpers, validation, section counts, Elementor Query IDs, and plugin-managed CSS.
+ * Version: 1.7.0
  */
 
 if (!defined('ABSPATH')) exit;
@@ -39,6 +39,21 @@ add_action('init', function () {
 
         'show_in_rest' => true
     ]);
+});
+
+
+/*--------------------------------------------------------------
+ENQUEUE FRONTEND CSS
+--------------------------------------------------------------*/
+
+add_action('wp_enqueue_scripts', function () {
+
+    wp_enqueue_style(
+        'pointone-events',
+        plugins_url('assets/pointone-events.css', __FILE__),
+        [],
+        '1.7.0'
+    );
 });
 
 
@@ -136,7 +151,7 @@ add_filter('acf/validate_value/name=event_end_date', function ($valid, $value) {
 
     if (!$start || !$value) return $valid;
 
-    if ((int)$value < (int)$start) {
+    if ((int) $value < (int) $start) {
         return 'End Date must be the same as or later than the Start Date.';
     }
 
@@ -157,8 +172,8 @@ function pointone_events_format_admin_date($date): string
 {
     if (!$date) return '';
 
-    $d = DateTime::createFromFormat('Ymd', (string)$date);
-    if (!$d) return (string)$date;
+    $d = DateTime::createFromFormat('Ymd', (string) $date);
+    if (!$d) return (string) $date;
 
     return $d->format('m-d-Y');
 }
@@ -175,12 +190,12 @@ function pointone_event_date_display(): string
 
     if (!$start) return '';
 
-    $start_obj = DateTime::createFromFormat('Ymd', (string)$start);
-    $end_obj   = $end ? DateTime::createFromFormat('Ymd', (string)$end) : null;
+    $start_obj = DateTime::createFromFormat('Ymd', (string) $start);
+    $end_obj   = $end ? DateTime::createFromFormat('Ymd', (string) $end) : null;
 
     if (!$start_obj) return '';
 
-    if ($end_obj && (string)$start !== (string)$end) {
+    if ($end_obj && (string) $start !== (string) $end) {
 
         if ($start_obj->format('F Y') === $end_obj->format('F Y')) {
             return esc_html($start_obj->format('F j') . '–' . $end_obj->format('j, Y'));
@@ -423,17 +438,11 @@ add_action('admin_enqueue_scripts', function () {
 
 /*--------------------------------------------------------------
 ELEMENTOR QUERY IDs
-- Use these in Loop Grid -> Query -> Query ID
 --------------------------------------------------------------*/
 
 /**
  * Current Events Query ID:
- *   Query ID: pointone_current_events
- *
- * Rules:
- * - event_end_date >= today
- * - order by event_start_date ASC
- * - closest upcoming/current event first
+ * pointone_current_events
  */
 add_action('elementor/query/pointone_current_events', function ($query) {
 
@@ -456,14 +465,10 @@ add_action('elementor/query/pointone_current_events', function ($query) {
     ]);
 });
 
+
 /**
  * Past Events Query ID:
- *   Query ID: pointone_past_events
- *
- * Rules:
- * - event_end_date < today
- * - order by event_start_date DESC
- * - most recent past event first
+ * pointone_past_events
  */
 add_action('elementor/query/pointone_past_events', function ($query) {
 
