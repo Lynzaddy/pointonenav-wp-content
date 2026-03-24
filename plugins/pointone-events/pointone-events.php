@@ -2,8 +2,8 @@
 
 /**
  * Plugin Name: Point One Nav - Point One Events
- * Description: Custom Events system for Point One including CPT, ACF fields, admin indicators, Elementor helpers, validation, section counts, Elementor Query IDs, plugin-managed CSS, and default featured image handling.
- * Version: 1.7.3
+ * Description: Custom Events system for Point One including CPT, ACF fields, admin indicators, Elementor helpers, validation, section counts, Elementor Query IDs, plugin-managed CSS, default featured image handling, and author support.
+ * Version: 1.7.4
  */
 
 if (!defined('ABSPATH')) exit;
@@ -28,7 +28,8 @@ add_action('init', function () {
 
         'supports' => [
             'title',
-            'thumbnail'
+            'thumbnail',
+            'author'
         ],
 
         'has_archive' => true,
@@ -52,7 +53,7 @@ add_action('wp_enqueue_scripts', function () {
         'pointone-events',
         plugins_url('assets/pointone-events.css', __FILE__),
         [],
-        '1.7.3'
+        '1.7.4'
     );
 });
 
