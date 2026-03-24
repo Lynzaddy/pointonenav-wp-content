@@ -1,9 +1,10 @@
 <?php
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if (!defined('ABSPATH')) exit;
 
 // Enqueue parent and child theme styles, plus modular custom CSS
-function my_child_theme_styles() {
+function my_child_theme_styles()
+{
     // Load parent theme style
     wp_enqueue_style('parent-style', get_template_directory_uri() . '/style.css');
 
@@ -31,7 +32,12 @@ add_action('wp_enqueue_scripts', 'my_child_theme_styles', 20);
 
 
 // Remove ?ver query strings from all enqueued CSS and JS (including Elementor)
-function remove_css_js_versioning($src) {
+function remove_css_js_versioning($src)
+{
+    // Only strip ver from files NOT in your child theme
+    if (strpos($src, get_stylesheet_directory_uri()) !== false) {
+        return $src; // leave child theme files alone
+    }
     if (strpos($src, '?ver=') !== false) {
         $src = remove_query_arg('ver', $src);
     }
@@ -46,28 +52,30 @@ add_filter('elementor/css-file/enable_cache_busting', '__return_true');
 add_filter('elementor/css-file/post/enable_cache_busting', '__return_true');
 
 // Page indicator as to which pages need the transparent header (Currently just the homepage)
-add_filter( 'body_class', function( $classes ) {
-    if ( is_front_page() || is_page('homepage-components') ) {
+add_filter('body_class', function ($classes) {
+    if (is_front_page() || is_page('homepage-components')) {
         $classes[] = 'has-transparent-header';
     }
     return $classes;
-} );
+});
 
 
-function enqueue_slick_carousel() {
-    wp_enqueue_style( 'slick-css', 'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css' );
-    wp_enqueue_script( 'slick-js', 'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js', array('jquery'), null, true );
+function enqueue_slick_carousel()
+{
+    wp_enqueue_style('slick-css', 'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css');
+    wp_enqueue_script('slick-js', 'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js', array('jquery'), null, true);
 }
-add_action( 'wp_enqueue_scripts', 'enqueue_slick_carousel' );
+add_action('wp_enqueue_scripts', 'enqueue_slick_carousel');
 
-function render_elementor_template($atts) {
-  if (!isset($atts['id'])) return '';
-  return Elementor\Plugin::instance()->frontend->get_builder_content_for_display($atts['id']);
+function render_elementor_template($atts)
+{
+    if (!isset($atts['id'])) return '';
+    return Elementor\Plugin::instance()->frontend->get_builder_content_for_display($atts['id']);
 }
 add_shortcode('render-template', 'render_elementor_template');
 
 // Filters out additional query parameters from the Search box
-add_action('pre_get_posts', function($query) {
+add_action('pre_get_posts', function ($query) {
     if (!is_admin() && $query->is_main_query() && $query->is_search()) {
         // Remove e_search_props from the query vars
         if (isset($query->query_vars['e_search_props'])) {
@@ -82,7 +90,7 @@ add_action('pre_get_posts', function($query) {
 });
 
 // Trim Excerpt function to limit the length of excerpts
-add_filter('get_the_excerpt', function($excerpt, $post) {
+add_filter('get_the_excerpt', function ($excerpt, $post) {
     if (empty($post->post_excerpt)) {
         $content = strip_shortcodes($post->post_content);
         $content = wp_strip_all_tags($content);
@@ -94,40 +102,42 @@ add_filter('get_the_excerpt', function($excerpt, $post) {
 }, 10, 2);
 
 
-function lynzaddy_enqueue_swiper_css() {
-  wp_enqueue_style('swiper-css', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css', array(), null);
+function lynzaddy_enqueue_swiper_css()
+{
+    wp_enqueue_style('swiper-css', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css', array(), null);
 }
 add_action('wp_enqueue_scripts', 'lynzaddy_enqueue_swiper_css');
 
 // Function for MapBox Code on States Pages
-function render_mapbox_state_div() {
-  $lat = get_field('latitude');
-  $lng = get_field('longitude');
-  $state = get_the_title();
+function render_mapbox_state_div()
+{
+    $lat = get_field('latitude');
+    $lng = get_field('longitude');
+    $state = get_the_title();
 
-  if (!$lat || !$lng) {
-    return '<p style="color: red;">Missing coordinates for this state.</p>';
-  }
+    if (!$lat || !$lng) {
+        return '<p style="color: red;">Missing coordinates for this state.</p>';
+    }
 
-  ob_start();
-  ?>
+    ob_start();
+?>
     <div
-      id="map"
-      data-lat="<?php echo esc_attr($lat); ?>"
-      data-lng="<?php echo esc_attr($lng); ?>"
-      data-state="<?php echo esc_attr($state); ?>"
-      style="width: 100%; height: 500px;"
-    ></div>
-  <?php
-  return ob_get_clean();
+        id="map"
+        data-lat="<?php echo esc_attr($lat); ?>"
+        data-lng="<?php echo esc_attr($lng); ?>"
+        data-state="<?php echo esc_attr($state); ?>"
+        style="width: 100%; height: 500px;"></div>
+<?php
+    return ob_get_clean();
 }
 add_shortcode('state_map_div', 'render_mapbox_state_div');
 
-function render_competitor_table_for_state() {
+function render_competitor_table_for_state()
+{
     // ACF relationship field on the current State post
-    $competitors = get_field( 'competitors' );
+    $competitors = get_field('competitors');
 
-    if ( ! $competitors || ! is_array( $competitors ) ) {
+    if (! $competitors || ! is_array($competitors)) {
         return '<p>No competitor data available for this state.</p>';
     }
 
@@ -140,7 +150,7 @@ function render_competitor_table_for_state() {
         'Coverage'                      => ['acf' => 'coverage',                             'polaris' => 'International'],
         'Global coverage'               => ['acf' => 'global_coverage',                      'polaris' => 'Yes'],
         'GraphQL API'                   => ['acf' => 'graphql_api',                          'polaris' => 'Yes'],
-        'Automated Ref. Station Assoc.' => ['acf' => 'automated_reference_station_association','polaris' => 'Yes'],
+        'Automated Ref. Station Assoc.' => ['acf' => 'automated_reference_station_association', 'polaris' => 'Yes'],
         'GNSS Frequency Bands'          => ['acf' => 'gnss_frequency_bands_supported',       'polaris' => 'L1, L2, L5'],
         'True RTK'                      => ['acf' => 'true_rtk',                             'polaris' => 'Yes'],
     ];
@@ -153,21 +163,21 @@ function render_competitor_table_for_state() {
                     <tr>
                         <th class="sticky-col">Brand</th>
                         <th class="sticky-col">Polaris</th>
-                        <?php foreach ( $competitors as $comp ) : ?>
-                            <th><?php echo esc_html( get_the_title( $comp ) ); ?></th>
+                        <?php foreach ($competitors as $comp) : ?>
+                            <th><?php echo esc_html(get_the_title($comp)); ?></th>
                         <?php endforeach; ?>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ( $rows as $label => $meta ) : ?>
+                    <?php foreach ($rows as $label => $meta) : ?>
                         <tr>
-                            <td class="sticky-col"><?php echo esc_html( $label ); ?></td>
-                            <td class="sticky-col"><?php echo esc_html( $meta['polaris'] ); ?></td>
-                            <?php foreach ( $competitors as $comp ) : ?>
+                            <td class="sticky-col"><?php echo esc_html($label); ?></td>
+                            <td class="sticky-col"><?php echo esc_html($meta['polaris']); ?></td>
+                            <?php foreach ($competitors as $comp) : ?>
                                 <td>
                                     <?php
-                                    $value = get_field( $meta['acf'], $comp->ID );
-                                    echo esc_html( $value ?: '—' );
+                                    $value = get_field($meta['acf'], $comp->ID);
+                                    echo esc_html($value ?: '—');
                                     ?>
                                 </td>
                             <?php endforeach; ?>
@@ -180,40 +190,41 @@ function render_competitor_table_for_state() {
     <?php
     return ob_get_clean();
 }
-add_shortcode( 'competitor_table', 'render_competitor_table_for_state' );
+add_shortcode('competitor_table', 'render_competitor_table_for_state');
 
 // === FAQ Accordion Shortcode ===
-function render_state_faq_accordion() {
-  ob_start();
+function render_state_faq_accordion()
+{
+    ob_start();
 
-  $faqs = get_field('location_specific_faq');
-  $state_name = get_the_title();
+    $faqs = get_field('location_specific_faq');
+    $state_name = get_the_title();
 
-  if ($faqs && is_array($faqs)) :
+    if ($faqs && is_array($faqs)) :
     ?>
-    <div class="faq-accordion">
-      <?php foreach ($faqs as $index => $faq) :
-        $question = $faq['faq_question'] ?? '';
-        $answer = $faq['faq_answer'] ?? '';
-        if (!$question || !$answer) continue;
-        ?>
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false" aria-controls="faq-<?php echo $index; ?>">
-            <span class="faq-toggle-indicator" aria-hidden="true"></span>
-            <span class="faq-question-text"><?php echo esc_html($question); ?></span>
-          </button>
-          <div id="faq-<?php echo $index; ?>" class="faq-answer" hidden>
-            <?php echo wp_kses_post($answer); ?>
-          </div>
+        <div class="faq-accordion">
+            <?php foreach ($faqs as $index => $faq) :
+                $question = $faq['faq_question'] ?? '';
+                $answer = $faq['faq_answer'] ?? '';
+                if (!$question || !$answer) continue;
+            ?>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false" aria-controls="faq-<?php echo $index; ?>">
+                        <span class="faq-toggle-indicator" aria-hidden="true"></span>
+                        <span class="faq-question-text"><?php echo esc_html($question); ?></span>
+                    </button>
+                    <div id="faq-<?php echo $index; ?>" class="faq-answer" hidden>
+                        <?php echo wp_kses_post($answer); ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
         </div>
-      <?php endforeach; ?>
-    </div>
     <?php
-  else :
-    echo '<p>No FAQs for ' . esc_html($state_name) . '.</p>';
-  endif;
+    else :
+        echo '<p>No FAQs for ' . esc_html($state_name) . '.</p>';
+    endif;
 
-  return ob_get_clean();
+    return ob_get_clean();
 }
 add_shortcode('state_faq_accordion', 'render_state_faq_accordion');
 
@@ -221,22 +232,22 @@ add_action('wp_head', function () {
     ?>
     <!-- Ketch Consent Manager – EARLY LOAD -->
     <script>
-      !function(){
-        window.semaphore = window.semaphore || [];
-        window.ketch = function(){
-          window.semaphore.push(arguments);
-        };
+        ! function() {
+            window.semaphore = window.semaphore || [];
+            window.ketch = function() {
+                window.semaphore.push(arguments);
+            };
 
-        var e = document.createElement("script");
-        e.type = "text/javascript";
-        e.src = "https://global.ketchcdn.com/web/v3/config/point_one_nav/website_smart_tag/boot.js";
-        e.defer = true;
-        e.async = true;
+            var e = document.createElement("script");
+            e.type = "text/javascript";
+            e.src = "https://global.ketchcdn.com/web/v3/config/point_one_nav/website_smart_tag/boot.js";
+            e.defer = true;
+            e.async = true;
 
-        document.getElementsByTagName("head")[0].appendChild(e);
-      }();
+            document.getElementsByTagName("head")[0].appendChild(e);
+        }();
     </script>
-    <?php
+<?php
 }, 0);
 
 /**
@@ -267,12 +278,11 @@ add_action('acf/save_post', function ($post_id) {
 
         wp_update_post([
             'ID'        => $post_id,
-            'post_name'=> $custom_slug,
+            'post_name' => $custom_slug,
         ]);
 
         add_action('acf/save_post', __FUNCTION__);
     }
-
 }, 20);
 
 
@@ -285,7 +295,8 @@ add_action('acf/save_post', function ($post_id) {
 /**
  * Get glossary excerpt word count (admin configurable)
  */
-function glossary_excerpt_word_count() {
+function glossary_excerpt_word_count()
+{
     return (int) get_option('glossary_excerpt_word_count', 18);
 }
 
@@ -325,7 +336,6 @@ add_action('acf/save_post', function ($post_id) {
     ]);
 
     add_action('acf/save_post', __FUNCTION__);
-
 }, 20);
 
 /**
@@ -353,7 +363,6 @@ add_action('post_submitbox_misc_actions', function () {
     echo 'Regenerate Excerpt';
     echo '</a>';
     echo '</div>';
-
 });
 
 /**
@@ -393,7 +402,6 @@ add_action('admin_post_regenerate_glossary_excerpt', function () {
         admin_url('post.php?post=' . $post_id . '&action=edit&excerpt_regenerated=1')
     );
     exit;
-
 });
 
 /**
@@ -410,7 +418,6 @@ add_action('admin_notices', function () {
     echo '<div class="notice notice-success is-dismissible">';
     echo '<p><strong>Excerpt regenerated successfully.</strong></p>';
     echo '</div>';
-
 });
 
 /**
@@ -428,13 +435,13 @@ add_action('admin_menu', function () {
         'glossary-excerpt-settings',
         'render_glossary_excerpt_settings_page'
     );
-
 });
 
 /**
  * Render glossary excerpt settings page
  */
-function render_glossary_excerpt_settings_page() {
+function render_glossary_excerpt_settings_page()
+{
 
     if (!current_user_can('manage_options')) {
         return;
@@ -452,7 +459,7 @@ function render_glossary_excerpt_settings_page() {
     }
 
     $word_count = glossary_excerpt_word_count();
-    ?>
+?>
 
     <div class="wrap">
         <h1>Glossary Excerpt Settings</h1>
@@ -479,11 +486,11 @@ function render_glossary_excerpt_settings_page() {
         <p><strong>Warning:</strong> This will overwrite all glossary excerpts.</p>
 
         <a href="<?php echo esc_url(
-            wp_nonce_url(
-                admin_url('admin-post.php?action=regenerate_all_glossary_excerpts'),
-                'regenerate_all_glossary_excerpts'
-            )
-        ); ?>" class="button button-primary">
+                        wp_nonce_url(
+                            admin_url('admin-post.php?action=regenerate_all_glossary_excerpts'),
+                            'regenerate_all_glossary_excerpts'
+                        )
+                    ); ?>" class="button button-primary">
             Regenerate All Glossary Excerpts
         </a>
     </div>
@@ -528,5 +535,4 @@ add_action('admin_post_regenerate_all_glossary_excerpts', function () {
         admin_url('edit.php?post_type=glossary_term&page=glossary-excerpt-settings&bulk_done=1')
     );
     exit;
-
 });
