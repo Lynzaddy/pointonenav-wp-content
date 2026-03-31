@@ -1,0 +1,29 @@
+/* 
+==================================================
+    BLOG-POST.CSS
+    Description: Styles for blog post layout and spacing.
+
+    TABLE OF CONTENTS:
+    01. Blog Post Layout
+    02. Blog Post Spacing
+
+==================================================  
+*/
+
+.post .elementor-widget-text-editor h1,
+.post .elementor-widget-text-editor h2 {
+    padding-top: 1em !important;
+    padding-bottom: 1em !important;
+}
+
+.post .elementor-widget-text-editor h3,
+.post .elementor-widget-text-editor h4 {
+    padding-top: 0.75em !important;
+    padding-bottom: 0.75em !important;
+}
+
+.post .elementor-widget-text-editor h5,
+.post .elementor-widget-text-editor h6 {
+    padding-top: 0.5em !important;
+    padding-bottom: 0.5em !important;
+}

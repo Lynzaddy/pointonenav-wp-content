@@ -16,3 +16,6 @@
 
 /* ==== Link Styles ======== */
 @import "base/link.css";
+
+/* ==== Blog Spacing ======== */
+@import "base/blog-post.css";
