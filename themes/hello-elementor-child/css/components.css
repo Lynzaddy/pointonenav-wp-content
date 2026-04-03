@@ -17,6 +17,7 @@
 @import "molecules/cards.css";
 @import "molecules/custom-slider.css";
 @import "molecules/feature-container.css";
+@import "molecules/pricing-toggle.css";
 @import "molecules/text-feature.css";
 @import "molecules/single-image-sections.css";
 @import "molecules/text-widget.css";
