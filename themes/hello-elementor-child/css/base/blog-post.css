@@ -27,3 +27,20 @@
     padding-top: 0.5em !important;
     padding-bottom: 0.5em !important;
 }
+
+/* CSS used to ensure the video player is sizing correctly within a post */
+/* Fix Elementor Video widget height being overridden by YouTube IFrame API */
+.elementor-widget-video .elementor-wrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+}
+
+.elementor-widget-video .elementor-wrapper iframe.elementor-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+}
