@@ -49,8 +49,18 @@
     font-weight: 500; /* Active state */
 }
 
-.toggle-btn:not(.active):hover {
+/* Override Hello Elementor reset.css which sets background-color: #c36 on button:hover/focus */
+.pricing-toggle .toggle-btn:hover,
+.pricing-toggle .toggle-btn:focus {
+    background: transparent;
     color: rgba(0, 0, 0, 0.6);
+    text-decoration: none;
+}
+
+.pricing-toggle .toggle-btn.active:hover,
+.pricing-toggle .toggle-btn.active:focus {
+    background: transparent;
+    color: white;
 }
 
 .toggle-slider {
