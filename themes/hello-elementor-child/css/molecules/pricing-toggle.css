@@ -1,0 +1,66 @@
+/* 
+==================================================
+    PRICING-TOGGLE.CSS
+    Description: Styles for the toggle switch used in the pricing section to switch between monthly and yearly pricing.
+
+    TABLE OF CONTENTS:
+
+
+==================================================  
+*/
+
+.pricing-toggle-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.pricing-toggle {
+    position: relative;
+    display: inline-flex;
+    border-radius: 999px;
+    background-color: white;
+    border: 1px solid #141413;
+    overflow: hidden;
+    width: 192px;
+    height: 48px;
+    font-family: var(--typography-font-primary);
+}
+
+.toggle-btn {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    padding: 10px 0;
+    border: none;
+    background: transparent;
+    color: #141413;
+    font-weight: 400; /* Default (inactive) state */
+    font-size: 14px;
+    cursor: pointer;
+    transition:
+        color 0.3s ease,
+        font-weight 0.3s ease;
+    font-family: var(--typography-font-primary);
+}
+
+.toggle-btn.active {
+    color: white;
+    font-weight: 500; /* Active state */
+}
+
+.toggle-btn:not(.active):hover {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.toggle-slider {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: calc(50% - 8px);
+    height: calc(100% - 8px);
+    background-color: #141413;
+    border-radius: 999px;
+    transition: left 0.3s ease;
+    z-index: 1;
+}
