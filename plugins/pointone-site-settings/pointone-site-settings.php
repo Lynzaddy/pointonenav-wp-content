@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Plugin Name: Point One Nav - Site Settings
+ * Plugin Name: Point One Nav - Global Site Settings
  * Description: Global site variables managed via an ACF Options Page. Values are exposed in Elementor Pro via a custom Dynamic Tag (⚡ picker) and via the [site_setting key="..."] shortcode as a fallback.
  * Version: 1.0.2
  */
@@ -138,8 +138,8 @@ add_action('acf/init', function () {
     if (!function_exists('acf_add_options_page')) return;
 
     acf_add_options_page([
-        'page_title' => 'Site Settings',
-        'menu_title' => 'Site Settings',
+        'page_title' => 'Global Site Settings',
+        'menu_title' => 'Global Site Settings',
         'menu_slug'  => 'pointone-site-settings',
         'capability' => 'manage_options',
         'icon_url'   => 'dashicons-admin-settings',
