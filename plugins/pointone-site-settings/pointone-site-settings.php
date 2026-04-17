@@ -61,7 +61,7 @@ function pointone_ss_field_definitions(): array
             'label'        => 'Virtual RTK Annual Price (per month)',
             'type'         => 'number',
             'tab'          => 'Pricing',
-            'instructions' => 'The "billed as $X/mo" breakdown figure. Example: 82.50',
+            'instructions' => 'The "billed $x annually" breakdown figure. Example: 1500',
             'prepend'      => '$',
             'width'        => '33',
         ],
@@ -91,7 +91,7 @@ function pointone_ss_field_definitions(): array
             'label'        => 'True RTK Annual Price (per month)',
             'type'         => 'number',
             'tab'          => 'Pricing',
-            'instructions' => 'The "billed as $X/mo" breakdown figure. Example: 82.50',
+            'instructions' => 'The "billed $x annually" breakdown figure. Example: 1500',
             'prepend'      => '$',
             'width'        => '33',
         ],
@@ -102,7 +102,7 @@ function pointone_ss_field_definitions(): array
             'type'         => 'text',
             'tab'          => 'Stats',
             'instructions' => 'Example: 10,000+',
-            'width'        => '50',
+            'width'        => '33',
         ],
 
         // ── Add more groups below ─────────────────────────────────────────
