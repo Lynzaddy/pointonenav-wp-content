@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Point One Nav - Site Settings
  * Description: Global site variables managed via an ACF Options Page. Values are exposed in Elementor Pro via a custom Dynamic Tag (⚡ picker) and via the [site_setting key="..."] shortcode as a fallback.
- * Version: 1.0.1
+ * Version: 1.0.2
  */
 
 if (!defined('ABSPATH')) exit;
