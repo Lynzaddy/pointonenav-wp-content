@@ -37,31 +37,72 @@ function pointone_ss_field_definitions(): array
         // ── Pricing ───────────────────────────────────────────────────────
 
         [
-            'name'         => 'price_monthly',
-            'label'        => 'Monthly Price',
+            'name'         => 'virtualrtk_price_monthly',
+            'label'        => 'Virtual RTK Monthly Price',
             'type'         => 'number',
             'tab'          => 'Pricing',
             'instructions' => 'Displayed as the monthly billing rate. Example: 99',
             'prepend'      => '$',
             'width'        => '33',
         ],
+
         [
-            'name'         => 'price_annual',
-            'label'        => 'Annual Price',
+            'name'         => 'virtualrtk_price_annual',
+            'label'        => 'Virtual RTK Annual Price',
             'type'         => 'number',
             'tab'          => 'Pricing',
             'instructions' => 'Total billed annually. Example: 990',
             'prepend'      => '$',
             'width'        => '33',
         ],
+
         [
-            'name'         => 'price_annual_per_month',
-            'label'        => 'Annual Price (per month)',
+            'name'         => 'virtualrtk_price_annual_per_month',
+            'label'        => 'Virtual RTK Annual Price (per month)',
             'type'         => 'number',
             'tab'          => 'Pricing',
             'instructions' => 'The "billed as $X/mo" breakdown figure. Example: 82.50',
             'prepend'      => '$',
             'width'        => '33',
+        ],
+
+        [
+            'name'         => 'truertk_price_monthly',
+            'label'        => 'True RTK Monthly Price',
+            'type'         => 'number',
+            'tab'          => 'Pricing',
+            'instructions' => 'Displayed as the monthly billing rate. Example: 99',
+            'prepend'      => '$',
+            'width'        => '33',
+        ],
+
+        [
+            'name'         => 'truertk_price_annual',
+            'label'        => 'True RTK Annual Price',
+            'type'         => 'number',
+            'tab'          => 'Pricing',
+            'instructions' => 'Total billed annually. Example: 990',
+            'prepend'      => '$',
+            'width'        => '33',
+        ],
+
+        [
+            'name'         => 'truertk_price_annual_per_month',
+            'label'        => 'True RTK Annual Price (per month)',
+            'type'         => 'number',
+            'tab'          => 'Pricing',
+            'instructions' => 'The "billed as $X/mo" breakdown figure. Example: 82.50',
+            'prepend'      => '$',
+            'width'        => '33',
+        ],
+
+        [
+            'name'         => 'stat_base_station_count',
+            'label'        => 'Base Station Count',
+            'type'         => 'text',
+            'tab'          => 'Stats',
+            'instructions' => 'Example: 10,000+',
+            'width'        => '50',
         ],
 
         // ── Add more groups below ─────────────────────────────────────────
