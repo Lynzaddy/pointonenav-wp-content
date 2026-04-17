@@ -20,8 +20,8 @@ wp-rocket-config/
 !/plugins/pointone-events/
 !/plugins/pointone-events/**
 
-!/plugins/pointone-site-settings/
-!/plugins/pointone-site-settings/**
+!/plugins/pointone-global-variables/
+!/plugins/pointone-global-variables/**
 
 # Ignore WP cache drop-in created by cache plugins
 advanced-cache.php
