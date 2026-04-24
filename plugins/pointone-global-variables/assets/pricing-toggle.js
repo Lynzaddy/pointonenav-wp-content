@@ -14,10 +14,14 @@
 
 const gv = window.pointoneGlobalVars || {};
 
-// Helper: format a number as a dollar string ("$42"), or "" if null/undefined
+// Helper: format a number as a dollar string with comma separators, or "" if null/undefined
+// Whole numbers:  1500   → "$1,500"
+// Decimals:       42.5   → "$42.50"
 function pgDollar(val) {
     if (val === null || val === undefined) return "";
-    return "$" + (Number.isInteger(val) ? val : parseFloat(val).toFixed(2));
+    const num = parseFloat(val);
+    const formatted = Number.isInteger(num) ? num.toLocaleString("en-US") : num.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return "$" + formatted;
 }
 
 // Helper: compute annual savings from monthly rate and annual total
