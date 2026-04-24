@@ -2,8 +2,8 @@
 
 /**
  * Plugin Name: Point One Nav - Global Variables
- * Description: Global site variables managed via an ACF Options Page. Values are exposed in Elementor Pro via a custom Dynamic Tag (⚡ picker) and via the [global_var key="..."] shortcode as a fallback.
- * Version: 1.0.1
+ * Description: Global site variables managed via an ACF Options Page. Values are exposed in Elementor Pro via a custom Dynamic Tag (⚡ picker), via the [global_var key="..."] shortcode, and injected into the front end as a JS object (pointoneGlobalVars). The pricing page toggle script is also managed and enqueued from this plugin.
+ * Version: 1.1.0
  */
 
 if (!defined('ABSPATH')) exit;
@@ -15,10 +15,11 @@ FIELD DEFINITIONS  ← only edit here to add / remove variables
 
 /**
  * This array is the single source of truth.
- * It drives both the ACF field group AND the Elementor Dynamic Tag dropdown.
+ * It drives the ACF field group, the Elementor Dynamic Tag dropdown,
+ * and the JS object injected on the front end (pointoneGlobalVars).
  *
  * Each entry:
- *   'name'         (string)  ACF field name / shortcode key
+ *   'name'         (string)  ACF field name / shortcode key / JS object property
  *   'label'        (string)  Human-readable label shown in admin + tag picker
  *   'type'         (string)  ACF field type: 'number', 'text', 'textarea', etc.
  *   'tab'          (string)  Groups fields under a tab in the Options Page
@@ -27,41 +28,71 @@ FIELD DEFINITIONS  ← only edit here to add / remove variables
  *   'width'        (string)  Column width in the admin: '33', '50', '100', etc.
  *
  * Adding a new variable: append an entry below. Done.
- * Removing a variable:   delete its entry. Any tags/shortcodes using it return empty.
+ * Removing a variable:   delete its entry. Tags/shortcodes/JS using it return empty/null.
  */
 
 function pointone_gv_field_definitions(): array
 {
     return [
 
-        // ── Pricing ───────────────────────────────────────────────────────
+        // ── Pricing: Virtual Plan ─────────────────────────────────────────
 
         [
-            'name'         => 'price_monthly',
-            'label'        => 'Monthly Price',
+            'name'         => 'price_virtual_monthly',
+            'label'        => 'Virtual — Monthly Price',
             'type'         => 'number',
             'tab'          => 'Pricing',
-            'instructions' => 'Displayed as the monthly billing rate. Example: 99',
+            'instructions' => 'Per-license monthly rate for the Virtual plan. Example: 50',
             'prepend'      => '$',
-            'width'        => '33',
+            'width'        => '50',
         ],
         [
-            'name'         => 'price_annual',
-            'label'        => 'Annual Price',
+            'name'         => 'price_virtual_annual_per_month',
+            'label'        => 'Virtual — Annual Price (per month)',
             'type'         => 'number',
             'tab'          => 'Pricing',
-            'instructions' => 'Total billed annually. Example: 990',
+            'instructions' => 'Per-license monthly breakdown when billed annually. Example: 42',
             'prepend'      => '$',
-            'width'        => '33',
+            'width'        => '50',
         ],
         [
-            'name'         => 'price_annual_per_month',
-            'label'        => 'Annual Price (per month)',
+            'name'         => 'price_virtual_annual_total',
+            'label'        => 'Virtual — Annual Total (billed once)',
             'type'         => 'number',
             'tab'          => 'Pricing',
-            'instructions' => 'The "billed as $X/mo" breakdown figure. Example: 82.50',
+            'instructions' => 'Total charged per license per year. Example: 500',
             'prepend'      => '$',
-            'width'        => '33',
+            'width'        => '50',
+        ],
+
+        // ── Pricing: True Plan ────────────────────────────────────────────
+
+        [
+            'name'         => 'price_true_monthly',
+            'label'        => 'True — Monthly Price',
+            'type'         => 'number',
+            'tab'          => 'Pricing',
+            'instructions' => 'Per-license monthly rate for the True plan. Example: 150',
+            'prepend'      => '$',
+            'width'        => '50',
+        ],
+        [
+            'name'         => 'price_true_annual_per_month',
+            'label'        => 'True — Annual Price (per month)',
+            'type'         => 'number',
+            'tab'          => 'Pricing',
+            'instructions' => 'Per-license monthly breakdown when billed annually. Example: 125',
+            'prepend'      => '$',
+            'width'        => '50',
+        ],
+        [
+            'name'         => 'price_true_annual_total',
+            'label'        => 'True — Annual Total (billed once)',
+            'type'         => 'number',
+            'tab'          => 'Pricing',
+            'instructions' => 'Total charged per license per year. Example: 1500',
+            'prepend'      => '$',
+            'width'        => '50',
         ],
 
         // ── Add more groups below ─────────────────────────────────────────
@@ -124,7 +155,6 @@ add_action('acf/init', function () {
 
         $tab = $def['tab'] ?? 'General';
 
-        // Insert a tab field the first time we see this tab name
         if (!in_array($tab, $seen_tabs, true)) {
             $fields[] = [
                 'key'   => 'field_gv_tab_' . sanitize_key($tab),
@@ -175,16 +205,90 @@ add_action('acf/init', function () {
 
 
 /*--------------------------------------------------------------
+FRONT-END JS OBJECT  (pointoneGlobalVars)
+--------------------------------------------------------------*/
+
+/**
+ * Injects all Global Variable values into the front end as a JS object.
+ * Available on every page as: window.pointoneGlobalVars
+ *
+ * Number fields are cast to floats so JS arithmetic works without parsing.
+ * Text fields are passed as strings. Unset fields pass as null.
+ *
+ * This runs site-wide intentionally — the data is already autoloaded by
+ * WordPress from wp_options so there is no extra DB cost, and the output
+ * is only ~200–300 bytes. Keeping it global means any future page or
+ * component can reference these values without plugin changes.
+ */
+
+add_action('wp_enqueue_scripts', function () {
+
+    if (!function_exists('get_field')) return;
+
+    $vars = [];
+
+    foreach (pointone_gv_field_definitions() as $def) {
+        $value = get_field($def['name'], 'option');
+
+        if ($value === null || $value === false || $value === '') {
+            $vars[$def['name']] = null;
+            continue;
+        }
+
+        $vars[$def['name']] = ($def['type'] === 'number') ? (float) $value : (string) $value;
+    }
+
+    wp_register_script('pointone-global-vars', false, [], null, false);
+    wp_enqueue_script('pointone-global-vars');
+    wp_add_inline_script(
+        'pointone-global-vars',
+        'window.pointoneGlobalVars = ' . wp_json_encode($vars) . ';'
+    );
+});
+
+
+/*--------------------------------------------------------------
+PRICING PAGE TOGGLE SCRIPT
+--------------------------------------------------------------*/
+
+/**
+ * Enqueues the pricing toggle JS only on the /pricing page.
+ * The script lives in this plugin's assets/ folder so all pricing
+ * logic — data, injection, and toggle behavior — is co-located here.
+ *
+ * The script is loaded in the footer (true) so the DOM is already
+ * parsed and no DOMContentLoaded wrapper is needed in the JS itself.
+ *
+ * Depends on pointone-global-vars so WordPress ensures that object
+ * is always available before this script runs.
+ *
+ * To update the pricing page slug: change 'pricing' below.
+ */
+
+add_action('wp_enqueue_scripts', function () {
+
+    if (!is_page('pricing')) return;
+
+    wp_enqueue_script(
+        'pointone-pricing-toggle',
+        plugins_url('assets/pricing-toggle.js', __FILE__),
+        ['pointone-global-vars'],
+        '1.1.0',
+        true
+    );
+});
+
+
+/*--------------------------------------------------------------
 ELEMENTOR PRO DYNAMIC TAG
 --------------------------------------------------------------*/
 
 /**
- * Registered tag name:  pointone-global-variable
- * Appears in picker as: Global Variable  (under the "Point One" group)
- * Categories:           Text, Number — works in headings, text, buttons, etc.
+ * Appears in the ⚡ picker as "Global Variable" under the "Point One" group.
+ * Works in headings, text editors, button labels, number controls, etc.
  *
  * In the Elementor editor:
- *   1. Click the lightning bolt (⚡) icon on any text or number control.
+ *   1. Click the ⚡ icon on any text or number control.
  *   2. Choose "Global Variable" under the "Point One" group.
  *   3. Pick the variable from the dropdown.
  */
@@ -193,18 +297,15 @@ add_action('elementor/dynamic_tags/register', function ($dynamic_tags) {
 
     if (!class_exists('\Elementor\Modules\DynamicTags\Module')) return;
 
-    // Register a "Point One" group in the tag picker
     $dynamic_tags->register_group('pointone', [
         'title' => 'Point One',
     ]);
 
-    // Build the select options from field definitions — auto-updates as you add fields
     $options = ['' => '— Select a variable —'];
     foreach (pointone_gv_field_definitions() as $def) {
         $options[$def['name']] = '[' . ($def['tab'] ?? 'General') . '] ' . $def['label'];
     }
 
-    // Anonymous class — no separate file needed
     $tag_class = new class($options) extends \Elementor\Core\DynamicTags\Tag {
 
         private array $field_options;
@@ -272,12 +373,11 @@ SHORTCODE FALLBACK  [global_var key="field_name"]
 --------------------------------------------------------------*/
 
 /**
- * Kept as a fallback for contexts where Dynamic Tags cannot be used:
+ * For contexts where Dynamic Tags cannot be used:
  * custom HTML widgets, third-party plugins, PHP templates, etc.
  *
- * Usage in Elementor text widget:  $[global_var key="price_monthly"]/mo
- * Usage in PHP template:           <?php echo do_shortcode('[global_var key="price_monthly"]'); ?>
- * Direct PHP:                      get_field('price_monthly', 'option')
+ * Usage in Elementor text widget:  $[global_var key="price_virtual_monthly"]/mo
+ * Usage in PHP:                    get_field('price_virtual_monthly', 'option')
  */
 
 add_shortcode('global_var', function ($atts) {
