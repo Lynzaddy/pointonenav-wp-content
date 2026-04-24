@@ -35,8 +35,12 @@ function pointone_gv_field_definitions(): array
 {
     return [
 
-        // ── Pricing: Virtual Plan ─────────────────────────────────────────
+        // ── Pricing ───────────────────────────────────────────────────────
+        // Fields are interleaved Virtual (left) / True (right) so that each
+        // matching pair sits on the same row in the admin. ACF renders 50%-width
+        // fields sequentially: odd = left column, even = right column.
 
+        // Row 1: Monthly prices
         [
             'name'         => 'price_virtual_monthly',
             'label'        => 'Virtual — Monthly Price',
@@ -47,6 +51,17 @@ function pointone_gv_field_definitions(): array
             'width'        => '50',
         ],
         [
+            'name'         => 'price_true_monthly',
+            'label'        => 'True — Monthly Price',
+            'type'         => 'number',
+            'tab'          => 'Pricing',
+            'instructions' => 'Per-license monthly rate for the True plan. Example: 150',
+            'prepend'      => '$',
+            'width'        => '50',
+        ],
+
+        // Row 2: Annual per-month breakdown
+        [
             'name'         => 'price_virtual_annual_per_month',
             'label'        => 'Virtual — Annual Price (per month)',
             'type'         => 'number',
@@ -56,32 +71,22 @@ function pointone_gv_field_definitions(): array
             'width'        => '50',
         ],
         [
-            'name'         => 'price_virtual_annual_total',
-            'label'        => 'Virtual — Annual Total (billed once)',
-            'type'         => 'number',
-            'tab'          => 'Pricing',
-            'instructions' => 'Total charged per license per year. Example: 500',
-            'prepend'      => '$',
-            'width'        => '50',
-        ],
-
-        // ── Pricing: True Plan ────────────────────────────────────────────
-
-        [
-            'name'         => 'price_true_monthly',
-            'label'        => 'True — Monthly Price',
-            'type'         => 'number',
-            'tab'          => 'Pricing',
-            'instructions' => 'Per-license monthly rate for the True plan. Example: 150',
-            'prepend'      => '$',
-            'width'        => '50',
-        ],
-        [
             'name'         => 'price_true_annual_per_month',
             'label'        => 'True — Annual Price (per month)',
             'type'         => 'number',
             'tab'          => 'Pricing',
             'instructions' => 'Per-license monthly breakdown when billed annually. Example: 125',
+            'prepend'      => '$',
+            'width'        => '50',
+        ],
+
+        // Row 3: Annual totals
+        [
+            'name'         => 'price_virtual_annual_total',
+            'label'        => 'Virtual — Annual Total (billed once)',
+            'type'         => 'number',
+            'tab'          => 'Pricing',
+            'instructions' => 'Total charged per license per year. Example: 500',
             'prepend'      => '$',
             'width'        => '50',
         ],
