@@ -165,7 +165,7 @@ a.card-image .btn-link:hover .elementor-heading-title {
 /* ==== 01. PRICING CARDS ======== */
 .elementor .pricingContainer h3 {
     margin-bottom: 0 !important;
-    font-weight: var(--font-weight-500);
+    font-weight: var(--weight-bold);
 }
 
 .pricingContainer > .e-con {
@@ -177,7 +177,7 @@ a.card-image .btn-link:hover .elementor-heading-title {
 .elementor .pricingContainer .monthlyPrice {
     font-size: var(--font-size-14) !important;
     margin-bottom: 3px !important;
-    font-weight: var(--font-weight-500) !important;
+    font-weight: var(--weight-bold) !important;
     color: var(--color-primary) !important;
 }
 
@@ -185,7 +185,7 @@ a.card-image .btn-link:hover .elementor-heading-title {
 .elementor .pricingContainer .annualSavingsTrue {
     font-size: var(--font-size-14) !important;
     margin-bottom: 0 !important;
-    font-weight: var(--font-weight-400);
+    font-weight: var(--weight-regular);
     color: var(--content-secondary) !important;
 }
 
