@@ -1,7 +1,7 @@
 /**
  * Pricing Page Toggle
  * Part of: Point One Nav - Global Variables plugin
- * Version: 1.2.0
+ * Version: 1.3.0
  *
  * Reads all values from window.pointoneGlobalVars, which is injected
  * by the plugin on every page load.
@@ -24,6 +24,14 @@ function pgDollar(val) {
     return "$" + formatted;
 }
 
+// Helper: compute annual savings vs. 12 months at monthly rate
+// Returns "Save $X yr/license" or "" if values are missing
+function pgSavings(monthly, annual) {
+    if (!monthly || !annual) return "";
+    const saved = monthly * 12 - annual;
+    return saved > 0 ? "Save " + pgDollar(saved) + " yr/license" : "";
+}
+
 // Monthly display prices
 const pgVirtualMonthly = pgDollar(gv.price_virtual_monthly); // e.g. "$50"
 const pgTrueMonthly = pgDollar(gv.price_true_monthly); // e.g. "$150"
@@ -32,12 +40,16 @@ const pgTrueMonthly = pgDollar(gv.price_true_monthly); // e.g. "$150"
 const pgVirtualAnnual = pgDollar(gv.price_virtual_annual); // e.g. "$500"
 const pgTrueAnnual = pgDollar(gv.price_true_annual); // e.g. "$1,500"
 
+// Savings badges — computed from monthly vs. annual, not stored in admin
+const pgVirtualSavings = pgSavings(gv.price_virtual_monthly, gv.price_virtual_annual); // e.g. "Save $100 yr/license"
+const pgTrueSavings = pgSavings(gv.price_true_monthly, gv.price_true_annual); // e.g. "Save $300 yr/license"
+
 // ── DOM references ─────────────────────────────────────────────────────────
 
 const pgButtons = document.querySelectorAll(".toggle-btn");
 const pgSlider = document.querySelector(".toggle-slider");
 
-// Pricing badges
+// Pricing badges (shown on annual, hidden on monthly)
 const pgPriceVirtual = document.querySelector(".price-virtual");
 const pgPriceTrue = document.querySelector(".price-true");
 const pgPriceVirtualValue = document.querySelector(".price-virtual .value");
@@ -59,13 +71,11 @@ function pgSetPlan(plan) {
     if (plan === "annual") {
         pgSlider.style.left = "4px";
 
-        // Show pricing badges
+        // Show pricing badges and populate with computed savings
         if (pgPriceVirtual) pgPriceVirtual.style.display = "block";
         if (pgPriceTrue) pgPriceTrue.style.display = "block";
-
-        // Update pricing badges with annual totals
-        if (pgPriceVirtualValue) pgPriceVirtualValue.innerText = pgVirtualAnnual;
-        if (pgPriceTrueValue) pgPriceTrueValue.innerText = pgTrueAnnual;
+        if (pgPriceVirtualValue) pgPriceVirtualValue.innerText = pgVirtualSavings;
+        if (pgPriceTrueValue) pgPriceTrueValue.innerText = pgTrueSavings;
 
         // Update H3 Dollar Amounts to annual prices
         if (pgTxtVirtualValue) pgTxtVirtualValue.innerText = pgVirtualAnnual;
