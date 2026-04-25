@@ -168,11 +168,17 @@ a.card-image .btn-link:hover .elementor-heading-title {
     font-weight: var(--font-weight-500);
 }
 
+.pricingContainer > .e-con {
+    width: fit-content !important;
+    flex: 0 0 auto !important;
+    min-width: 0;
+}
+
 .elementor .pricingContainer .monthlyPrice {
     font-size: var(--font-size-14) !important;
     margin-bottom: 3px !important;
     font-weight: var(--font-weight-500);
-    color: var(--color-primar) !important;
+    color: var(--color-primary) !important;
 }
 
 .elementor .pricingContainer .annualSavingsVirtual,

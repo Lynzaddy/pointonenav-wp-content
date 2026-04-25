@@ -1,10 +1,10 @@
 /**
  * Pricing Page Toggle
  * Part of: Point One Nav - Global Variables plugin
+ * Version: 1.2.0
  *
  * Reads all values from window.pointoneGlobalVars, which is injected
- * by the plugin on every page load. Savings badges are computed from
- * the stored numbers so no extra field is needed in the admin.
+ * by the plugin on every page load.
  *
  * Loaded in the footer by WordPress so the DOM is already parsed —
  * no DOMContentLoaded wrapper required.
@@ -24,29 +24,13 @@ function pgDollar(val) {
     return "$" + formatted;
 }
 
-// Helper: compute annual savings from monthly rate and annual total
-// Returns "Save $X yr/license" or "" if values are missing
-function pgSavings(monthly, annualTotal) {
-    if (!monthly || !annualTotal) return "";
-    const saved = monthly * 12 - annualTotal;
-    return saved > 0 ? "Save " + pgDollar(saved) + " yr/license" : "";
-}
-
 // Monthly display prices
 const pgVirtualMonthly = pgDollar(gv.price_virtual_monthly); // e.g. "$50"
 const pgTrueMonthly = pgDollar(gv.price_true_monthly); // e.g. "$150"
 
-// Annual per-month display prices
-const pgVirtualAnnualPerMonth = pgDollar(gv.price_virtual_annual_per_month); // e.g. "$42"
-const pgTrueAnnualPerMonth = pgDollar(gv.price_true_annual_per_month); // e.g. "$125"
-
-// Annual totals for the "billed $X annually" label
-const pgVirtualAnnualTotal = pgDollar(gv.price_virtual_annual_total); // e.g. "$500"
-const pgTrueAnnualTotal = pgDollar(gv.price_true_annual_total); // e.g. "$1500"
-
-// Savings badges — computed, not stored
-const pgVirtualSavings = pgSavings(gv.price_virtual_monthly, gv.price_virtual_annual_total);
-const pgTrueSavings = pgSavings(gv.price_true_monthly, gv.price_true_annual_total);
+// Annual display prices
+const pgVirtualAnnual = pgDollar(gv.price_virtual_annual); // e.g. "$500"
+const pgTrueAnnual = pgDollar(gv.price_true_annual); // e.g. "$1,500"
 
 // ── DOM references ─────────────────────────────────────────────────────────
 
@@ -63,9 +47,8 @@ const pgPriceTrueValue = document.querySelector(".price-true .value");
 const pgTxtVirtualValue = document.querySelector(".txt-virtual .value");
 const pgTxtTrueValue = document.querySelector(".txt-true .value");
 
-// Billed Annually labels
-const pgAnnualVirtual = document.querySelector(".annualSavingsVirtual .value");
-const pgAnnualTrue = document.querySelector(".annualSavingsTrue .value");
+// Per-period label (switches between "year / license" and "month / license")
+const pgMonthlyPrice = document.querySelector(".monthlyPrice");
 
 // ── Toggle logic ───────────────────────────────────────────────────────────
 
@@ -79,32 +62,30 @@ function pgSetPlan(plan) {
         // Show pricing badges
         if (pgPriceVirtual) pgPriceVirtual.style.display = "block";
         if (pgPriceTrue) pgPriceTrue.style.display = "block";
-        if (pgAnnualVirtual) pgAnnualVirtual.style.display = "block";
-        if (pgAnnualTrue) pgAnnualTrue.style.display = "block";
 
-        // Update savings badges (computed from Global Variables)
-        if (pgPriceVirtualValue) pgPriceVirtualValue.innerText = pgVirtualSavings;
-        if (pgPriceTrueValue) pgPriceTrueValue.innerText = pgTrueSavings;
+        // Update pricing badges with annual totals
+        if (pgPriceVirtualValue) pgPriceVirtualValue.innerText = pgVirtualAnnual;
+        if (pgPriceTrueValue) pgPriceTrueValue.innerText = pgTrueAnnual;
 
-        // Update H3 Dollar Amounts
-        if (pgTxtVirtualValue) pgTxtVirtualValue.innerText = pgVirtualAnnualPerMonth;
-        if (pgTxtTrueValue) pgTxtTrueValue.innerText = pgTrueAnnualPerMonth;
+        // Update H3 Dollar Amounts to annual prices
+        if (pgTxtVirtualValue) pgTxtVirtualValue.innerText = pgVirtualAnnual;
+        if (pgTxtTrueValue) pgTxtTrueValue.innerText = pgTrueAnnual;
 
-        // Update "billed annually" labels
-        if (pgAnnualVirtual) pgAnnualVirtual.innerHTML = "billed " + pgVirtualAnnualTotal + " annually";
-        if (pgAnnualTrue) pgAnnualTrue.innerHTML = "billed " + pgTrueAnnualTotal + " annually";
+        // Update period label
+        if (pgMonthlyPrice) pgMonthlyPrice.innerText = "year / license";
     } else {
         pgSlider.style.left = "calc(50% + 4px)";
 
         // Hide pricing badges
         if (pgPriceVirtual) pgPriceVirtual.style.display = "none";
         if (pgPriceTrue) pgPriceTrue.style.display = "none";
-        if (pgAnnualVirtual) pgAnnualVirtual.style.display = "none";
-        if (pgAnnualTrue) pgAnnualTrue.style.display = "none";
 
-        // Update H3 Dollar Amounts
+        // Update H3 Dollar Amounts to monthly prices
         if (pgTxtVirtualValue) pgTxtVirtualValue.innerText = pgVirtualMonthly;
         if (pgTxtTrueValue) pgTxtTrueValue.innerText = pgTrueMonthly;
+
+        // Update period label
+        if (pgMonthlyPrice) pgMonthlyPrice.innerText = "month / license";
     }
 }
 

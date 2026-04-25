@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Point One Nav - Global Variables
  * Description: Global site variables managed via an ACF Options Page. Values are exposed in Elementor Pro via a custom Dynamic Tag (⚡ picker), via the [global_var key="..."] shortcode, and injected into the front end as a JS object (pointoneGlobalVars). The pricing page toggle script is also managed and enqueued from this plugin.
- * Version: 1.1.0
+ * Version: 1.2.0
  */
 
 if (!defined('ABSPATH')) exit;
@@ -43,7 +43,7 @@ function pointone_gv_field_definitions(): array
         // Row 1: Monthly prices
         [
             'name'         => 'price_virtual_monthly',
-            'label'        => 'Virtual — Monthly Price',
+            'label'        => 'Virtual — Monthly',
             'type'         => 'number',
             'tab'          => 'Pricing',
             'instructions' => 'Per-license monthly rate for the Virtual plan. Example: 50',
@@ -52,7 +52,7 @@ function pointone_gv_field_definitions(): array
         ],
         [
             'name'         => 'price_true_monthly',
-            'label'        => 'True — Monthly Price',
+            'label'        => 'True — Monthly',
             'type'         => 'number',
             'tab'          => 'Pricing',
             'instructions' => 'Per-license monthly rate for the True plan. Example: 150',
@@ -60,42 +60,22 @@ function pointone_gv_field_definitions(): array
             'width'        => '50',
         ],
 
-        // Row 2: Annual per-month breakdown
+        // Row 2: Annual prices
         [
-            'name'         => 'price_virtual_annual_per_month',
-            'label'        => 'Virtual — Annual Price (per month)',
+            'name'         => 'price_virtual_annual',
+            'label'        => 'Virtual — Annual',
             'type'         => 'number',
             'tab'          => 'Pricing',
-            'instructions' => 'Per-license monthly breakdown when billed annually. Example: 42',
+            'instructions' => 'Total charged per license per year for the Virtual plan. Example: 500',
             'prepend'      => '$',
             'width'        => '50',
         ],
         [
-            'name'         => 'price_true_annual_per_month',
-            'label'        => 'True — Annual Price (per month)',
+            'name'         => 'price_true_annual',
+            'label'        => 'True — Annual',
             'type'         => 'number',
             'tab'          => 'Pricing',
-            'instructions' => 'Per-license monthly breakdown when billed annually. Example: 125',
-            'prepend'      => '$',
-            'width'        => '50',
-        ],
-
-        // Row 3: Annual totals
-        [
-            'name'         => 'price_virtual_annual_total',
-            'label'        => 'Virtual — Annual Total (billed once)',
-            'type'         => 'number',
-            'tab'          => 'Pricing',
-            'instructions' => 'Total charged per license per year. Example: 500',
-            'prepend'      => '$',
-            'width'        => '50',
-        ],
-        [
-            'name'         => 'price_true_annual_total',
-            'label'        => 'True — Annual Total (billed once)',
-            'type'         => 'number',
-            'tab'          => 'Pricing',
-            'instructions' => 'Total charged per license per year. Example: 1500',
+            'instructions' => 'Total charged per license per year for the True plan. Example: 1500',
             'prepend'      => '$',
             'width'        => '50',
         ],
@@ -278,7 +258,7 @@ add_action('wp_enqueue_scripts', function () {
         'pointone-pricing-toggle',
         plugins_url('assets/pricing-toggle.js', __FILE__),
         ['pointone-global-vars'],
-        '1.1.0',
+        '1.2.0',
         true
     );
 });
