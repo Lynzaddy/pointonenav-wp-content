@@ -59,8 +59,8 @@ const pgPriceTrueValue = document.querySelector(".price-true .value");
 const pgTxtVirtualValue = document.querySelector(".txt-virtual .value");
 const pgTxtTrueValue = document.querySelector(".txt-true .value");
 
-// Per-period label (switches between "year / license" and "month / license")
-const pgMonthlyPrice = document.querySelector(".monthlyPrice");
+// Per-period labels (one per pricing card — querySelectorAll captures both)
+const pgMonthlyPrices = document.querySelectorAll(".monthlyPrice");
 
 // ── Toggle logic ───────────────────────────────────────────────────────────
 
@@ -81,8 +81,8 @@ function pgSetPlan(plan) {
         if (pgTxtVirtualValue) pgTxtVirtualValue.innerText = pgVirtualAnnual;
         if (pgTxtTrueValue) pgTxtTrueValue.innerText = pgTrueAnnual;
 
-        // Update period label
-        if (pgMonthlyPrice) pgMonthlyPrice.innerText = "year / license";
+        // Update period label on both cards
+        pgMonthlyPrices.forEach((el) => (el.innerText = "year / license"));
     } else {
         pgSlider.style.left = "calc(50% + 4px)";
 
@@ -94,8 +94,8 @@ function pgSetPlan(plan) {
         if (pgTxtVirtualValue) pgTxtVirtualValue.innerText = pgVirtualMonthly;
         if (pgTxtTrueValue) pgTxtTrueValue.innerText = pgTrueMonthly;
 
-        // Update period label
-        if (pgMonthlyPrice) pgMonthlyPrice.innerText = "month / license";
+        // Update period label on both cards
+        pgMonthlyPrices.forEach((el) => (el.innerText = "month / license"));
     }
 }
 
