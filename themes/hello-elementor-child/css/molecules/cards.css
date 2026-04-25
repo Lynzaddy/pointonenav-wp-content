@@ -177,7 +177,7 @@ a.card-image .btn-link:hover .elementor-heading-title {
 .elementor .pricingContainer .monthlyPrice {
     font-size: var(--font-size-14) !important;
     margin-bottom: 3px !important;
-    font-weight: var(--font-weight-500);
+    font-weight: var(--font-weight-500) !important;
     color: var(--color-primary) !important;
 }
 
