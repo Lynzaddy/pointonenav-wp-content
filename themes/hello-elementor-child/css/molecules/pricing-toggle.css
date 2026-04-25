@@ -74,3 +74,9 @@
     transition: left 0.3s ease;
     z-index: 1;
 }
+
+.pricingContainer > .e-con {
+    width: fit-content !important;
+    flex: 0 0 auto !important;
+    min-width: 0;
+}
