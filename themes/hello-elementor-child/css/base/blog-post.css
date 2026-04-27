@@ -28,7 +28,6 @@
     padding-bottom: 0.5em !important;
 }
 
-/* CSS used to ensure the video player is sizing correctly within a post */
 /* Fix Elementor Video widget height being overridden by YouTube IFrame API */
 .elementor-widget-video .elementor-wrapper {
     position: relative;
@@ -37,7 +36,8 @@
     overflow: hidden;
 }
 
-.elementor-widget-video .elementor-wrapper iframe.elementor-video {
+.elementor-widget-video .elementor-wrapper iframe.elementor-video,
+.elementor-widget-video .elementor-wrapper video.elementor-video {
     position: absolute;
     top: 0;
     left: 0;
