@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Point One Nav - Global Variables
  * Description: Global site variables managed via an ACF Options Page. Values are exposed in Elementor Pro via a custom Dynamic Tag (⚡ picker), via the [global_var key="..."] shortcode, and injected into the front end as a JS object (pointoneGlobalVars). The pricing page toggle script is also managed and enqueued from this plugin.
- * Version: 1.2.0
+ * Version: 1.2.1
  */
 
 if (!defined('ABSPATH')) exit;
