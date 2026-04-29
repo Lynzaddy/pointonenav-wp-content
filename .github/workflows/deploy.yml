@@ -55,7 +55,7 @@ jobs:
           rsync -az --delete \
             -e "$RSYNC_SSH" \
             plugins/pointone-events/ \
-            "$USER@$HOST:public_html/wp-content/plugins/pointone-events/" 
+            "$USER@$HOST:public_html/wp-content/plugins/pointone-global-variables/" 
 
           echo "Syncing pointone-site-settings..."
           rsync -az --delete \
