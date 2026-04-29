@@ -165,21 +165,27 @@ a.card-image .btn-link:hover .elementor-heading-title {
 /* ==== 01. PRICING CARDS ======== */
 .elementor .pricingContainer h3 {
     margin-bottom: 0 !important;
-    font-weight: var(--font-weight-500);
+    font-weight: var(--weight-bold);
+}
+
+.pricingContainer > .e-con {
+    width: fit-content !important;
+    flex: 0 0 auto !important;
+    min-width: 0;
 }
 
 .elementor .pricingContainer .monthlyPrice {
     font-size: var(--font-size-14) !important;
     margin-bottom: 3px !important;
-    font-weight: var(--font-weight-500);
-    color: var(--color-primar) !important;
+    font-weight: var(--weight-bold) !important;
+    color: var(--color-primary) !important;
 }
 
 .elementor .pricingContainer .annualSavingsVirtual,
 .elementor .pricingContainer .annualSavingsTrue {
     font-size: var(--font-size-14) !important;
     margin-bottom: 0 !important;
-    font-weight: var(--font-weight-400);
+    font-weight: var(--weight-regular);
     color: var(--content-secondary) !important;
 }
 
