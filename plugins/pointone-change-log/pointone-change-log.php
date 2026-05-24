@@ -2,8 +2,8 @@
 
 /**
  * Plugin Name: Point One Nav - Point One Change Log
- * Description: Custom Change Log system for Point One including CPT, ACF fields, admin sorting, admin columns, and Elementor Query ID support.
- * Version: 1.0.1
+ * Description: Custom Change Log system with CPT, ACF fields, admin sorting, and Elementor integration.
+ * Version: 1.1.0
  */
 
 if (!defined('ABSPATH')) exit;
@@ -28,26 +28,15 @@ add_action('init', function () {
             'new_item'              => 'New Change Log',
             'edit_item'             => 'Edit Change Log',
             'view_item'             => 'View Change Log',
-            'view_items'            => 'View Change Logs',
             'all_items'             => 'All Change Logs',
             'search_items'          => 'Search Change Logs',
             'not_found'             => 'No Change Logs found.',
             'not_found_in_trash'    => 'No Change Logs found in Trash.',
             'archives'              => 'Change Logs',
-            'attributes'            => 'Change Log Attributes',
-            'insert_into_item'      => 'Insert into change log',
-            'uploaded_to_this_item' => 'Uploaded to this change log',
-            'filter_items_list'     => 'Filter change log list',
-            'items_list_navigation' => 'Change Log list navigation',
-            'items_list'            => 'Change Log list',
         ],
 
         'public' => true,
 
-        /**
-         * Dashicon:
-         * https://developer.wordpress.org/resource/dashicons/
-         */
         'menu_icon' => 'dashicons-backup',
 
         'supports' => [
@@ -55,10 +44,6 @@ add_action('init', function () {
             'editor'
         ],
 
-        /**
-         * We are using a normal Elementor page
-         * at /changelog instead of a CPT archive.
-         */
         'has_archive' => false,
 
         'rewrite' => [
@@ -71,7 +56,7 @@ add_action('init', function () {
 
 
 /*--------------------------------------------------------------
-ACF FIELD GROUP
+ACF FIELD GROUP (EVENT-STYLE META BOX)
 --------------------------------------------------------------*/
 
 add_action('acf/init', function () {
@@ -88,25 +73,17 @@ add_action('acf/init', function () {
 
             [
                 'key' => 'change_log_date',
-
                 'label' => 'Change Log Date',
-
                 'name' => 'change_log_date',
-
                 'type' => 'date_picker',
-
                 'required' => 1,
-
                 'display_format' => 'F j, Y',
-
                 'return_format' => 'Y-m-d',
-
-                'first_day' => 0,
-
                 'wrapper' => [
-                    'width' => '50'
+                    'width' => '100'
                 ]
             ]
+
         ],
 
         'location' => [
@@ -123,23 +100,7 @@ add_action('acf/init', function () {
 
 
 /*--------------------------------------------------------------
-HELPERS
---------------------------------------------------------------*/
-
-function pointone_change_log_format_admin_date($date): string
-{
-    if (!$date) return '';
-
-    $d = DateTime::createFromFormat('Y-m-d', (string) $date);
-
-    if (!$d) return (string) $date;
-
-    return $d->format('m-d-Y');
-}
-
-
-/*--------------------------------------------------------------
-ADMIN COLUMN ORDER
+ADMIN COLUMN SETUP (EVENT STYLE)
 --------------------------------------------------------------*/
 
 add_filter('manage_change_log_posts_columns', function ($columns) {
@@ -147,36 +108,30 @@ add_filter('manage_change_log_posts_columns', function ($columns) {
     return [
 
         'cb' => $columns['cb'],
-
         'title' => 'Title',
-
         'change_log_date' => 'Change Log Date',
-
         'date' => 'Published'
     ];
 });
 
 
-/*--------------------------------------------------------------
-POPULATE ADMIN COLUMNS
---------------------------------------------------------------*/
-
 add_action('manage_change_log_posts_custom_column', function ($column, $post_id) {
 
     if ($column === 'change_log_date') {
 
-        echo esc_html(
-            pointone_change_log_format_admin_date(
-                get_field('change_log_date', $post_id)
-            )
-        );
+        $date = get_field('change_log_date', $post_id);
+
+        if ($date) {
+            echo esc_html(
+                DateTime::createFromFormat('Y-m-d', $date)->format('m-d-Y')
+            );
+        }
     }
 }, 10, 2);
 
 
 /*--------------------------------------------------------------
-DEFAULT ADMIN SORTING
-(Change Log Date DESC)
+ADMIN SORTING (DATE DESC)
 --------------------------------------------------------------*/
 
 add_action('pre_get_posts', function ($query) {
@@ -188,9 +143,7 @@ add_action('pre_get_posts', function ($query) {
     if (!$query->get('orderby')) {
 
         $query->set('meta_key', 'change_log_date');
-
         $query->set('orderby', 'meta_value');
-
         $query->set('order', 'DESC');
     }
 });
@@ -201,19 +154,41 @@ ELEMENTOR QUERY ID
 --------------------------------------------------------------*/
 
 /**
- * Query ID:
- * pointone_change_log
+ * Query ID: pointone_change_log
  */
 
 add_action('elementor/query/pointone_change_log', function ($query) {
 
     $query->set('post_type', 'change_log');
-
     $query->set('post_status', 'publish');
-
     $query->set('meta_key', 'change_log_date');
-
     $query->set('orderby', 'meta_value');
-
     $query->set('order', 'DESC');
+});
+
+
+/*--------------------------------------------------------------
+ADMIN UI POLISH (MATCH EVENTS FEEL)
+--------------------------------------------------------------*/
+
+add_action('admin_head', function () {
+
+    $screen = get_current_screen();
+
+    if (!$screen || $screen->post_type !== 'change_log') return;
+
+?>
+    <style>
+        /* Make ACF box feel like a primary section like Events */
+        #acf-group_pointone_change_log {
+            border: 1px solid #dcdcde;
+            border-left: 4px solid #2271b1;
+            background: #fff;
+        }
+
+        #acf-group_pointone_change_log .acf-label label {
+            font-weight: 600;
+        }
+    </style>
+<?php
 });
