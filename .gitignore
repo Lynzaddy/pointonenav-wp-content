@@ -14,14 +14,17 @@ wp-rocket-config/
 !/plugins/pointone-card-carousel/
 !/plugins/pointone-card-carousel/**
 
-!/plugins/pointone-site-alert-bar/
-!/plugins/pointone-site-alert-bar/**
+!/plugins/pointone-change-log/
+!/plugins/pointone-change-log/**
 
 !/plugins/pointone-events/
 !/plugins/pointone-events/**
 
 !/plugins/pointone-global-variables/
 !/plugins/pointone-global-variables/**
+
+!/plugins/pointone-site-alert-bar/
+!/plugins/pointone-site-alert-bar/**
 
 # Ignore WP cache drop-in created by cache plugins
 advanced-cache.php
