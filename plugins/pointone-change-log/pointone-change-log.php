@@ -2,7 +2,7 @@
 
 /**
  * Plugin Name: Point One Nav - Point One Change Log
- * Description: Custom Change Log system with CPT, ACF fields, admin sorting, and Elementor integration.
+ * Description: Custom Change Log system for Point One including CPT, ACF fields, admin sorting, admin columns, and Elementor Query ID support.
  * Version: 1.1.0
  */
 
@@ -18,7 +18,6 @@ add_action('init', function () {
     register_post_type('change_log', [
 
         'labels' => [
-
             'name'                  => 'Change Log',
             'singular_name'         => 'Change Log',
             'menu_name'             => 'Change Log',
@@ -28,20 +27,32 @@ add_action('init', function () {
             'new_item'              => 'New Change Log',
             'edit_item'             => 'Edit Change Log',
             'view_item'             => 'View Change Log',
+            'view_items'            => 'View Change Logs',
             'all_items'             => 'All Change Logs',
             'search_items'          => 'Search Change Logs',
             'not_found'             => 'No Change Logs found.',
             'not_found_in_trash'    => 'No Change Logs found in Trash.',
             'archives'              => 'Change Logs',
+            'attributes'            => 'Change Log Attributes',
+            'insert_into_item'      => 'Insert into change log',
+            'uploaded_to_this_item' => 'Uploaded to this change log',
+            'filter_items_list'     => 'Filter change log list',
+            'items_list_navigation' => 'Change Log list navigation',
+            'items_list'            => 'Change Log list',
         ],
 
         'public' => true,
-
         'menu_icon' => 'dashicons-backup',
 
+        /**
+         * Important:
+         * Do NOT include 'editor' here.
+         * We are using an ACF WYSIWYG field instead so the admin screen
+         * matches the Events plugin layout.
+         */
         'supports' => [
             'title',
-            'editor'
+            'author'
         ],
 
         'has_archive' => false,
@@ -50,13 +61,17 @@ add_action('init', function () {
             'slug' => 'changelog'
         ],
 
-        'show_in_rest' => true
+        /**
+         * Set false so this CPT uses the classic admin layout
+         * like Events, instead of the block editor layout.
+         */
+        'show_in_rest' => false
     ]);
 });
 
 
 /*--------------------------------------------------------------
-ACF FIELD GROUP (EVENT-STYLE META BOX)
+ACF FIELD GROUP
 --------------------------------------------------------------*/
 
 add_action('acf/init', function () {
@@ -66,7 +81,6 @@ add_action('acf/init', function () {
     acf_add_local_field_group([
 
         'key' => 'group_pointone_change_log',
-
         'title' => 'Change Log Details',
 
         'fields' => [
@@ -79,11 +93,27 @@ add_action('acf/init', function () {
                 'required' => 1,
                 'display_format' => 'F j, Y',
                 'return_format' => 'Y-m-d',
+                'first_day' => 0,
+                'wrapper' => [
+                    'width' => '100'
+                ]
+            ],
+
+            [
+                'key' => 'change_log_content',
+                'label' => 'Change Log Content',
+                'name' => 'change_log_content',
+                'type' => 'wysiwyg',
+                'required' => 1,
+                'tabs' => 'all',
+                'toolbar' => 'full',
+                'media_upload' => 0,
+                'delay' => 0,
+                'instructions' => 'Add the bulleted list or summary of changes included in this update.',
                 'wrapper' => [
                     'width' => '100'
                 ]
             ]
-
         ],
 
         'location' => [
@@ -100,13 +130,28 @@ add_action('acf/init', function () {
 
 
 /*--------------------------------------------------------------
-ADMIN COLUMN SETUP (EVENT STYLE)
+HELPERS
+--------------------------------------------------------------*/
+
+function pointone_change_log_format_admin_date($date): string
+{
+    if (!$date) return '';
+
+    $d = DateTime::createFromFormat('Y-m-d', (string) $date);
+
+    if (!$d) return (string) $date;
+
+    return $d->format('m-d-Y');
+}
+
+
+/*--------------------------------------------------------------
+ADMIN COLUMN ORDER
 --------------------------------------------------------------*/
 
 add_filter('manage_change_log_posts_columns', function ($columns) {
 
     return [
-
         'cb' => $columns['cb'],
         'title' => 'Title',
         'change_log_date' => 'Change Log Date',
@@ -115,33 +160,33 @@ add_filter('manage_change_log_posts_columns', function ($columns) {
 });
 
 
+/*--------------------------------------------------------------
+POPULATE ADMIN COLUMNS
+--------------------------------------------------------------*/
+
 add_action('manage_change_log_posts_custom_column', function ($column, $post_id) {
 
     if ($column === 'change_log_date') {
-
-        $date = get_field('change_log_date', $post_id);
-
-        if ($date) {
-            echo esc_html(
-                DateTime::createFromFormat('Y-m-d', $date)->format('m-d-Y')
-            );
-        }
+        echo esc_html(
+            pointone_change_log_format_admin_date(
+                get_field('change_log_date', $post_id)
+            )
+        );
     }
 }, 10, 2);
 
 
 /*--------------------------------------------------------------
-ADMIN SORTING (DATE DESC)
+DEFAULT ADMIN SORTING
+(Change Log Date DESC)
 --------------------------------------------------------------*/
 
 add_action('pre_get_posts', function ($query) {
 
     if (!is_admin() || !$query->is_main_query()) return;
-
     if ($query->get('post_type') !== 'change_log') return;
 
     if (!$query->get('orderby')) {
-
         $query->set('meta_key', 'change_log_date');
         $query->set('orderby', 'meta_value');
         $query->set('order', 'DESC');
@@ -154,7 +199,8 @@ ELEMENTOR QUERY ID
 --------------------------------------------------------------*/
 
 /**
- * Query ID: pointone_change_log
+ * Query ID:
+ * pointone_change_log
  */
 
 add_action('elementor/query/pointone_change_log', function ($query) {
@@ -164,31 +210,4 @@ add_action('elementor/query/pointone_change_log', function ($query) {
     $query->set('meta_key', 'change_log_date');
     $query->set('orderby', 'meta_value');
     $query->set('order', 'DESC');
-});
-
-
-/*--------------------------------------------------------------
-ADMIN UI POLISH (MATCH EVENTS FEEL)
---------------------------------------------------------------*/
-
-add_action('admin_head', function () {
-
-    $screen = get_current_screen();
-
-    if (!$screen || $screen->post_type !== 'change_log') return;
-
-?>
-    <style>
-        /* Make ACF box feel like a primary section like Events */
-        #acf-group_pointone_change_log {
-            border: 1px solid #dcdcde;
-            border-left: 4px solid #2271b1;
-            background: #fff;
-        }
-
-        #acf-group_pointone_change_log .acf-label label {
-            font-weight: 600;
-        }
-    </style>
-<?php
 });
