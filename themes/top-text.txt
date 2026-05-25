@@ -1,0 +1,15 @@
+We refer to the information we collect from customers and their end users (if applicable) through our Services on behalf of our customers as "SDK Information." We only use SDK Information to provide the Services to our customers. We will not sell or provide access to your SDK Information to any third party without your consent. The SDK Information may include, without limitation, the following types of data, some of which may be considered Personal Data:
+<ul>
+    <li>Precise location (e.g., GPS-level) data, such as latitude, longitude, accuracy, altitude, speed, heading</li>
+    <li>Device Data (e.g., operating system version, Apple IDFV, Android ID)</li>
+    <li>Sensory Data (e.g., photos, videos or recordings of your environment)</li>
+    <li>Time zone information</li>
+    <li>Privacy preferences</li>
+</ul>
+On our customer's behalf and request in order to provide the Services to our customers, we may share the SDK Information with our Service Providers, Business Partners or Parties You Authorize, Access or Authenticate (as further defined below). This Privacy Policy does not apply to SDK Information or to the products, services and applications of our customers, and we are not responsible for our customers' handling of SDK Information. Our customers have their own policies regarding the collection, use and disclosure of Personal Data.
+
+<b>Personal Data</b>
+
+<em>Categories of Personal Data We Collect</em>
+
+This chart details the categories of Personal Data that we collect and have collected over the past 12 months:
