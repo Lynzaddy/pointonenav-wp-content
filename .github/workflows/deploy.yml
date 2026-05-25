@@ -45,22 +45,28 @@ jobs:
             plugins/pointone-card-carousel/ \
             "$USER@$HOST:public_html/wp-content/plugins/pointone-card-carousel/"
 
-          echo "Syncing pointone-site-alert-bar..."
+          echo "Syncing pointone-change-log..."
           rsync -az --delete \
             -e "$RSYNC_SSH" \
-            plugins/pointone-site-alert-bar/ \
-            "$USER@$HOST:public_html/wp-content/plugins/pointone-site-alert-bar/"
+            plugins/pointone-change-log/ \
+            "$USER@$HOST:public_html/wp-content/plugins/pointone-change-log/"
 
           echo "Syncing pointone-site-events..."
           rsync -az --delete \
             -e "$RSYNC_SSH" \
             plugins/pointone-events/ \
-            "$USER@$HOST:public_html/wp-content/plugins/pointone-events/"     
+            "$USER@$HOST:public_html/wp-content/plugins/pointone-events/"
 
           echo "Syncing pointone-global-variables..."
           rsync -az --delete \
             -e "$RSYNC_SSH" \
             plugins/pointone-global-variables/ \
-            "$USER@$HOST:public_html/wp-content/plugins/pointone-global-variables/"  
+            "$USER@$HOST:public_html/wp-content/plugins/pointone-global-variables/" 
+
+          echo "Syncing pointone-site-alert-bar..."
+          rsync -az --delete \
+            -e "$RSYNC_SSH" \
+            plugins/pointone-site-alert-bar/ \
+            "$USER@$HOST:public_html/wp-content/plugins/pointone-site-alert-bar/"
 
           echo "Deployment complete."
