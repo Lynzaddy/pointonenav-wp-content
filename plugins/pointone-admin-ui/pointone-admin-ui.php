@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Point One Nav - Admin UI
  * Description: Creates a unified Point One admin menu and groups custom CMS tools under one parent menu.
- * Version: 2.3.0
+ * Version: 2.3.1
  */
 
 if (!defined('ABSPATH')) exit;
