@@ -2,109 +2,145 @@
 
 /**
  * Plugin Name: Point One Nav - Admin UI
- * Description: Organizes the WordPress admin menu for Point One custom CMS tools.
- * Version: 1.2.0
+ * Description: Creates a unified Point One admin menu and groups custom CMS tools under one parent menu.
+ * Version: 2.0.0
  */
 
 if (!defined('ABSPATH')) exit;
 
 
 /*--------------------------------------------------------------
-ADMIN MENU ORGANIZATION
+POINT ONE ADMIN PARENT MENU
 --------------------------------------------------------------*/
 
 add_action('admin_menu', function () {
 
-    global $menu;
+    add_menu_page(
+        'Point One',
+        'Point One',
+        'edit_posts',
+        'pointone-cms',
+        'pointone_admin_ui_parent_page',
+        'dashicons-admin-site-alt3',
+        25
+    );
+}, 1);
 
-    /**
-     * Desired top-level admin order.
-     *
-     * These slugs must match the actual menu slugs WordPress uses.
-     */
-    $desired_order = [
 
-        'index.php',                        // Dashboard
-        'edit.php',                         // Posts
-        'upload.php',                       // Media
-        'edit.php?post_type=page',          // Pages
+/*--------------------------------------------------------------
+POINT ONE PARENT PAGE
+--------------------------------------------------------------*/
 
-        'separator-pointone-before',
+function pointone_admin_ui_parent_page()
+{
+?>
+    <div class="wrap">
+        <h1>Point One</h1>
+        <p>Use the submenu links to manage Point One content and tools.</p>
+    </div>
+<?php
+}
 
-        'edit.php?post_type=change_log',    // Change Log
-        'edit.php?post_type=competitor',    // Competitors
-        'edit.php?post_type=event',         // Events
-        'edit.php?post_type=faq',           // FAQs
-        'edit.php?post_type=gnss_term',     // GNSS Terms
-        'edit.php?post_type=site_alert',    // Site Alerts
-        'edit.php?post_type=state',         // States
 
-        'separator-pointone-after',
+/*--------------------------------------------------------------
+POINT ONE SUBMENU LINKS
+--------------------------------------------------------------*/
 
-        'elementor',                        // Elementor
+add_action('admin_menu', function () {
 
-        'separator-wordpress-admin',
+    add_submenu_page(
+        'pointone-cms',
+        'Change Log',
+        'Change Log',
+        'edit_posts',
+        'edit.php?post_type=change_log'
+    );
 
-        'themes.php',                       // Appearance
-        'plugins.php',                      // Plugins
-        'users.php',                        // Users
-        'tools.php',                        // Tools
-        'options-general.php',              // Settings
+    add_submenu_page(
+        'pointone-cms',
+        'Competitors',
+        'Competitors',
+        'edit_posts',
+        'edit.php?post_type=competitor'
+    );
+
+    add_submenu_page(
+        'pointone-cms',
+        'Events',
+        'Events',
+        'edit_posts',
+        'edit.php?post_type=event'
+    );
+
+    add_submenu_page(
+        'pointone-cms',
+        'FAQs',
+        'FAQs',
+        'edit_posts',
+        'edit.php?post_type=faq'
+    );
+
+    add_submenu_page(
+        'pointone-cms',
+        'GNSS Terms',
+        'GNSS Terms',
+        'edit_posts',
+        'edit.php?post_type=gnss_term'
+    );
+
+    add_submenu_page(
+        'pointone-cms',
+        'Site Alerts',
+        'Site Alerts',
+        'edit_posts',
+        'edit.php?post_type=site_alert'
+    );
+
+    add_submenu_page(
+        'pointone-cms',
+        'States',
+        'States',
+        'edit_posts',
+        'edit.php?post_type=state'
+    );
+}, 99);
+
+
+/*--------------------------------------------------------------
+REMOVE DUPLICATE TOP-LEVEL MENUS
+--------------------------------------------------------------*/
+
+add_action('admin_menu', function () {
+
+    remove_menu_page('edit.php?post_type=change_log');
+    remove_menu_page('edit.php?post_type=competitor');
+    remove_menu_page('edit.php?post_type=event');
+    remove_menu_page('edit.php?post_type=faq');
+    remove_menu_page('edit.php?post_type=gnss_term');
+    remove_menu_page('edit.php?post_type=site_alert');
+    remove_menu_page('edit.php?post_type=state');
+}, 999);
+
+
+/*--------------------------------------------------------------
+ADMIN MENU ORDER
+--------------------------------------------------------------*/
+
+add_filter('custom_menu_order', '__return_true');
+
+add_filter('menu_order', function () {
+
+    return [
+        'index.php',
+        'edit.php',
+        'upload.php',
+        'edit.php?post_type=page',
+        'pointone-cms',
+        'elementor',
+        'themes.php',
+        'plugins.php',
+        'users.php',
+        'tools.php',
+        'options-general.php',
     ];
-
-    /**
-     * Add our custom separators.
-     */
-    $menu[] = [
-        '',
-        'read',
-        'separator-pointone-before',
-        '',
-        'wp-menu-separator'
-    ];
-
-    $menu[] = [
-        '',
-        'read',
-        'separator-pointone-after',
-        '',
-        'wp-menu-separator'
-    ];
-
-    $menu[] = [
-        '',
-        'read',
-        'separator-wordpress-admin',
-        '',
-        'wp-menu-separator'
-    ];
-
-    /**
-     * Rebuild menu based on desired order.
-     */
-    $ordered_menu = [];
-
-    foreach ($desired_order as $slug) {
-
-        foreach ($menu as $index => $item) {
-
-            if (!isset($item[2])) continue;
-
-            if ($item[2] === $slug) {
-                $ordered_menu[] = $item;
-                unset($menu[$index]);
-                break;
-            }
-        }
-    }
-
-    /**
-     * Append anything not explicitly listed.
-     * This prevents plugin/admin items from disappearing.
-     */
-    foreach ($menu as $item) {
-        $ordered_menu[] = $item;
-    }
-
-    $menu = $ordered_menu;
-}, 9999);
+});
