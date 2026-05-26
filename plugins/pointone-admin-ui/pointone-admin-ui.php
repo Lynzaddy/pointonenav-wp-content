@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Point One Nav - Admin UI
  * Description: Creates a unified Point One admin menu and groups custom CMS tools under one parent menu.
- * Version: 2.5.0
+ * Version: 2.6.0
  */
 
 if (!defined('ABSPATH')) exit;
@@ -79,6 +79,60 @@ add_action('admin_menu', function () {
     add_submenu_page('pointone-cms', 'Site Alerts', 'Site Alerts', 'edit_posts', 'edit.php?post_type=site_alert');
     add_submenu_page('pointone-cms', 'States', 'States', 'edit_posts', 'edit.php?post_type=state');
 }, 99);
+
+
+/*--------------------------------------------------------------
+KEEP POINT ONE MENU OPEN ON CHILD SCREENS
+--------------------------------------------------------------*/
+
+add_filter('parent_file', function ($parent_file) {
+
+    $pointone_post_types = [
+        'change_log',
+        'competitor',
+        'event',
+        'faq',
+        'gnss_term',
+        'site_alert',
+        'state',
+    ];
+
+    $post_type = $_GET['post_type'] ?? '';
+
+    if (!$post_type && isset($_GET['post'])) {
+        $post_type = get_post_type((int) $_GET['post']);
+    }
+
+    if (in_array($post_type, $pointone_post_types, true)) {
+        return 'pointone-cms';
+    }
+
+    if (isset($_GET['page']) && $_GET['page'] === 'pointone-global-variables') {
+        return 'pointone-cms';
+    }
+
+    return $parent_file;
+});
+
+
+add_filter('submenu_file', function ($submenu_file) {
+
+    $post_type = $_GET['post_type'] ?? '';
+
+    if (!$post_type && isset($_GET['post'])) {
+        $post_type = get_post_type((int) $_GET['post']);
+    }
+
+    if ($post_type) {
+        return 'edit.php?post_type=' . $post_type;
+    }
+
+    if (isset($_GET['page']) && $_GET['page'] === 'pointone-global-variables') {
+        return 'pointone-global-variables';
+    }
+
+    return $submenu_file;
+});
 
 
 /*--------------------------------------------------------------
