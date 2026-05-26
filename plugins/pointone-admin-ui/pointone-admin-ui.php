@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Point One Nav - Admin UI
  * Description: Creates a unified Point One admin menu and groups custom CMS tools under one parent menu.
- * Version: 2.2.0
+ * Version: 2.3.0
  */
 
 if (!defined('ABSPATH')) exit;
@@ -44,17 +44,32 @@ POINT ONE SUBMENU LINKS
 
 add_action('admin_menu', function () {
 
+    global $submenu;
+
     /**
      * Remove default duplicate parent submenu item.
      */
     remove_submenu_page('pointone-cms', 'pointone-cms');
 
     /**
-     * Alphabetical order.
-     *
-     * Global Variables is intentionally NOT added here.
-     * It is added automatically by the Global Variables plugin using:
-     * 'parent_slug' => 'pointone-cms'
+     * Remove automatically-added Global Variables submenu.
+     * We will manually re-add it alphabetically.
+     */
+    if (isset($submenu['pointone-cms'])) {
+
+        foreach ($submenu['pointone-cms'] as $index => $item) {
+
+            if (
+                isset($item[2]) &&
+                $item[2] === 'pointone-global-variables'
+            ) {
+                unset($submenu['pointone-cms'][$index]);
+            }
+        }
+    }
+
+    /**
+     * Alphabetical submenu order.
      */
 
     add_submenu_page(
@@ -87,6 +102,14 @@ add_action('admin_menu', function () {
         'FAQs',
         'edit_posts',
         'edit.php?post_type=faq'
+    );
+
+    add_submenu_page(
+        'pointone-cms',
+        'Global Variables',
+        'Global Variables',
+        'manage_options',
+        'pointone-global-variables'
     );
 
     add_submenu_page(
