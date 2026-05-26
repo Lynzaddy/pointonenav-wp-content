@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Point One Nav - Admin UI
  * Description: Creates a unified Point One admin menu and groups custom CMS tools under one parent menu.
- * Version: 2.9.0
+ * Version: 2.10.0
  */
 
 if (!defined('ABSPATH')) exit;
@@ -34,7 +34,7 @@ function pointone_admin_ui_post_types(): array
         'competitors',
         'event',
         'faqs',
-        'gnss_terms',
+        'glossary_term',
         'site_alert',
         'states',
     ];
@@ -117,7 +117,7 @@ add_action('admin_menu', function () {
     add_submenu_page('pointone-cms', 'Events', 'Events', 'edit_posts', 'edit.php?post_type=event');
     add_submenu_page('pointone-cms', 'FAQs', 'FAQs', 'edit_posts', 'edit.php?post_type=faqs');
     add_submenu_page('pointone-cms', 'Global Variables', 'Global Variables', 'manage_options', 'pointone-global-variables');
-    add_submenu_page('pointone-cms', 'GNSS Terms', 'GNSS Terms', 'edit_posts', 'edit.php?post_type=gnss_terms');
+    add_submenu_page('pointone-cms', 'GNSS Terms', 'GNSS Terms', 'edit_posts', 'edit.php?post_type=glossary_term');
     add_submenu_page('pointone-cms', 'Site Alerts', 'Site Alerts', 'edit_posts', 'edit.php?post_type=site_alert');
     add_submenu_page('pointone-cms', 'States', 'States', 'edit_posts', 'edit.php?post_type=states');
 }, 99);
@@ -167,7 +167,7 @@ add_action('admin_menu', function () {
     remove_menu_page('edit.php?post_type=competitors');
     remove_menu_page('edit.php?post_type=event');
     remove_menu_page('edit.php?post_type=faqs');
-    remove_menu_page('edit.php?post_type=gnss_terms');
+    remove_menu_page('edit.php?post_type=glossary_term');
     remove_menu_page('edit.php?post_type=site_alert');
     remove_menu_page('edit.php?post_type=states');
 }, 999);
