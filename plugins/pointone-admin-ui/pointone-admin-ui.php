@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Point One Nav - Admin UI
  * Description: Organizes the WordPress admin menu for Point One custom CMS tools.
- * Version: 1.1.0
+ * Version: 1.2.0
  */
 
 if (!defined('ABSPATH')) exit;
@@ -36,7 +36,6 @@ add_action('admin_menu', function () {
         'edit.php?post_type=event',         // Events
         'edit.php?post_type=faq',           // FAQs
         'edit.php?post_type=gnss_term',     // GNSS Terms
-        'admin.php?page=pointone-global-variables',  // Global Variables
         'edit.php?post_type=site_alert',    // Site Alerts
         'edit.php?post_type=state',         // States
 
