@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Point One Nav - Admin UI
  * Description: Creates a unified Point One admin menu and groups custom CMS tools under one parent menu.
- * Version: 2.11.0
+ * Version: 2.12.0
  */
 
 if (!defined('ABSPATH')) exit;
@@ -45,13 +45,21 @@ function pointone_admin_ui_post_types(): array
 POINT ONE SCREEN CHECK
 --------------------------------------------------------------*/
 
-function pointone_admin_ui_is_pointone_screen(): bool
+function pointone_admin_ui_current_post_type(): string
 {
     $post_type = $_GET['post_type'] ?? '';
 
     if (!$post_type && isset($_GET['post'])) {
         $post_type = get_post_type((int) $_GET['post']);
     }
+
+    return (string) $post_type;
+}
+
+
+function pointone_admin_ui_is_pointone_screen(): bool
+{
+    $post_type = pointone_admin_ui_current_post_type();
 
     if ($post_type && in_array($post_type, pointone_admin_ui_post_types(), true)) {
         return true;
@@ -139,11 +147,7 @@ add_filter('parent_file', function ($parent_file) {
 
 add_filter('submenu_file', function ($submenu_file) {
 
-    $post_type = $_GET['post_type'] ?? '';
-
-    if (!$post_type && isset($_GET['post'])) {
-        $post_type = get_post_type((int) $_GET['post']);
-    }
+    $post_type = pointone_admin_ui_current_post_type();
 
     if ($post_type && in_array($post_type, pointone_admin_ui_post_types(), true)) {
         return 'edit.php?post_type=' . $post_type;
@@ -216,6 +220,14 @@ add_action('admin_head', function () {
 
     if (!pointone_admin_ui_is_pointone_screen()) return;
 
+    $post_type = pointone_admin_ui_current_post_type();
+
+    if (isset($_GET['page']) && $_GET['page'] === 'pointone-global-variables') {
+        $active_href = 'admin.php?page=pointone-global-variables';
+    } else {
+        $active_href = 'edit.php?post_type=' . esc_attr($post_type);
+    }
+
 ?>
     <style>
         #adminmenu #toplevel_page_pointone-cms {
@@ -266,6 +278,17 @@ add_action('admin_head', function () {
 
         #adminmenu #toplevel_page_pointone-cms .wp-submenu li a {
             padding-left: 34px;
+            color: #c3c4c7;
+        }
+
+        #adminmenu #toplevel_page_pointone-cms .wp-submenu li a:hover,
+        #adminmenu #toplevel_page_pointone-cms .wp-submenu li a:focus {
+            color: #72aee6;
+        }
+
+        #adminmenu #toplevel_page_pointone-cms .wp-submenu li a[href="<?php echo esc_url($active_href); ?>"] {
+            color: #fff !important;
+            font-weight: 600;
         }
     </style>
 <?php
