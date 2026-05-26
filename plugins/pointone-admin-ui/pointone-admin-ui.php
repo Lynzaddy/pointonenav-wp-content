@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Point One Nav - Admin UI
  * Description: Creates a unified Point One admin menu and groups custom CMS tools under one parent menu.
- * Version: 2.8.0
+ * Version: 2.9.0
  */
 
 if (!defined('ABSPATH')) exit;
@@ -31,12 +31,12 @@ function pointone_admin_ui_post_types(): array
 {
     return [
         'change_log',
-        'competitor',
+        'competitors',
         'event',
-        'faq',
-        'gnss_term',
+        'faqs',
+        'gnss_terms',
         'site_alert',
-        'state',
+        'states',
     ];
 }
 
@@ -113,13 +113,13 @@ add_action('admin_menu', function () {
     }
 
     add_submenu_page('pointone-cms', 'Change Log', 'Change Log', 'edit_posts', 'edit.php?post_type=change_log');
-    add_submenu_page('pointone-cms', 'Competitors', 'Competitors', 'edit_posts', 'edit.php?post_type=competitor');
+    add_submenu_page('pointone-cms', 'Competitors', 'Competitors', 'edit_posts', 'edit.php?post_type=competitors');
     add_submenu_page('pointone-cms', 'Events', 'Events', 'edit_posts', 'edit.php?post_type=event');
-    add_submenu_page('pointone-cms', 'FAQs', 'FAQs', 'edit_posts', 'edit.php?post_type=faq');
+    add_submenu_page('pointone-cms', 'FAQs', 'FAQs', 'edit_posts', 'edit.php?post_type=faqs');
     add_submenu_page('pointone-cms', 'Global Variables', 'Global Variables', 'manage_options', 'pointone-global-variables');
-    add_submenu_page('pointone-cms', 'GNSS Terms', 'GNSS Terms', 'edit_posts', 'edit.php?post_type=gnss_term');
+    add_submenu_page('pointone-cms', 'GNSS Terms', 'GNSS Terms', 'edit_posts', 'edit.php?post_type=gnss_terms');
     add_submenu_page('pointone-cms', 'Site Alerts', 'Site Alerts', 'edit_posts', 'edit.php?post_type=site_alert');
-    add_submenu_page('pointone-cms', 'States', 'States', 'edit_posts', 'edit.php?post_type=state');
+    add_submenu_page('pointone-cms', 'States', 'States', 'edit_posts', 'edit.php?post_type=states');
 }, 99);
 
 
@@ -164,12 +164,12 @@ REMOVE DUPLICATE TOP-LEVEL MENUS
 add_action('admin_menu', function () {
 
     remove_menu_page('edit.php?post_type=change_log');
-    remove_menu_page('edit.php?post_type=competitor');
+    remove_menu_page('edit.php?post_type=competitors');
     remove_menu_page('edit.php?post_type=event');
-    remove_menu_page('edit.php?post_type=faq');
-    remove_menu_page('edit.php?post_type=gnss_term');
+    remove_menu_page('edit.php?post_type=faqs');
+    remove_menu_page('edit.php?post_type=gnss_terms');
     remove_menu_page('edit.php?post_type=site_alert');
-    remove_menu_page('edit.php?post_type=state');
+    remove_menu_page('edit.php?post_type=states');
 }, 999);
 
 
