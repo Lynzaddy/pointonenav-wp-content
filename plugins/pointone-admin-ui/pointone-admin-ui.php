@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Point One Nav - Admin UI
  * Description: Organizes the WordPress admin menu for Point One custom CMS tools.
- * Version: 1.0.0
+ * Version: 1.1.0
  */
 
 if (!defined('ABSPATH')) exit;
@@ -13,28 +13,24 @@ if (!defined('ABSPATH')) exit;
 ADMIN MENU ORGANIZATION
 --------------------------------------------------------------*/
 
-/**
- * This plugin centralizes the WordPress admin menu order.
- *
- * Custom Point One CMS items are grouped together after Pages,
- * alphabetized, and separated visually from the rest of WordPress.
- */
+add_action('admin_menu', function () {
 
-add_filter('custom_menu_order', '__return_true');
+    global $menu;
 
-add_filter('menu_order', function ($menu_order) {
+    /**
+     * Desired top-level admin order.
+     *
+     * These slugs must match the actual menu slugs WordPress uses.
+     */
+    $desired_order = [
 
-    return [
-
-        /* Core WordPress content */
         'index.php',                        // Dashboard
         'edit.php',                         // Posts
         'upload.php',                       // Media
         'edit.php?post_type=page',          // Pages
 
-        'separator1',
+        'separator-pointone-before',
 
-        /* Point One CMS */
         'edit.php?post_type=change_log',    // Change Log
         'edit.php?post_type=competitor',    // Competitors
         'edit.php?post_type=event',         // Events
@@ -44,41 +40,23 @@ add_filter('menu_order', function ($menu_order) {
         'edit.php?post_type=site_alert',    // Site Alerts
         'edit.php?post_type=state',         // States
 
-        'separator2',
+        'separator-pointone-after',
 
-        /* Builder */
         'elementor',                        // Elementor
 
-        'separator3',
+        'separator-wordpress-admin',
 
-        /* WordPress admin */
         'themes.php',                       // Appearance
         'plugins.php',                      // Plugins
         'users.php',                        // Users
         'tools.php',                        // Tools
         'options-general.php',              // Settings
-
     ];
-});
-
-
-/*--------------------------------------------------------------
-ADMIN SEPARATOR CLEANUP
---------------------------------------------------------------*/
-
-/**
- * WordPress already has native separators.
- * This makes sure our grouped layout has cleaner spacing.
- */
-
-add_action('admin_menu', function () {
-
-    global $menu;
 
     /**
-     * Add a separator after Pages.
+     * Add our custom separators.
      */
-    $menu[25] = [
+    $menu[] = [
         '',
         'read',
         'separator-pointone-before',
@@ -86,14 +64,48 @@ add_action('admin_menu', function () {
         'wp-menu-separator'
     ];
 
-    /**
-     * Add a separator after Point One CMS items.
-     */
-    $menu[59] = [
+    $menu[] = [
         '',
         'read',
         'separator-pointone-after',
         '',
         'wp-menu-separator'
     ];
-}, 999);
+
+    $menu[] = [
+        '',
+        'read',
+        'separator-wordpress-admin',
+        '',
+        'wp-menu-separator'
+    ];
+
+    /**
+     * Rebuild menu based on desired order.
+     */
+    $ordered_menu = [];
+
+    foreach ($desired_order as $slug) {
+
+        foreach ($menu as $index => $item) {
+
+            if (!isset($item[2])) continue;
+
+            if ($item[2] === $slug) {
+                $ordered_menu[] = $item;
+                unset($menu[$index]);
+                break;
+            }
+        }
+    }
+
+    /**
+     * Append anything not explicitly listed.
+     * This prevents plugin/admin items from disappearing.
+     */
+    foreach ($menu as $item) {
+        $ordered_menu[] = $item;
+    }
+
+    $menu = $ordered_menu;
+}, 9999);
