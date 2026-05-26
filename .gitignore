@@ -11,6 +11,9 @@ wp-rocket-config/
 /plugins/*
 
 # Allow specific custom plugins
+!/plugins/pointone-admin-ui/
+!/plugins/pointone-admin-ui/**
+
 !/plugins/pointone-card-carousel/
 !/plugins/pointone-card-carousel/**
 

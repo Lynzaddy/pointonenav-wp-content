@@ -39,6 +39,12 @@ jobs:
           # -------------------------------------------------
           # Deploy CUSTOM PLUGINS ONLY
           # -------------------------------------------------
+          echo "Syncing pointone-admin-ui..."
+          rsync -az --delete \
+            -e "$RSYNC_SSH" \
+            plugins/pointone-admin-ui/ \
+            "$USER@$HOST:public_html/wp-content/plugins/pointone-admin-ui/"
+          
           echo "Syncing pointone-card-carousel..."
           rsync -az --delete \
             -e "$RSYNC_SSH" \
