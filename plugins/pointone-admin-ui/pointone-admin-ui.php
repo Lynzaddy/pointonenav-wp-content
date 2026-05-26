@@ -3,14 +3,14 @@
 /**
  * Plugin Name: Point One Nav - Admin UI
  * Description: Creates a unified Point One admin menu and groups custom CMS tools under one parent menu.
- * Version: 2.0.0
+ * Version: 2.1.0
  */
 
 if (!defined('ABSPATH')) exit;
 
 
 /*--------------------------------------------------------------
-POINT ONE ADMIN PARENT MENU
+POINT ONE ADMIN MENU
 --------------------------------------------------------------*/
 
 add_action('admin_menu', function () {
@@ -20,7 +20,7 @@ add_action('admin_menu', function () {
         'Point One',
         'edit_posts',
         'pointone-cms',
-        'pointone_admin_ui_parent_page',
+        'pointone_admin_ui_redirect_to_first_item',
         'dashicons-admin-site-alt3',
         25
     );
@@ -28,17 +28,13 @@ add_action('admin_menu', function () {
 
 
 /*--------------------------------------------------------------
-POINT ONE PARENT PAGE
+POINT ONE MENU REDIRECT
 --------------------------------------------------------------*/
 
-function pointone_admin_ui_parent_page()
+function pointone_admin_ui_redirect_to_first_item()
 {
-?>
-    <div class="wrap">
-        <h1>Point One</h1>
-        <p>Use the submenu links to manage Point One content and tools.</p>
-    </div>
-<?php
+    wp_safe_redirect(admin_url('admin.php?page=pointone-global-variables'));
+    exit;
 }
 
 
@@ -48,6 +44,14 @@ POINT ONE SUBMENU LINKS
 
 add_action('admin_menu', function () {
 
+    /**
+     * Remove default duplicate parent submenu item.
+     */
+    remove_submenu_page('pointone-cms', 'pointone-cms');
+
+    /**
+     * Alphabetical order.
+     */
     add_submenu_page(
         'pointone-cms',
         'Change Log',
@@ -78,6 +82,14 @@ add_action('admin_menu', function () {
         'FAQs',
         'edit_posts',
         'edit.php?post_type=faq'
+    );
+
+    add_submenu_page(
+        'pointone-cms',
+        'Global Variables',
+        'Global Variables',
+        'manage_options',
+        'pointone-global-variables'
     );
 
     add_submenu_page(
@@ -123,8 +135,33 @@ add_action('admin_menu', function () {
 
 
 /*--------------------------------------------------------------
-ADMIN MENU ORDER
+ADMIN MENU ORDER + SPACERS
 --------------------------------------------------------------*/
+
+add_action('admin_menu', function () {
+
+    global $menu;
+
+    /**
+     * Add spacers before and after Point One.
+     */
+    $menu[] = [
+        '',
+        'read',
+        'separator-pointone-before',
+        '',
+        'wp-menu-separator'
+    ];
+
+    $menu[] = [
+        '',
+        'read',
+        'separator-pointone-after',
+        '',
+        'wp-menu-separator'
+    ];
+}, 9998);
+
 
 add_filter('custom_menu_order', '__return_true');
 
@@ -135,7 +172,13 @@ add_filter('menu_order', function () {
         'edit.php',
         'upload.php',
         'edit.php?post_type=page',
+
+        'separator-pointone-before',
+
         'pointone-cms',
+
+        'separator-pointone-after',
+
         'elementor',
         'themes.php',
         'plugins.php',
