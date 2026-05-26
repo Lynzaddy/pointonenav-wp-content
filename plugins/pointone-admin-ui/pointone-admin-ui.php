@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Point One Nav - Admin UI
  * Description: Creates a unified Point One admin menu and groups custom CMS tools under one parent menu.
- * Version: 2.10.0
+ * Version: 2.11.0
  */
 
 if (!defined('ABSPATH')) exit;
@@ -239,9 +239,13 @@ add_action('admin_head', function () {
             border-right: 8px solid #f0f0f1;
         }
 
-        #adminmenu #toplevel_page_pointone-cms>a .wp-menu-name,
-        #adminmenu #toplevel_page_pointone-cms>a .wp-menu-image::before {
+        #adminmenu #toplevel_page_pointone-cms>a .wp-menu-name {
             color: #fff;
+        }
+
+        #adminmenu #toplevel_page_pointone-cms>a .wp-menu-image img {
+            opacity: 1;
+            filter: brightness(0) invert(1);
         }
 
         #adminmenu #toplevel_page_pointone-cms.wp-not-current-submenu .wp-submenu,
