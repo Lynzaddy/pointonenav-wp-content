@@ -118,7 +118,6 @@ add_action('acf/init', function () {
         'menu_slug'  => 'pointone-global-variables',
         'capability' => 'manage_options',
         'icon_url'   => 'dashicons-admin-settings',
-        'position'   => 30,
         'redirect'   => false,
     ]);
 });

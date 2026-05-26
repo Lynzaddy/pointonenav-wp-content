@@ -36,7 +36,7 @@ add_action('admin_menu', function () {
         'edit.php?post_type=event',         // Events
         'edit.php?post_type=faq',           // FAQs
         'edit.php?post_type=gnss_term',     // GNSS Terms
-        'admin.php?page=global-variables',  // Global Variables
+        'admin.php?page=pointone-global-variables',  // Global Variables
         'edit.php?post_type=site_alert',    // Site Alerts
         'edit.php?post_type=state',         // States
 
