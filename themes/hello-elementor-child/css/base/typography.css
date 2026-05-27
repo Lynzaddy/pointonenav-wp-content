@@ -285,6 +285,7 @@
 
 .b16,
 .elementor .text-widget .body .elementor-heading-title,
+.elementor .text-widget .body .elementor-shortcode,
 .elementor .text-widget.tw-small .body .elementor-heading-title,
 .elementor .stat-widget .body {
     color: var(--content-secondary);
@@ -388,6 +389,7 @@
 
 .o14,
 .elementor .text-widget .overline .elementor-heading-title,
+.elementor .text-widget .overline .elementor-shortcode,
 .elementor .blog-section .elementor-post-date {
     color: var(--content-primary);
     font-family: var(--typography-font-secondary);
