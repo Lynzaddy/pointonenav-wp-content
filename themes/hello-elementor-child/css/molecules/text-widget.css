@@ -29,6 +29,24 @@
     gap: var(--gap-8) !important;
 }
 
+/* Added for Loop Grid Spacing */
+.elementor .text-widget > .e-con-inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-16);
+    margin: 0;
+    padding: 0;
+    max-width: 660px !important;
+}
+
+.elementor .text-widget.tw-large > .e-con-inner {
+    gap: var(--gap-20) !important;
+}
+
+.elementor .text-widget.tw-small > .e-con-inner {
+    gap: var(--gap-8) !important;
+}
+
 .elementor .text-widget.tw-large .btn-container {
     /* Was 20px, but changed to zero, widget controls gap */
     margin-top: 0px;
