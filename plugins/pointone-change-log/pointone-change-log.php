@@ -2,8 +2,8 @@
 
 /**
  * Plugin Name: Point One Nav - Point One Change Log
- * Description: Custom Change Log system for Point One including CPT, ACF fields, admin sorting, admin columns, and Elementor Query ID support.
- * Version: 1.1.0
+ * Description: Custom Change Log system for Point One including CPT, ACF fields, admin sorting, admin columns, Elementor Query ID support, and display shortcodes.
+ * Version: 1.2.0
  */
 
 if (!defined('ABSPATH')) exit;
@@ -45,10 +45,8 @@ add_action('init', function () {
         'menu_icon' => 'dashicons-backup',
 
         /**
-         * Important:
-         * Do NOT include 'editor' here.
-         * We are using an ACF WYSIWYG field instead so the admin screen
-         * matches the Events plugin layout.
+         * Do NOT include editor.
+         * We are using an ACF WYSIWYG field for the change log content.
          */
         'supports' => [
             'title',
@@ -61,10 +59,6 @@ add_action('init', function () {
             'slug' => 'changelog'
         ],
 
-        /**
-         * Set false so this CPT uses the classic admin layout
-         * like Events, instead of the block editor layout.
-         */
         'show_in_rest' => false
     ]);
 });
@@ -137,12 +131,97 @@ function pointone_change_log_format_admin_date($date): string
 {
     if (!$date) return '';
 
-    $d = DateTime::createFromFormat('Y-m-d', (string) $date);
+    $date = (string) $date;
 
-    if (!$d) return (string) $date;
+    $d = DateTime::createFromFormat('Y-m-d', $date);
+
+    if (!$d) {
+        $d = DateTime::createFromFormat('Ymd', $date);
+    }
+
+    if (!$d) return $date;
 
     return $d->format('m-d-Y');
 }
+
+function pointone_change_log_format_display_date($date): string
+{
+    if (!$date) return '';
+
+    $date = (string) $date;
+
+    $d = DateTime::createFromFormat('Y-m-d', $date);
+
+    if (!$d) {
+        $d = DateTime::createFromFormat('Ymd', $date);
+    }
+
+    if (!$d) return $date;
+
+    return $d->format('F j, Y');
+}
+
+
+/*--------------------------------------------------------------
+DISPLAY SHORTCODE: CHANGE LOG DATE
+--------------------------------------------------------------*/
+
+/**
+ * Usage in Elementor Loop Item:
+ * [change_log_date_display]
+ *
+ * Outputs:
+ * May 26, 2026
+ */
+
+function pointone_change_log_date_display(): string
+{
+    $date = '';
+
+    if (function_exists('get_field')) {
+        $date = get_field('change_log_date');
+    }
+
+    if (!$date) {
+        $date = get_post_meta(get_the_ID(), 'change_log_date', true);
+    }
+
+    return esc_html(pointone_change_log_format_display_date($date));
+}
+add_shortcode('change_log_date_display', 'pointone_change_log_date_display');
+
+
+/*--------------------------------------------------------------
+DISPLAY SHORTCODE: CHANGE LOG CONTENT
+--------------------------------------------------------------*/
+
+/**
+ * Usage in Elementor Loop Item:
+ * [change_log_content_display]
+ *
+ * Preserves WYSIWYG formatting, bullets, links, paragraphs, and line breaks.
+ */
+
+function pointone_change_log_content_display(): string
+{
+    $content = '';
+
+    if (function_exists('get_field')) {
+        $content = get_field('change_log_content');
+    }
+
+    if (!$content) {
+        $content = get_post_meta(get_the_ID(), 'change_log_content', true);
+    }
+
+    if (!$content) return '';
+
+    $content = do_shortcode($content);
+    $content = wpautop($content);
+
+    return '<div class="pointone-change-log-content">' . wp_kses_post($content) . '</div>';
+}
+add_shortcode('change_log_content_display', 'pointone_change_log_content_display');
 
 
 /*--------------------------------------------------------------
