@@ -26,6 +26,9 @@ wp-rocket-config/
 !/plugins/pointone-global-variables/
 !/plugins/pointone-global-variables/**
 
+!/plugins/pointone-routing-fixes/
+!/plugins/pointone-routing-fixes/**
+
 !/plugins/pointone-site-alert-bar/
 !/plugins/pointone-site-alert-bar/**
 
