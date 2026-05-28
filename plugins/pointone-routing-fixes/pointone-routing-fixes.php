@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Point One Nav - Routing Fixes
  * Description: Corrects WordPress URL resolution edge cases for /%category%/%postname%/ permalink structure. Shorthand single-segment URLs (e.g. /case-studies/, /press-release/) are routed to their matching category or tag archive. Unrecognised slugs 404.
- * Version:     1.3.0
+ * Version:     1.3.1
  * Author:      Point One Nav
  */
 
@@ -20,7 +20,7 @@ if (! defined('ABSPATH')) exit;
  *   /bad-link/      → should 404 (no match)
  *
  * This hook intercepts template_redirect and:
- *   1. Leaves all real WordPress content alone (pages, posts, front page)
+ *   1. Leaves all real WordPress content alone (pages, posts, front page, blog home)
  *   2. If the slug matches a tag → 301 redirect to /tag/slug/
  *   3. If the slug matches nothing (empty category archive without /category/ prefix) → 404
  *   4. Everything else is left alone
@@ -36,7 +36,7 @@ add_action('template_redirect', function () {
     if (empty($request) || $request === $category_base) return;
 
     // Don't interfere with real WordPress content
-    if (is_page() || is_single() || is_front_page()) return;
+    if (is_page() || is_single() || is_front_page() || is_home()) return;
 
     // If WordPress resolved this as a valid category archive with posts, leave it alone
     if (is_category() && have_posts()) return;
