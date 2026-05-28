@@ -73,7 +73,7 @@ jobs:
           rsync -az --delete \
             -e "$RSYNC_SSH" \
             plugins/pointone-routing-fixes/ \
-            "$USER@$HOST:public_html/wp-content/plugins/pointone-routing-fixes/"             
+            "$USER@$HOST:public_html/wp-content/plugins/pointone-routing-fixes/" 
 
           echo "Syncing pointone-site-alert-bar..."
           rsync -az --delete \
