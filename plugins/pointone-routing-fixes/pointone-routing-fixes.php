@@ -2,51 +2,35 @@
 
 /**
  * Plugin Name: Point One Nav - Routing Fixes
- * Description: Corrects WordPress URL resolution edge cases for /%category%/%postname%/ permalink structure. Shorthand single-segment URLs (e.g. /case-studies/, /press-release/) are routed to their matching category or tag archive. Unrecognised slugs 404.
- * Version:     1.2.0
+ * Description: Corrects WordPress URL resolution edge cases — forces 404 for unknown single-segment slugs that WordPress misinterprets as category archives due to /%category%/%postname%/ permalink structure.
+ * Version:     1.1.1
  * Author:      Point One Nav
  */
 
 if (! defined('ABSPATH')) exit;
 
 /**
- * Smart routing for single-segment URLs.
+ * Fix 3: Single-segment unknown slugs like /bad-link/ are interpreted by
+ * WordPress as category archives due to /%category%/%postname%/ permalinks.
+ * If the URL doesn't use the explicit /category/ base, force a 404.
  *
- * With /%category%/%postname%/ permalinks, WordPress only natively resolves
- * single-segment slugs as category archives. This means:
- *
- *   /case-studies/  → works (it's a category slug)
- *   /press-release/ → 404s (it's a tag slug, not a category)
- *   /bad-link/      → should 404 (no match)
- *
- * This hook intercepts template_redirect and:
- *   1. If the slug matches a tag → 301 redirect to /tag/slug/
- *   2. If the slug matches nothing (empty category archive without /category/ prefix) → 404
- *   3. Everything else is left alone
+ * Note: /category/bad-link/ (with the explicit category base) intentionally
+ * shows the "nothing found" archive state — this is the correct UX for a
+ * navigational failure where context is available.
  */
 add_action('template_redirect', function () {
+    if (! is_category() || have_posts()) return;
+
+    // Get the category base (defaults to 'category' if not customized)
     $category_base = get_option('category_base') ?: 'category';
-    $request       = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+    $request       = trim($_SERVER['REQUEST_URI'], '/');
 
-    // Only act on single-segment URLs (no slashes in the request path)
-    if (strpos($request, '/') !== false) return;
-
-    // Skip empty requests and known taxonomy bases
-    if (empty($request) || $request === $category_base) return;
-
-    // If WordPress resolved this as a valid category archive with posts, leave it alone
-    if (is_category() && have_posts()) return;
-
-    // Check if the slug matches a tag — if so, redirect to the canonical tag URL
-    $tag = get_term_by('slug', $request, 'post_tag');
-    if ($tag && ! is_wp_error($tag)) {
-        wp_redirect(get_tag_link($tag), 301);
-        exit;
+    // If the URL doesn't start with the category base, it's an ambiguous
+    // slug that fell through — not a real category URL
+    if (strpos($request, $category_base . '/') !== 0) {
+        global $wp_query;
+        $wp_query->set_404();
+        status_header(404);
+        nocache_headers();
     }
-
-    // No category with posts and no tag match — force 404
-    global $wp_query;
-    $wp_query->set_404();
-    status_header(404);
-    nocache_headers();
 });
