@@ -69,6 +69,12 @@ jobs:
             plugins/pointone-global-variables/ \
             "$USER@$HOST:public_html/wp-content/plugins/pointone-global-variables/" 
 
+          echo "Syncing pointone-routing-fixes..."
+          rsync -az --delete \
+            -e "$RSYNC_SSH" \
+            plugins/pointone-routing-fixes/ \
+            "$USER@$HOST:public_html/wp-content/plugins/pointone-routing-fixes/" 
+
           echo "Syncing pointone-site-alert-bar..."
           rsync -az --delete \
             -e "$RSYNC_SSH" \
