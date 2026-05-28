@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Plugin Name: Point One Routing Fixes
+ * Plugin Name: Point One Nav - Routing Fixes
  * Description: Corrects WordPress URL resolution edge cases — forces 404 for unknown single-segment slugs that WordPress misinterprets as category archives due to /%category%/%postname%/ permalink structure.
- * Version:     1.1.0
+ * Version:     1.1.1
  * Author:      Point One Nav
  */
 
