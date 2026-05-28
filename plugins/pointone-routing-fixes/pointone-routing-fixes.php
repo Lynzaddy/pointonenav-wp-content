@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Point One Nav - Routing Fixes
  * Description: Corrects WordPress URL resolution edge cases for /%category%/%postname%/ permalink structure. Shorthand single-segment URLs (e.g. /case-studies/, /press-release/) are routed to their matching category or tag archive. Unrecognised slugs 404.
- * Version:     1.2.1
+ * Version:     1.2.0
  * Author:      Point One Nav
  */
 
