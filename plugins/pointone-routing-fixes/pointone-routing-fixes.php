@@ -2,8 +2,8 @@
 
 /**
  * Plugin Name: Point One Nav - Routing Fixes
- * Description: Corrects WordPress URL resolution edge cases for /%category%/%postname%/ permalink structure. Shorthand single-segment URLs (e.g. /case-studies/, /press-release/) are routed to their matching category or tag archive. Paginated shorthand URLs (e.g. /insights/page/2/) are also handled. Custom post type archives and real WordPress content are left untouched. Unrecognised slugs 404.
- * Version:     1.3.5
+ * Description: Corrects WordPress URL resolution edge cases for /%category%/%postname%/ permalink structure. Shorthand single-segment URLs (e.g. /case-studies/, /press-release/) are routed to their matching category or tag archive. Paginated shorthand URLs (e.g. /insights/page/2/) are also handled. Custom post type archives, the Posts Page, and real WordPress content are left untouched. Unrecognised slugs 404.
+ * Version:     1.3.6
  * Author:      Point One Nav
  */
 
@@ -38,6 +38,7 @@ function pointone_get_cpt_archive_slugs()
  *   /insights/page/2/      → /category/insights/page/2/
  *   /press-release/page/2/ → /tag/press-release/page/2/
  *   /events/page/2/        → left alone (CPT archive)
+ *   /blog/page/2/          → left alone (Posts Page)
  *   /bad-link/page/2/      → 404
  */
 add_action('wp', function () {
@@ -50,6 +51,13 @@ add_action('wp', function () {
 
     // Leave CPT archive pagination alone
     if (in_array($slug, pointone_get_cpt_archive_slugs(), true)) return;
+
+    // Leave the Posts Page pagination alone
+    $posts_page_id = (int) get_option('page_for_posts');
+    if ($posts_page_id) {
+        $posts_page = get_post($posts_page_id);
+        if ($posts_page && $posts_page->post_name === $slug) return;
+    }
 
     // Check if slug is a category
     $category = get_term_by('slug', $slug, 'category');
