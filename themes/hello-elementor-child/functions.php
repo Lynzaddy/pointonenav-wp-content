@@ -536,3 +536,22 @@ add_action('admin_post_regenerate_all_glossary_excerpts', function () {
     );
     exit;
 });
+
+// Ensure the 192x192 favicon appears before the 32x32 in <head>
+// so Google sees a qualifying size first
+remove_action('wp_head', 'wp_site_icon', 99);
+add_action('wp_head', function () {
+    $icon_32  = get_site_icon_url(32);
+    $icon_192 = get_site_icon_url(192);
+    if ($icon_192) {
+        echo '<link rel="icon" href="' . esc_url($icon_192) . '" sizes="192x192" />' . "\n";
+    }
+    if ($icon_32) {
+        echo '<link rel="icon" href="' . esc_url($icon_32) . '" sizes="32x32" />' . "\n";
+    }
+    // Apple touch icon
+    $icon_180 = get_site_icon_url(180);
+    if ($icon_180) {
+        echo '<link rel="apple-touch-icon" href="' . esc_url($icon_180) . '" />' . "\n";
+    }
+}, 99);
