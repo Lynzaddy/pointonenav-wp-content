@@ -2,8 +2,8 @@
 
 /**
  * Plugin Name: Point One Nav - Point One Change Log
- * Description: Custom Change Log system for Point One including CPT, ACF fields, admin sorting, admin columns, Elementor Query ID support, and display shortcodes.
- * Version: 1.2.0
+ * Description: Custom Change Log system for Point One including CPT, ACF fields, admin sorting, admin columns, Elementor Query ID support, REST API support, and display shortcodes.
+ * Version: 1.3.0
  */
 
 if (!defined('ABSPATH')) exit;
@@ -46,7 +46,7 @@ add_action('init', function () {
 
         /**
          * Do NOT include editor.
-         * We are using an ACF WYSIWYG field for the change log content.
+         * We are using ACF fields for date/content.
          */
         'supports' => [
             'title',
@@ -59,9 +59,38 @@ add_action('init', function () {
             'slug' => 'changelog'
         ],
 
-        'show_in_rest' => false
+        /**
+         * Enables /wp-json/wp/v2/change_log for n8n/API automation.
+         * The classic admin layout is preserved separately below.
+         */
+        'show_in_rest' => true,
+
+        /**
+         * Explicit REST base for clarity.
+         */
+        'rest_base' => 'change_log',
     ]);
 });
+
+
+/*--------------------------------------------------------------
+KEEP CLASSIC ADMIN EDITOR LAYOUT
+--------------------------------------------------------------*/
+
+/**
+ * show_in_rest must be true for API access, but that can cause WordPress
+ * to prefer the block editor. This forces Change Log to keep the classic
+ * admin layout so the ACF field flow still matches Events.
+ */
+
+add_filter('use_block_editor_for_post_type', function ($use_block_editor, $post_type) {
+
+    if ($post_type === 'change_log') {
+        return false;
+    }
+
+    return $use_block_editor;
+}, 10, 2);
 
 
 /*--------------------------------------------------------------
@@ -86,7 +115,13 @@ add_action('acf/init', function () {
                 'type' => 'date_picker',
                 'required' => 1,
                 'display_format' => 'F j, Y',
-                'return_format' => 'Y-m-d',
+
+                /**
+                 * Keep Ymd for consistent sorting with Elementor and admin.
+                 * Example stored value: 20260526
+                 */
+                'return_format' => 'Ymd',
+
                 'first_day' => 0,
                 'wrapper' => [
                     'width' => '100'
@@ -118,7 +153,70 @@ add_action('acf/init', function () {
                     'value' => 'change_log'
                 ]
             ]
-        ]
+        ],
+
+        /**
+         * Allows ACF fields to be read/written via REST API using the "acf" object.
+         */
+        'show_in_rest' => 1,
+    ]);
+});
+
+
+/*--------------------------------------------------------------
+REST API META REGISTRATION
+--------------------------------------------------------------*/
+
+/**
+ * Registers the underlying ACF meta fields with WordPress REST.
+ *
+ * This makes the fields available in the standard "meta" object too,
+ * which is useful for n8n or other automation tools that may not use
+ * the ACF REST "acf" object.
+ *
+ * REST write examples:
+ *
+ * Option A — ACF object:
+ * {
+ *   "title": "Change Log 2.0.0",
+ *   "status": "publish",
+ *   "acf": {
+ *     "change_log_date": "20260526",
+ *     "change_log_content": "<ul><li>Added X</li><li>Fixed Y</li></ul>"
+ *   }
+ * }
+ *
+ * Option B — meta object:
+ * {
+ *   "title": "Change Log 2.0.0",
+ *   "status": "publish",
+ *   "meta": {
+ *     "change_log_date": "20260526",
+ *     "change_log_content": "<ul><li>Added X</li><li>Fixed Y</li></ul>"
+ *   }
+ * }
+ */
+
+add_action('init', function () {
+
+    register_post_meta('change_log', 'change_log_date', [
+        'single' => true,
+        'type' => 'string',
+        'show_in_rest' => true,
+        'sanitize_callback' => 'sanitize_text_field',
+        'auth_callback' => function () {
+            return current_user_can('edit_posts');
+        },
+    ]);
+
+    register_post_meta('change_log', 'change_log_content', [
+        'single' => true,
+        'type' => 'string',
+        'show_in_rest' => true,
+        'sanitize_callback' => 'wp_kses_post',
+        'auth_callback' => function () {
+            return current_user_can('edit_posts');
+        },
     ]);
 });
 
@@ -133,10 +231,10 @@ function pointone_change_log_format_admin_date($date): string
 
     $date = (string) $date;
 
-    $d = DateTime::createFromFormat('Y-m-d', $date);
+    $d = DateTime::createFromFormat('Ymd', $date);
 
     if (!$d) {
-        $d = DateTime::createFromFormat('Ymd', $date);
+        $d = DateTime::createFromFormat('Y-m-d', $date);
     }
 
     if (!$d) return $date;
@@ -150,10 +248,10 @@ function pointone_change_log_format_display_date($date): string
 
     $date = (string) $date;
 
-    $d = DateTime::createFromFormat('Y-m-d', $date);
+    $d = DateTime::createFromFormat('Ymd', $date);
 
     if (!$d) {
-        $d = DateTime::createFromFormat('Ymd', $date);
+        $d = DateTime::createFromFormat('Y-m-d', $date);
     }
 
     if (!$d) return $date;
@@ -217,6 +315,11 @@ function pointone_change_log_content_display(): string
     if (!$content) return '';
 
     $content = do_shortcode($content);
+
+    /**
+     * wpautop protects formatting if the content is plain text,
+     * while still allowing WYSIWYG HTML such as ul/li/p/a.
+     */
     $content = wpautop($content);
 
     return '<div class="pointone-change-log-content">' . wp_kses_post($content) . '</div>';
@@ -267,7 +370,7 @@ add_action('pre_get_posts', function ($query) {
 
     if (!$query->get('orderby')) {
         $query->set('meta_key', 'change_log_date');
-        $query->set('orderby', 'meta_value');
+        $query->set('orderby', 'meta_value_num');
         $query->set('order', 'DESC');
     }
 });
@@ -287,6 +390,6 @@ add_action('elementor/query/pointone_change_log', function ($query) {
     $query->set('post_type', 'change_log');
     $query->set('post_status', 'publish');
     $query->set('meta_key', 'change_log_date');
-    $query->set('orderby', 'meta_value');
+    $query->set('orderby', 'meta_value_num');
     $query->set('order', 'DESC');
 });
