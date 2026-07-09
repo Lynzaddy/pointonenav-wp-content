@@ -444,10 +444,10 @@
 }
 
 /* New Section Styles */
-/* Desktop/Laptop: stretch to match sibling text column height */
+/* Desktop/Laptop: let flexbox stretch handle sizing, no explicit height */
 .pon-video-aspect {
-    height: 100%;
-    aspect-ratio: unset; /* explicitly clear in case anything cascades in */
+    height: auto;
+    aspect-ratio: unset;
 }
 
 /* Tablet */
