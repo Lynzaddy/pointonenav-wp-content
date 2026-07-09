@@ -442,3 +442,33 @@
         height: auto;
     }
 }
+
+/* New Section Styles */
+/* Desktop/Laptop: stretch to match sibling text column height */
+.pon-video-aspect {
+    height: 100%;
+    aspect-ratio: unset; /* explicitly clear in case anything cascades in */
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+    .pon-video-aspect {
+        height: auto;
+        aspect-ratio: 3 / 2;
+    }
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+    .pon-video-aspect {
+        height: auto;
+        aspect-ratio: 1 / 1;
+    }
+}
+
+.pon-video-aspect video,
+.pon-video-aspect .elementor-background-video-container video {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
