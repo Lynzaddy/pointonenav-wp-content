@@ -472,3 +472,8 @@
     width: 100%;
     height: 100%;
 }
+
+.fuse-link-item:hover {
+    text-decoration: none;
+    background-color: var(--background-secondary);
+}
