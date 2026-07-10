@@ -473,6 +473,10 @@
     height: 100%;
 }
 
+.fuse-link-item .elementor-heading-title {
+    text-decoration: none !important;
+}
+
 .fuse-link-item {
     text-decoration: none;
     padding: 12px 8px;
