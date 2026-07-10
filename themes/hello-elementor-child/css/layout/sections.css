@@ -473,16 +473,16 @@
     height: 100%;
 }
 
-.fuse-link-item .elementor-heading-title {
+.fuse-link-item,
+.fuse-link-item:link,
+.fuse-link-item:visited,
+.fuse-link-item:hover,
+.fuse-link-item:active,
+.fuse-link-item:focus {
     text-decoration: none !important;
-}
-
-.fuse-link-item {
-    text-decoration: none;
     padding: 12px 8px;
 }
 
 .fuse-link-item:hover {
-    text-decoration: none;
     background-color: rgba(255, 255, 255, 0.1);
 }
