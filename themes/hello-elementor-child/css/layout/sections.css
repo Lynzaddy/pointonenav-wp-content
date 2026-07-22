@@ -442,3 +442,48 @@
         height: auto;
     }
 }
+
+/* New Section Styles */
+/* Desktop/Laptop: let flexbox stretch handle sizing, no explicit height */
+.pon-video-aspect {
+    height: auto;
+    aspect-ratio: unset;
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+    .pon-video-aspect {
+        height: auto;
+        aspect-ratio: 3 / 2;
+    }
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+    .pon-video-aspect {
+        height: auto;
+        aspect-ratio: 1 / 1;
+    }
+}
+
+.pon-video-aspect video,
+.pon-video-aspect .elementor-background-video-container video {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+/* Code for the FUSE Conference Section */
+.fuse-link-item,
+.fuse-link-item:link,
+.fuse-link-item:visited,
+.fuse-link-item:hover,
+.fuse-link-item:active,
+.fuse-link-item:focus {
+    text-decoration: none !important;
+    padding: 12px 8px;
+}
+
+.fuse-link-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
