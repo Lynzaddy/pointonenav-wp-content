@@ -3,7 +3,7 @@
 /**
  * Plugin Name: Point One Nav - Routing Fixes
  * Description: Corrects WordPress URL resolution edge cases for /%category%/%postname%/ permalink structure. Tags and categories resolve at shorthand URLs (e.g. /product-announcements/, /insights/) without /tag/ or /category/ prefixes, including paginated archives (/insights/page/2/). Canonical URLs, Yoast SEO meta, and pagination are all handled correctly. Unrecognised slugs 404.
- * Version:     1.5.0
+ * Version:     1.5.1
  * Author:      Point One Nav
  */
 
@@ -60,24 +60,22 @@ function pointone_get_cpt_archive_slugs()
  *
  * Priority order: Pages/CPTs > Categories > Tags
  *
- * --- v1.5.0: repair mis-parsed shorthand pagination -------------------------
+ * --- v1.5.1: resolve shorthand pagination straight from the raw URL --------
  *
  * There is no dedicated rewrite rule for "shorthand archive + pagination"
- * under a /%category%/%postname%/ structure. A URL like:
- *
- *   /insights/page/2/
- *
- * falls through to the two-segment rule built for /%category%/%postname%/,
- * which greedily parses it as a single-post permalink instead of pagination:
- *
- *   category_name = "insights/page"   (WRONG — "page" swallowed into the slug)
- *   name          = "2"               (WRONG — the page number read as a postname)
- *
- * Neither "insights/page" nor a post named "2" exist, so WordPress 404s
- * before any of the logic below ever gets a chance to run — which is why
+ * under a /%category%/%postname%/ structure, so a URL like /insights/page/2/
+ * either gets mis-parsed by whatever rule WordPress falls back to, or — if
+ * nothing matches at all — WordPress never populates category_name/tag/paged
+ * in $query_vars in the first place. Either way, by the time this filter
+ * runs there's nothing reliable in $query_vars to repair, which is why
  * page 1 and single posts work fine but every paginated shorthand URL
- * (category or tag) 404s. We detect that exact shape and repair it back into
- * category_name="insights" + paged=2 before doing anything else.
+ * (category or tag) 404s.
+ *
+ * So for the paginated case, skip $query_vars entirely and resolve directly
+ * from the raw request path: if the slug before "/page/N/" matches a real
+ * category or tag, set the query vars ourselves. This doesn't depend on any
+ * assumption about how WordPress's rewrite engine parsed (or failed to
+ * parse) the URL.
  *
  * This handles both single-segment and paginated shorthand URLs:
  *   /insights/                → renders as category archive in place
@@ -87,23 +85,44 @@ function pointone_get_cpt_archive_slugs()
  */
 add_filter('request', function ($query_vars) {
     if (is_admin()) return $query_vars;
+
+    // --- Paginated shorthand: resolve directly from the raw request path ---
+    $raw_request = isset($_SERVER['REQUEST_URI'])
+        ? trim((string) parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/')
+        : '';
+
+    if ($raw_request && preg_match('#^([^/]+)/page/(\d+)/?$#', $raw_request, $page_match)) {
+        $paged_slug = $page_match[1];
+        $paged      = (int) $page_match[2];
+
+        $category = get_term_by('slug', $paged_slug, 'category');
+        $tag      = (! $category || is_wp_error($category))
+            ? get_term_by('slug', $paged_slug, 'post_tag')
+            : null;
+
+        if (($category && ! is_wp_error($category)) || ($tag && ! is_wp_error($tag))) {
+            // Discard whatever (likely incorrect, possibly empty) vars
+            // WordPress derived for this URL and set the correct ones
+            // directly, since we've just confirmed the real term.
+            unset($query_vars['name'], $query_vars['pagename'], $query_vars['category_name'], $query_vars['tag'], $query_vars['attachment']);
+            $query_vars['paged'] = $paged;
+
+            if ($category && ! is_wp_error($category)) {
+                $query_vars['category_name'] = $paged_slug;
+            } else {
+                $query_vars['tag'] = $paged_slug;
+            }
+
+            return $query_vars;
+        }
+        // Not a recognised category or tag shorthand — fall through to the
+        // page-1 logic below (harmless; category_name likely isn't set for
+        // this request anyway) and ultimately to section 3's 404 net.
+    }
+
     if (! isset($query_vars['category_name'])) return $query_vars;
 
     $slug = $query_vars['category_name'];
-
-    // Repair the mis-parsed shorthand pagination shape described above.
-    if (
-        isset($query_vars['name'])
-        && ctype_digit((string) $query_vars['name'])
-        && preg_match('#^(.+)/page$#', $slug, $repair_match)
-    ) {
-        $paged = (int) $query_vars['name'];
-        $slug  = $repair_match[1];
-
-        unset($query_vars['name']);
-        $query_vars['category_name'] = $slug;
-        $query_vars['paged']         = $paged;
-    }
 
     // Only handle simple slugs — don't interfere with category hierarchy paths
     if (strpos($slug, '/') !== false) return $query_vars;
@@ -117,7 +136,8 @@ add_filter('request', function ($query_vars) {
     if ($tag && ! is_wp_error($tag)) {
         unset($query_vars['category_name']);
         $query_vars['tag'] = $slug;
-        // paged is already set above (either by WordPress or by the repair)
+        // paged is already present in query_vars if WordPress parsed /page/N/
+        // (the paginated-shorthand branch above already returned early if so)
     }
 
     return $query_vars;
