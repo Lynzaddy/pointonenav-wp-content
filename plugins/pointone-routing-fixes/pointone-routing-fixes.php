@@ -2,8 +2,8 @@
 
 /**
  * Plugin Name: Point One Nav - Routing Fixes
- * Description: Corrects WordPress URL resolution edge cases for /%category%/%postname%/ permalink structure. Tags and categories resolve at shorthand URLs (e.g. /product-announcements/, /insights/) without /tag/ or /category/ prefixes. Canonical URLs, Yoast SEO meta, and pagination are all handled correctly. Unrecognised slugs 404.
- * Version:     1.4.0
+ * Description: Corrects WordPress URL resolution edge cases for /%category%/%postname%/ permalink structure. Tags and categories resolve at shorthand URLs (e.g. /product-announcements/, /insights/) without /tag/ or /category/ prefixes, including paginated archives (/insights/page/2/). Canonical URLs, Yoast SEO meta, and pagination are all handled correctly. Unrecognised slugs 404.
+ * Version:     1.5.0
  * Author:      Point One Nav
  */
 
@@ -16,6 +16,16 @@ if (! defined('ABSPATH')) exit;
 /**
  * Returns an array of all registered CPT archive slugs.
  * Dynamic — automatically picks up any new CPTs without plugin changes.
+ *
+ * v1.4.1: When has_archive is `true` (boolean), WordPress core resolves the
+ * actual archive slug from the post type's rewrite slug
+ * ($post_type->rewrite['slug']), falling back to the post type name only if
+ * no rewrite slug is set. This helper previously always used $post_type->name,
+ * which is wrong whenever a CPT's internal name differs from its archive
+ * slug (e.g. name "case_study" with rewrite slug "case-studies"). That
+ * mismatch caused pagination for such archives (/case-studies/page/2/) to be
+ * treated as unrecognised and force-404'd by the handler in section 3, even
+ * though /case-studies/ itself resolved fine natively.
  */
 function pointone_get_cpt_archive_slugs()
 {
@@ -24,14 +34,21 @@ function pointone_get_cpt_archive_slugs()
 
     foreach ($post_types as $post_type) {
         $archive = $post_type->has_archive;
-        $slugs[] = ($archive === true) ? $post_type->name : $archive;
+
+        if ($archive === true) {
+            $slugs[] = (! empty($post_type->rewrite) && ! empty($post_type->rewrite['slug']))
+                ? $post_type->rewrite['slug']
+                : $post_type->name;
+        } else {
+            $slugs[] = $archive;
+        }
     }
 
     return $slugs;
 }
 
 // =============================================================================
-// 1. REQUEST FILTER — Resolve tag shorthand URLs in place
+// 1. REQUEST FILTER — Resolve category/tag shorthand URLs in place
 // =============================================================================
 
 /**
@@ -43,8 +60,29 @@ function pointone_get_cpt_archive_slugs()
  *
  * Priority order: Pages/CPTs > Categories > Tags
  *
- * This handles both single-segment and paginated shorthand tag URLs:
- *   /product-announcements/        → renders as tag archive in place
+ * --- v1.5.0: repair mis-parsed shorthand pagination -------------------------
+ *
+ * There is no dedicated rewrite rule for "shorthand archive + pagination"
+ * under a /%category%/%postname%/ structure. A URL like:
+ *
+ *   /insights/page/2/
+ *
+ * falls through to the two-segment rule built for /%category%/%postname%/,
+ * which greedily parses it as a single-post permalink instead of pagination:
+ *
+ *   category_name = "insights/page"   (WRONG — "page" swallowed into the slug)
+ *   name          = "2"               (WRONG — the page number read as a postname)
+ *
+ * Neither "insights/page" nor a post named "2" exist, so WordPress 404s
+ * before any of the logic below ever gets a chance to run — which is why
+ * page 1 and single posts work fine but every paginated shorthand URL
+ * (category or tag) 404s. We detect that exact shape and repair it back into
+ * category_name="insights" + paged=2 before doing anything else.
+ *
+ * This handles both single-segment and paginated shorthand URLs:
+ *   /insights/                → renders as category archive in place
+ *   /insights/page/2/         → renders as paginated category archive in place
+ *   /product-announcements/   → renders as tag archive in place
  *   /product-announcements/page/2/ → renders as paginated tag archive in place
  */
 add_filter('request', function ($query_vars) {
@@ -52,6 +90,20 @@ add_filter('request', function ($query_vars) {
     if (! isset($query_vars['category_name'])) return $query_vars;
 
     $slug = $query_vars['category_name'];
+
+    // Repair the mis-parsed shorthand pagination shape described above.
+    if (
+        isset($query_vars['name'])
+        && ctype_digit((string) $query_vars['name'])
+        && preg_match('#^(.+)/page$#', $slug, $repair_match)
+    ) {
+        $paged = (int) $query_vars['name'];
+        $slug  = $repair_match[1];
+
+        unset($query_vars['name']);
+        $query_vars['category_name'] = $slug;
+        $query_vars['paged']         = $paged;
+    }
 
     // Only handle simple slugs — don't interfere with category hierarchy paths
     if (strpos($slug, '/') !== false) return $query_vars;
@@ -65,7 +117,7 @@ add_filter('request', function ($query_vars) {
     if ($tag && ! is_wp_error($tag)) {
         unset($query_vars['category_name']);
         $query_vars['tag'] = $slug;
-        // paged is already present in query_vars if WordPress parsed /page/N/
+        // paged is already set above (either by WordPress or by the repair)
     }
 
     return $query_vars;
@@ -107,21 +159,26 @@ add_action('template_redirect', function () {
 }, 1); // Priority 1 — fires before other template_redirect hooks
 
 // =============================================================================
-// 3. WP ACTION — Handle paginated category shorthand and 404s
+// 3. WP ACTION — Final 404 confirmation for unrecognised paginated slugs
 // =============================================================================
 
 /**
  * Intercepts /slug/page/N/ URLs before templates load.
  *
- * Tag paginated shorthand (/product-announcements/page/2/) is handled in
- * place by the request filter above and needs no redirect here.
+ * Both tag and category paginated shorthand (/product-announcements/page/2/,
+ * /insights/page/2/) are now repaired and handled in place by the request
+ * filter in section 1 — no redirect needed for either.
  *
- * Category paginated shorthand (/insights/page/2/) is redirected to the
- * canonical /category/insights/page/2/ URL since WordPress's rewrite rules
- * don't natively resolve child category slugs without the /category/ prefix.
+ * v1.5.0: this hook previously redirected category pagination to the
+ * /category/slug/page/N/ prefix. That's no longer necessary now that the
+ * request filter resolves it correctly at the shorthand URL, and doing so
+ * would have fought the fix by bouncing working shorthand URLs back to the
+ * prefixed form. This hook now only exists as a final safety net that
+ * force-404s slugs that don't match anything real.
  *
- *   /insights/page/2/              → 301 → /category/insights/page/2/
+ *   /insights/page/2/              → left alone (handled by request filter)
  *   /product-announcements/page/2/ → left alone (handled by request filter)
+ *   /case-studies/page/2/          → left alone (handled by request filter)
  *   /events/page/2/                → left alone (CPT archive)
  *   /blog/page/2/                  → left alone (Posts Page)
  *   /bad-link/page/2/              → 404
@@ -132,7 +189,6 @@ add_action('wp', function () {
     if (! preg_match('#^([^/]+)/page/(\d+)/?$#', $request, $matches)) return;
 
     $slug = $matches[1];
-    $page = $matches[2];
 
     // Leave CPT archive pagination alone
     if (in_array($slug, pointone_get_cpt_archive_slugs(), true)) return;
@@ -148,12 +204,9 @@ add_action('wp', function () {
     $tag = get_term_by('slug', $slug, 'post_tag');
     if ($tag && ! is_wp_error($tag)) return;
 
-    // Category paginated shorthand — redirect to canonical paginated URL
+    // Leave category pagination alone — handled in place by the request filter
     $category = get_term_by('slug', $slug, 'category');
-    if ($category && ! is_wp_error($category)) {
-        wp_redirect(get_category_link($category) . 'page/' . $page . '/', 301);
-        exit;
-    }
+    if ($category && ! is_wp_error($category)) return;
 
     // No match — force 404
     global $wp_query;
@@ -204,40 +257,50 @@ add_action('template_redirect', function () {
 });
 
 // =============================================================================
-// 5. YOAST SEO — Canonical and OG URL corrections for tag archives
+// 5. YOAST SEO — Canonical and OG URL corrections for tag/category archives
 // =============================================================================
 
 /**
- * Rewrites Yoast's canonical URL for tag archives to the shorthand version.
- * Without this, Yoast would output /tag/slug/ as canonical even when the
- * page is rendering at /slug/.
+ * Computes the shorthand canonical URL for the current tag or category
+ * archive, preserving pagination.
+ *
+ * Both get_tag_link() and get_category_link() always return the prefixed
+ * URL (/tag/slug/, /category/slug/) regardless of where the page actually
+ * rendered. Without this override Yoast would emit that prefixed URL as
+ * canonical even when the page is rendering at the shorthand URL — for
+ * categories this only became visible once v1.5.0 made shorthand pagination
+ * render in place instead of 404ing.
+ *
+ * Returns null if the current request isn't a tag or category archive.
  */
-add_filter('wpseo_canonical', function ($canonical) {
-    if (! is_tag()) return $canonical;
+function pointone_shorthand_canonical_url()
+{
+    if (! is_tag() && ! is_category()) return null;
 
-    $tag = get_queried_object();
-    if (! $tag || is_wp_error($tag)) return $canonical;
+    $term = get_queried_object();
+    if (! $term || is_wp_error($term)) return null;
 
     $paged = get_query_var('paged');
 
     return ($paged > 1)
-        ? home_url('/' . $tag->slug . '/page/' . $paged . '/')
-        : home_url('/' . $tag->slug . '/');
+        ? home_url('/' . $term->slug . '/page/' . $paged . '/')
+        : home_url('/' . $term->slug . '/');
+}
+
+/**
+ * Rewrites Yoast's canonical URL for tag and category archives to the
+ * shorthand version.
+ */
+add_filter('wpseo_canonical', function ($canonical) {
+    $shorthand = pointone_shorthand_canonical_url();
+    return $shorthand ?? $canonical;
 });
 
 /**
- * Rewrites Yoast's Open Graph URL for tag archives to the shorthand version.
- * Keeps OG:URL consistent with the canonical.
+ * Rewrites Yoast's Open Graph URL for tag and category archives to the
+ * shorthand version. Keeps OG:URL consistent with the canonical.
  */
 add_filter('wpseo_opengraph_url', function ($url) {
-    if (! is_tag()) return $url;
-
-    $tag = get_queried_object();
-    if (! $tag || is_wp_error($tag)) return $url;
-
-    $paged = get_query_var('paged');
-
-    return ($paged > 1)
-        ? home_url('/' . $tag->slug . '/page/' . $paged . '/')
-        : home_url('/' . $tag->slug . '/');
+    $shorthand = pointone_shorthand_canonical_url();
+    return $shorthand ?? $url;
 });
