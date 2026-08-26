@@ -555,8 +555,3 @@ add_action('wp_head', function () {
         echo '<link rel="apple-touch-icon" href="' . esc_url($icon_180) . '" />' . "\n";
     }
 }, 99);
-
-add_filter('weglot_css_custom_inline', function ($css_custom) {
-    $css_custom .= '.country-selector.weglot-default { left: 40px !important; right: auto !important; }';
-    return $css_custom;
-});
