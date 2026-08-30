@@ -270,6 +270,10 @@ button:hover {
     pointer-events: none;
 }
 
+/* === 08a. Button Link === */
+.elementor .btn-signin .elementor-button {
+}
+
 /* === 09. Tertiary Button === */
 .elementor .btn-tertiary .elementor-button {
     background: transparent;
