@@ -47,7 +47,9 @@ body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects
 body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .elementor-item:hover {
     background-color: var(--color-white-a20);
     border-radius: 100px;
-    transition: background-color 0.3s ease, border-radius 0.3s ease;
+    transition:
+        background-color 0.3s ease,
+        border-radius 0.3s ease;
 }
 
 /* Divider (Transparent) */
@@ -210,7 +212,8 @@ body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .el
     /* Box styling */
     z-index: 9999 !important;
     display: block !important;
-    width: 250px !important;
+    width: max-content !important;
+    min-width: 250px !important;
     padding: 8px !important;
     background-color: var(--color-white-a100) !important;
     border: 1px solid var(--color-black-a12) !important;
