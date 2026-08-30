@@ -11,6 +11,7 @@
     05. Scrolled/Internal / Menu Hover Styles
     06. Desktop Menu Items
     07. Subnav Code
+    08. Mobile / Instant Sticky Background Transition
 ==================================================  
 */
 
@@ -269,4 +270,12 @@ body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .el
     color: var(--color-white-a100) !important;
     border-radius: var(--image-border-radius);
     transition: none !important;
+}
+
+/* === 08. Mobile / Instant Sticky Background Transition === */
+@media (max-width: 768px) {
+    .custom-sticky-header.elementor-sticky--effects,
+    body:not(.has-transparent-header) .custom-sticky-header {
+        transition: none !important;
+    }
 }
