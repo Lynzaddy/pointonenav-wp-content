@@ -77,6 +77,10 @@ body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects
     font-weight: var(--font-weight-500);
 }
 
+body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .link-signin .elementor-heading-title {
+    color: var(--content-primary-inverse);
+}
+
 body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .btn-tertiary .elementor-button:hover {
     color: var(--color-white-a70) !important;
 }

@@ -63,7 +63,7 @@ button:hover {
     font-weight: var(--weight-bold);
     line-height: var(--lh-relaxed);
     letter-spacing: var(--ls-neg-28);
-    color: var(--content-primary-inverse);
+    color: var(--content-primary);
 }
 
 .elementor .elementor-button svg {
