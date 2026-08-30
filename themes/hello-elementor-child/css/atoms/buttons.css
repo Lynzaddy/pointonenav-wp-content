@@ -56,6 +56,16 @@ button:hover {
     transition: background 0.3s ease;
 }
 
+.elementor .link-signin .elementor-heading-title {
+    font-family: var(--typography-font-primary);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: var(--weight-bold);
+    line-height: var(--lh-relaxed);
+    letter-spacing: var(--ls-neg-28);
+    color: var(--content-primary-inverse);
+}
+
 .elementor .elementor-button svg {
     width: var(--svg-icon-width);
     height: var(--svg-icon-height);
@@ -271,7 +281,7 @@ button:hover {
 }
 
 /* === 08a. Button Link === */
-.elementor .btn-signin .elementor-button {
+.elementor .link-signin .elementor-button {
 }
 
 /* === 09. Tertiary Button === */
