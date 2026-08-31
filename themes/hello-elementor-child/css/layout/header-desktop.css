@@ -348,7 +348,7 @@ body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .el
     }
 }
 
-@media (max-width: 1035px) {
+@media (max-width: 1059px) {
     html[lang="en-US"] .elementor-location-header .elementor-nav-menu--main {
         display: none !important;
     }
