@@ -283,3 +283,30 @@ body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .el
         transition: none !important;
     }
 }
+
+/* === 08. Mobile / Instant Sticky Background Transition === */
+@media (max-width: 768px) {
+    .custom-sticky-header.elementor-sticky--effects,
+    body:not(.has-transparent-header) .custom-sticky-header {
+        transition: none !important;
+    }
+}
+
+/* === 09. Language-Specific Early Mobile Nav (Weglot) ===
+   Elementor's own breakpoint switches to the hamburger menu at
+   1024px. Translated nav labels can run longer than the English
+   originals the layout was built around, so some languages need
+   extra room before that switch happens. Weglot sets the html
+   lang attribute per language, so each override below only fires
+   for its own language, at its own tested width. English and
+   Chinese already fit inside the default 1024px, so neither needs
+   an entry here. */
+
+@media (max-width: 1128px) {
+    html[lang="de"] .elementor-location-header .elementor-nav-menu--main {
+        display: none !important;
+    }
+    html[lang="de"] .elementor-location-header .elementor-menu-toggle {
+        display: flex !important;
+    }
+}
