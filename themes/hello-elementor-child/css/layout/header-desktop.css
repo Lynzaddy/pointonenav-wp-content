@@ -312,7 +312,7 @@ body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .el
     display: none !important;
 }
 
-@media (max-width: 1128px) {
+@media (max-width: 1152px) {
     html[lang="de"] .elementor-location-header .elementor-nav-menu--main {
         display: none !important;
     }
