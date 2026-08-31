@@ -320,3 +320,39 @@ body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .el
         display: inline-flex !important;
     }
 }
+
+@media (max-width: 1191px) {
+    html[lang="es"] .elementor-location-header .elementor-nav-menu--main {
+        display: none !important;
+    }
+    html[lang="es"] .elementor-location-header .hamburger-menu {
+        display: inline-flex !important;
+    }
+}
+
+@media (max-width: 1238px) {
+    html[lang="fr"] .elementor-location-header .elementor-nav-menu--main {
+        display: none !important;
+    }
+    html[lang="fr"] .elementor-location-header .hamburger-menu {
+        display: inline-flex !important;
+    }
+}
+
+@media (max-width: 1271px) {
+    html[lang="ja"] .elementor-location-header .elementor-nav-menu--main {
+        display: none !important;
+    }
+    html[lang="ja"] .elementor-location-header .hamburger-menu {
+        display: inline-flex !important;
+    }
+}
+
+@media (max-width: 1035px) {
+    html[lang="en-US"] .elementor-location-header .elementor-nav-menu--main {
+        display: none !important;
+    }
+    html[lang="en-US"] .elementor-location-header .hamburger-menu {
+        display: inline-flex !important;
+    }
+}
