@@ -34,9 +34,14 @@ add_action('wp_enqueue_scripts', 'my_child_theme_styles', 20);
 // Remove ?ver query strings from all enqueued CSS and JS (including Elementor)
 function remove_css_js_versioning($src)
 {
-    // Only strip ver from files NOT in your child theme
+    // Leave child theme files alone
     if (strpos($src, get_stylesheet_directory_uri()) !== false) {
-        return $src; // leave child theme files alone
+        return $src;
+    }
+    // Leave Elementor's dynamically generated CSS alone — its ?ver= is how
+    // the browser and Cloudflare know to fetch a fresh copy after every edit
+    if (strpos($src, '/uploads/elementor/') !== false) {
+        return $src;
     }
     if (strpos($src, '?ver=') !== false) {
         $src = remove_query_arg('ver', $src);
