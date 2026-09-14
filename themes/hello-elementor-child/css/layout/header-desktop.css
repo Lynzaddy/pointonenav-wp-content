@@ -11,6 +11,7 @@
     05. Scrolled/Internal / Menu Hover Styles
     06. Desktop Menu Items
     07. Subnav Code
+    08. Mobile / Instant Sticky Background Transition
 ==================================================  
 */
 
@@ -47,7 +48,9 @@ body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects
 body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .elementor-item:hover {
     background-color: var(--color-white-a20);
     border-radius: 100px;
-    transition: background-color 0.3s ease, border-radius 0.3s ease;
+    transition:
+        background-color 0.3s ease,
+        border-radius 0.3s ease;
 }
 
 /* Divider (Transparent) */
@@ -72,6 +75,10 @@ body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects
     background: transparent;
     color: var(--color-white-a100) !important;
     font-weight: var(--font-weight-500);
+}
+
+body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .link-signin .elementor-heading-title {
+    color: var(--content-primary-inverse);
 }
 
 body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .btn-tertiary .elementor-button:hover {
@@ -210,7 +217,8 @@ body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .el
     /* Box styling */
     z-index: 9999 !important;
     display: block !important;
-    width: 250px !important;
+    width: max-content !important;
+    min-width: 250px !important;
     padding: 8px !important;
     background-color: var(--color-white-a100) !important;
     border: 1px solid var(--color-black-a12) !important;
@@ -266,4 +274,85 @@ body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .el
     color: var(--color-white-a100) !important;
     border-radius: var(--image-border-radius);
     transition: none !important;
+}
+
+/* === 08. Mobile / Instant Sticky Background Transition === */
+@media (max-width: 768px) {
+    .custom-sticky-header.elementor-sticky--effects,
+    body:not(.has-transparent-header) .custom-sticky-header {
+        transition: none !important;
+    }
+}
+
+/* === 08. Mobile / Instant Sticky Background Transition === */
+@media (max-width: 768px) {
+    .custom-sticky-header.elementor-sticky--effects,
+    body:not(.has-transparent-header) .custom-sticky-header {
+        transition: none !important;
+    }
+}
+
+/* === 09. Language-Specific Early Mobile Nav (Weglot) ===
+   Elementor's own breakpoint switches to mobile nav at 1024px.
+   Translated nav labels can run longer than the English originals
+   the layout was built around, so some languages need extra room
+   before that switch happens. Weglot sets the html lang attribute
+   per language, so each override below only fires for its own
+   language, at its own tested width. English and Chinese already
+   fit inside the default 1024px, so neither needs an entry here.
+
+   The site uses a custom off-canvas menu (triggered via
+   .hamburger-menu) rather than Elementor's default toggle, so
+   Elementor's own .elementor-menu-toggle is hidden everywhere,
+   and .hamburger-menu is what gets force-shown in each language
+   range below. */
+
+/* Elementor's own toggle is unused site-wide — hide unconditionally */
+.elementor-location-header .elementor-menu-toggle {
+    display: none !important;
+}
+
+@media (max-width: 1152px) {
+    html[lang="de"] .elementor-location-header .elementor-nav-menu--main {
+        display: none !important;
+    }
+    html[lang="de"] .elementor-location-header .hamburger-menu {
+        display: inline-flex !important;
+    }
+}
+
+@media (max-width: 1191px) {
+    html[lang="es"] .elementor-location-header .elementor-nav-menu--main {
+        display: none !important;
+    }
+    html[lang="es"] .elementor-location-header .hamburger-menu {
+        display: inline-flex !important;
+    }
+}
+
+@media (max-width: 1238px) {
+    html[lang="fr"] .elementor-location-header .elementor-nav-menu--main {
+        display: none !important;
+    }
+    html[lang="fr"] .elementor-location-header .hamburger-menu {
+        display: inline-flex !important;
+    }
+}
+
+@media (max-width: 1271px) {
+    html[lang="ja"] .elementor-location-header .elementor-nav-menu--main {
+        display: none !important;
+    }
+    html[lang="ja"] .elementor-location-header .hamburger-menu {
+        display: inline-flex !important;
+    }
+}
+
+@media (max-width: 1059px) {
+    html[lang="en-US"] .elementor-location-header .elementor-nav-menu--main {
+        display: none !important;
+    }
+    html[lang="en-US"] .elementor-location-header .hamburger-menu {
+        display: inline-flex !important;
+    }
 }
