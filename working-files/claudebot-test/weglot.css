@@ -1,0 +1,153 @@
+/* In plugin */
+.language-con.e-con {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+#weglot-switcher-1,
+#weglot-switcher-1 * {
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+#weglot-switcher-1 {
+    position: relative !important;
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    line-height: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+}
+#weglot-switcher-1::after {
+    content: "" !important;
+    position: absolute !important;
+    top: 100% !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 20px !important;
+    height: 34px !important;
+    background: transparent !important;
+}
+.language-con .weglot_switcher {
+    position: relative !important;
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: none !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+}
+.language-con .weglot_switcher::before,
+.language-con .weglot_switcher::after,
+.language-con .wgcurrent::after {
+    display: none !important;
+    content: none !important;
+}
+.language-con .wgcurrent {
+    width: 20px !important;
+    height: 20px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+.language-con .wgcurrent a {
+    width: 20px !important;
+    height: 20px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    font-size: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+}
+.language-con .wgcurrent img.wg-flag {
+    display: none !important;
+}
+.language-con .wgcurrent a::before {
+    content: "" !important;
+    display: inline-block !important;
+    width: 20px !important;
+    height: 20px !important;
+    background-color: #141413 !important;
+    -webkit-mask-image: url("https://wordpress-1263599-4962361.cloudwaysapps.com/wp-content/uploads/2025/06/world.svg") !important;
+    mask-image: url("https://wordpress-1263599-4962361.cloudwaysapps.com/wp-content/uploads/2025/06/world.svg") !important;
+    -webkit-mask-repeat: no-repeat !important;
+    mask-repeat: no-repeat !important;
+    -webkit-mask-position: center !important;
+    mask-position: center !important;
+    -webkit-mask-size: contain !important;
+    mask-size: contain !important;
+    transition: background-color 0.15s ease !important;
+}
+body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .language-con .wgcurrent a::before {
+    background-color: #fff !important;
+}
+#weglot-switcher-1:hover .wgcurrent a::before {
+    background-color: #57574c !important;
+}
+body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) #weglot-switcher-1:hover .wgcurrent a::before {
+    background-color: rgba(255, 255, 255, 0.7) !important;
+}
+.language-con .language-list {
+    display: block !important;
+    position: absolute !important;
+    top: calc(100% + 34px) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    margin-top: 0 !important;
+    width: max-content !important;
+    box-sizing: border-box !important;
+    padding: 8px !important;
+    border-radius: 8px !important;
+    background: #fff !important;
+    z-index: 999 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transition:
+        opacity 0.15s ease,
+        visibility 0.15s ease !important;
+}
+#weglot-switcher-1 .language-list {
+    border-width: 1px !important;
+    border-style: solid !important;
+    border-color: rgba(0, 0, 0, 0.12) !important;
+}
+#weglot-switcher-1:hover .language-list,
+#weglot-switcher-1:focus-within .language-list {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+}
+.language-con .language-list .language-option {
+    margin: 0 !important;
+}
+.language-con .language-list .language-option a {
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 10px !important;
+    white-space: nowrap !important;
+    color: #141413 !important;
+    font-family: "Instrument Sans", sans-serif !important;
+    border-radius: 8px !important;
+    transition: background-color 0.15s ease !important;
+}
+.language-con .language-list .language-option a:hover {
+    background-color: rgb(231, 231, 228) !important;
+}
+.language-con .language-list .language-option img.wg-flag {
+    margin-right: 10px !important;
+    flex-shrink: 0 !important;
+}
+
+/* in application */
