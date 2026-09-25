@@ -4,7 +4,9 @@
     Description: Styles for card components used in Point One Nav.
 
     TABLE OF CONTENTS:
-    01. Pricing Cards
+    01. Image Cards
+    02. Image Cards – Three-Card Layout (450px tall)
+    03. Pricing Cards
 ==================================================  
 */
 
@@ -53,9 +55,8 @@
     background-repeat: no-repeat;
 }
 
-/* Tall image (ONLY applies if there is actually an <img> tag inside .image-box-tall)
-   Your current HTML shows .image-box-tall is empty (background image), so this
-   rule likely does nothing — but leaving it here is safe. */
+/* Tall image (applies when an <img> is inside .image-box-tall,
+   e.g. an Elementor Image widget with the image-box-tall class) */
 .card-image .image-box-tall img {
     width: 100%;
     height: 100%;
@@ -162,7 +163,45 @@ a.card-image .btn-link:hover .elementor-heading-title {
     text-decoration: none !important;
 }
 
-/* ==== 01. PRICING CARDS ======== */
+/* ==== 02. IMAGE CARDS – THREE-CARD LAYOUT ======== */
+/*
+   Applies ONLY when a row holds exactly three .card-image cards.
+   Four-or-more rows are untouched and keep the rules in section 01.
+
+   Two ways it triggers (either one works):
+     a) Automatic: the parent container has exactly 3 direct children
+        and they are .card-image cards.
+     b) Manual: add the class "cards-three" to the parent container
+        (Elementor > Advanced > CSS Classes). Use this if the parent
+        also holds other elements, like a heading.
+
+   Result: image is always 4:5 and never taller than 450px
+   (so never wider than 360px), at every screen size.
+   :is() is used so browsers without :has() still honor .cards-three.
+*/
+
+/* Undo the 325px cap on the widget wrapper; let the <img> set the size */
+:is(.cards-three, .e-con:has(> .card-image:nth-child(3):last-child)) .card-image .image-box-tall {
+    aspect-ratio: auto;
+    max-height: none;
+    height: auto;
+    width: 100%;
+    display: block;
+}
+
+/* The image itself carries the 4:5 ratio and the 450px cap */
+:is(.cards-three, .e-con:has(> .card-image:nth-child(3):last-child)) .card-image .image-box-tall img {
+    aspect-ratio: 4 / 5;
+    width: 100%;
+    max-width: 360px; /* 450px × 4/5 – keeps ratio when the cap is hit */
+    height: auto;
+    max-height: 450px;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+/* ==== 03. PRICING CARDS ======== */
 .elementor .pricingContainer h3 {
     margin-bottom: 0 !important;
     font-weight: var(--weight-bold);
