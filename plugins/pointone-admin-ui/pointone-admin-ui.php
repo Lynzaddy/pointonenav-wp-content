@@ -2,11 +2,12 @@
 
 /**
  * Plugin Name: Point One Nav - Admin UI
- * Description: Creates a unified Point One admin menu and groups custom CMS tools under one parent menu.
- * Version: 2.12.0
+ * Description: Groups the Point One custom content types (Change Log, Competitors, Events, FAQs, GNSS Terms, Site Alerts, States) and Global Variables under a single "Point One" admin menu, and sets the admin sidebar order.
+ * Version:     2.12.1
+ * Author:      Point One Navigation
  */
 
-if (!defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
 
 /*--------------------------------------------------------------
@@ -26,6 +27,10 @@ function pointone_admin_ui_icon()
 /*--------------------------------------------------------------
 POINT ONE POST TYPES
 --------------------------------------------------------------*/
+
+// Post types grouped under the Point One menu. Competitors, FAQs, GNSS Terms
+// (glossary_term) and States are registered in ACF > Post Types, not in code.
+// To add a new one: add it here and add a matching add_submenu_page() below.
 
 function pointone_admin_ui_post_types(): array
 {
@@ -49,7 +54,7 @@ function pointone_admin_ui_current_post_type(): string
 {
     $post_type = $_GET['post_type'] ?? '';
 
-    if (!$post_type && isset($_GET['post'])) {
+    if (! $post_type && isset($_GET['post'])) {
         $post_type = get_post_type((int) $_GET['post']);
     }
 
@@ -95,6 +100,8 @@ add_action('admin_menu', function () {
 POINT ONE MENU REDIRECT
 --------------------------------------------------------------*/
 
+// The parent menu has no screen of its own; clicking it opens the Change Log list.
+
 function pointone_admin_ui_redirect_to_first_item()
 {
     wp_safe_redirect(admin_url('edit.php?post_type=change_log'));
@@ -112,6 +119,8 @@ add_action('admin_menu', function () {
 
     remove_submenu_page('pointone-cms', 'pointone-cms');
 
+    // ACF adds Global Variables to this menu on its own. Remove it so it can be
+    // re-added below in alphabetical order.
     if (isset($submenu['pointone-cms'])) {
         foreach ($submenu['pointone-cms'] as $index => $item) {
             if (isset($item[2]) && $item[2] === 'pointone-global-variables') {
@@ -167,13 +176,9 @@ REMOVE DUPLICATE TOP-LEVEL MENUS
 
 add_action('admin_menu', function () {
 
-    remove_menu_page('edit.php?post_type=change_log');
-    remove_menu_page('edit.php?post_type=competitors');
-    remove_menu_page('edit.php?post_type=event');
-    remove_menu_page('edit.php?post_type=faqs');
-    remove_menu_page('edit.php?post_type=glossary_term');
-    remove_menu_page('edit.php?post_type=site_alert');
-    remove_menu_page('edit.php?post_type=states');
+    foreach (pointone_admin_ui_post_types() as $post_type) {
+        remove_menu_page('edit.php?post_type=' . $post_type);
+    }
 }, 999);
 
 
@@ -216,9 +221,12 @@ add_filter('menu_order', function () {
 FORCE POINT ONE MENU OPEN VISUALLY
 --------------------------------------------------------------*/
 
+// WordPress doesn't highlight a custom parent menu on CPT screens, so these
+// styles keep the Point One menu expanded and mark the current item.
+
 add_action('admin_head', function () {
 
-    if (!pointone_admin_ui_is_pointone_screen()) return;
+    if (! pointone_admin_ui_is_pointone_screen()) return;
 
     $post_type = pointone_admin_ui_current_post_type();
 

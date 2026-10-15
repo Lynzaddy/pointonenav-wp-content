@@ -2,11 +2,12 @@
 
 /**
  * Plugin Name: Point One Nav - Change Log
- * Description: Custom Change Log system for Point One including CPT, ACF fields, admin sorting, admin columns, Elementor Query ID support, REST API support, and display shortcodes.
- * Version: 1.3.1
+ * Description: Change Log post type (/changelog/) with ACF date and content fields, newest-first admin sorting, display shortcodes, the pointone_change_log Elementor Query ID, and REST API support for n8n automation.
+ * Version:     1.3.2
+ * Author:      Point One Navigation
  */
 
-if (!defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
 
 /*--------------------------------------------------------------
@@ -65,9 +66,6 @@ add_action('init', function () {
          */
         'show_in_rest' => true,
 
-        /**
-         * Explicit REST base for clarity.
-         */
         'rest_base' => 'change_log',
     ]);
 });
@@ -99,7 +97,7 @@ ACF FIELD GROUP
 
 add_action('acf/init', function () {
 
-    if (!function_exists('acf_add_local_field_group')) return;
+    if (! function_exists('acf_add_local_field_group')) return;
 
     acf_add_local_field_group([
 
@@ -227,34 +225,34 @@ HELPERS
 
 function pointone_change_log_format_admin_date($date): string
 {
-    if (!$date) return '';
+    if (! $date) return '';
 
     $date = (string) $date;
 
     $d = DateTime::createFromFormat('Ymd', $date);
 
-    if (!$d) {
+    if (! $d) {
         $d = DateTime::createFromFormat('Y-m-d', $date);
     }
 
-    if (!$d) return $date;
+    if (! $d) return $date;
 
     return $d->format('m-d-Y');
 }
 
 function pointone_change_log_format_display_date($date): string
 {
-    if (!$date) return '';
+    if (! $date) return '';
 
     $date = (string) $date;
 
     $d = DateTime::createFromFormat('Ymd', $date);
 
-    if (!$d) {
+    if (! $d) {
         $d = DateTime::createFromFormat('Y-m-d', $date);
     }
 
-    if (!$d) return $date;
+    if (! $d) return $date;
 
     return $d->format('F j, Y');
 }
@@ -280,7 +278,7 @@ function pointone_change_log_date_display(): string
         $date = get_field('change_log_date');
     }
 
-    if (!$date) {
+    if (! $date) {
         $date = get_post_meta(get_the_ID(), 'change_log_date', true);
     }
 
@@ -308,11 +306,11 @@ function pointone_change_log_content_display(): string
         $content = get_field('change_log_content');
     }
 
-    if (!$content) {
+    if (! $content) {
         $content = get_post_meta(get_the_ID(), 'change_log_content', true);
     }
 
-    if (!$content) return '';
+    if (! $content) return '';
 
     $content = do_shortcode($content);
 
@@ -365,10 +363,10 @@ DEFAULT ADMIN SORTING
 
 add_action('pre_get_posts', function ($query) {
 
-    if (!is_admin() || !$query->is_main_query()) return;
+    if (! is_admin() || ! $query->is_main_query()) return;
     if ($query->get('post_type') !== 'change_log') return;
 
-    if (!$query->get('orderby')) {
+    if (! $query->get('orderby')) {
         $query->set('meta_key', 'change_log_date');
         $query->set('orderby', 'meta_value_num');
         $query->set('order', 'DESC');

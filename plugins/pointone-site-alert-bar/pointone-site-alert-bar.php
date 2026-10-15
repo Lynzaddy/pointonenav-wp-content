@@ -2,12 +2,12 @@
 
 /**
  * Plugin Name: Point One Nav - Site Alert Bar
- * Description: Date-based site-wide alert bar with dismiss, admin enhancements, and clone support.
- * Version: 1.5.0
- * Author: Point One Navigation
+ * Description: Scheduled site-wide alert bar. Editors create Site Alerts with start/end dates; the one currently active is output by the [site_alert_bar] shortcode in the header. Visitors can dismiss it, and dismissal is remembered per alert. Includes admin status badges and a Clone action.
+ * Version:     1.5.2
+ * Author:      Point One Navigation
  */
 
-if (!defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
 final class Site_Alert_Bar_Plugin
 {
@@ -19,7 +19,6 @@ final class Site_Alert_Bar_Plugin
 
     public function __construct()
     {
-
         add_action('init', [$this, 'register_cpt']);
         add_action('init', [$this, 'register_shortcode']);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_assets']);
@@ -41,13 +40,12 @@ final class Site_Alert_Bar_Plugin
         add_action('admin_action_clone_site_alert', [$this, 'clone_site_alert']);
     }
 
-    /* =====================================================
-       CPT
-    ===================================================== */
+    /*--------------------------------------------------------------
+    CPT
+    --------------------------------------------------------------*/
 
     public function register_cpt()
     {
-
         register_post_type(self::CPT, [
             'labels' => [
                 'name' => 'Site Alerts',
@@ -61,14 +59,13 @@ final class Site_Alert_Bar_Plugin
         ]);
     }
 
-    /* =====================================================
-       ACF FIELDS
-    ===================================================== */
+    /*--------------------------------------------------------------
+    ACF FIELDS
+    --------------------------------------------------------------*/
 
     public function register_acf_fields()
     {
-
-        if (!function_exists('acf_add_local_field_group')) return;
+        if (! function_exists('acf_add_local_field_group')) return;
 
         acf_add_local_field_group([
             'key' => self::FIELD_GROUP_KEY,
@@ -122,9 +119,9 @@ final class Site_Alert_Bar_Plugin
         ]);
     }
 
-    /* =====================================================
-       FRONTEND
-    ===================================================== */
+    /*--------------------------------------------------------------
+    FRONTEND
+    --------------------------------------------------------------*/
 
     public function register_shortcode()
     {
@@ -137,15 +134,16 @@ final class Site_Alert_Bar_Plugin
             self::SCRIPT_HANDLE,
             plugins_url('assets/site-alert-bar.js', __FILE__),
             [],
-            '1.5.0',
+            '1.5.2',
             true
         );
     }
 
+    // Returns the published alert whose start/end window includes right now.
+    // If windows overlap, the alert with the latest start date wins.
     private function get_active_alert_id(): int
     {
-
-        if (!function_exists('get_field')) return 0;
+        if (! function_exists('get_field')) return 0;
 
         $now = current_time('timestamp');
         $now_str = date('Y-m-d H:i:s', $now);
@@ -180,9 +178,8 @@ final class Site_Alert_Bar_Plugin
 
     public function render_shortcode(): string
     {
-
         $id = $this->get_active_alert_id();
-        if (!$id) return '';
+        if (! $id) return '';
 
         $desktop = get_field('alert_desktop_text', $id);
         $mobile = get_field('alert_mobile_text', $id);
@@ -191,7 +188,7 @@ final class Site_Alert_Bar_Plugin
         $position = get_field('alert_cta_position', $id) ?: 'before';
         $new = get_field('alert_cta_new_window', $id);
 
-        if (!$desktop || !$mobile || !$cta_text || !$cta_url) return '';
+        if (! $desktop || ! $mobile || ! $cta_text || ! $cta_url) return '';
 
         $target = $new ? '_blank' : '_self';
         $rel = $new ? 'noopener' : '';
@@ -225,13 +222,12 @@ final class Site_Alert_Bar_Plugin
         return ob_get_clean();
     }
 
-    /* =====================================================
-       ADMIN COLUMNS
-    ===================================================== */
+    /*--------------------------------------------------------------
+    ADMIN COLUMNS
+    --------------------------------------------------------------*/
 
     public function admin_columns($columns)
     {
-
         $new = [];
 
         foreach ($columns as $key => $value) {
@@ -249,7 +245,6 @@ final class Site_Alert_Bar_Plugin
 
     public function admin_column_values($column, $post_id)
     {
-
         $start = get_field('alert_start_date', $post_id);
         $end   = get_field('alert_end_date', $post_id);
 
@@ -263,7 +258,7 @@ final class Site_Alert_Bar_Plugin
 
         if ($column === 'alert_status') {
 
-            if (!$start || !$end) {
+            if (! $start || ! $end) {
                 echo '—';
                 return;
             }
@@ -291,11 +286,10 @@ final class Site_Alert_Bar_Plugin
 
     public function handle_column_sorting($query)
     {
-
-        if (!is_admin() || !$query->is_main_query()) return;
+        if (! is_admin() || ! $query->is_main_query()) return;
         if ($query->get('post_type') !== self::CPT) return;
 
-        if (!$query->get('orderby')) {
+        if (! $query->get('orderby')) {
             $query->set('meta_key', 'alert_start_date');
             $query->set('orderby', 'meta_value');
             $query->set('order', 'DESC');
@@ -314,7 +308,9 @@ final class Site_Alert_Bar_Plugin
 
     public function admin_badge_styles()
     {
-
+        // Only the Site Alerts list screen shows the Status badges.
+        $screen = get_current_screen();
+        if (! $screen || $screen->id !== 'edit-' . self::CPT) return;
     ?>
         <style>
             .sab-badge {
@@ -366,13 +362,12 @@ final class Site_Alert_Bar_Plugin
 <?php
     }
 
-    /* =====================================================
-       CLONE
-    ===================================================== */
+    /*--------------------------------------------------------------
+    CLONE
+    --------------------------------------------------------------*/
 
     public function add_clone_link($actions, $post)
     {
-
         if ($post->post_type !== self::CPT) return $actions;
 
         $url = wp_nonce_url(
@@ -384,19 +379,21 @@ final class Site_Alert_Bar_Plugin
         return $actions;
     }
 
+    // Copies the alert's title and all ACF fields into a new draft.
     public function clone_site_alert()
     {
-
-        if (!isset($_GET['post'])) wp_die('No post to clone.');
+        if (! isset($_GET['post'])) wp_die('No post to clone.');
 
         $post_id = intval($_GET['post']);
 
-        if (!wp_verify_nonce($_GET['_wpnonce'], 'clone_site_alert_' . $post_id)) {
+        if (! current_user_can('edit_posts')) wp_die('You are not allowed to clone alerts.');
+
+        if (! wp_verify_nonce($_GET['_wpnonce'] ?? '', 'clone_site_alert_' . $post_id)) {
             wp_die('Security check failed.');
         }
 
         $post = get_post($post_id);
-        if (!$post || $post->post_type !== self::CPT) wp_die('Invalid alert.');
+        if (! $post || $post->post_type !== self::CPT) wp_die('Invalid alert.');
 
         $new_post_id = wp_insert_post([
             'post_type'   => self::CPT,

@@ -2,11 +2,12 @@
 
 /**
  * Plugin Name: Point One Nav - Events
- * Description: Custom Events system for Point One including CPT, ACF fields, admin indicators, Elementor helpers, validation, section counts, Elementor Query IDs, plugin-managed CSS, default featured image handling, and author support.
- * Version: 1.7.6
+ * Description: Events post type (/events/) with ACF fields, start/end date validation, a default featured image, Active/Expired admin badges, card shortcodes, event counts, and the pointone_current_events and pointone_past_events Elementor Query IDs.
+ * Version:     1.7.7
+ * Author:      Point One Navigation
  */
 
-if (!defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
 /*--------------------------------------------------------------
 REGISTER CUSTOM POST TYPE
@@ -70,7 +71,7 @@ add_action('wp_enqueue_scripts', function () {
         'pointone-events',
         plugins_url('assets/pointone-events.css', __FILE__),
         [],
-        '1.7.5'
+        '1.7.7'
     );
 });
 
@@ -81,7 +82,7 @@ ACF FIELD GROUP
 
 add_action('acf/init', function () {
 
-    if (!function_exists('acf_add_local_field_group')) return;
+    if (! function_exists('acf_add_local_field_group')) return;
 
     acf_add_local_field_group([
 
@@ -187,11 +188,11 @@ VALIDATE START/END DATE ORDER
 
 add_filter('acf/validate_value/name=event_end_date', function ($valid, $value) {
 
-    if (!$valid) return $valid;
+    if (! $valid) return $valid;
 
     $start = $_POST['acf']['event_start_date'] ?? '';
 
-    if (!$start || !$value) return $valid;
+    if (! $start || ! $value) return $valid;
 
     if ((int) $value < (int) $start) {
         return 'Event End Date must be the same as or later than the Event Start Date.';
@@ -204,6 +205,9 @@ add_filter('acf/validate_value/name=event_end_date', function ($valid, $value) {
 /*--------------------------------------------------------------
 DEFAULT FEATURED IMAGE
 --------------------------------------------------------------*/
+
+// Events saved without a featured image get the generic Point One image so
+// event cards never render with an empty image slot.
 
 function pointone_events_get_default_image_id(): int
 {
@@ -229,7 +233,7 @@ function pointone_events_get_default_image_id(): int
         ]
     ]);
 
-    if (!empty($existing)) {
+    if (! empty($existing)) {
         $attachment_id = (int) $existing[0];
         return $attachment_id;
     }
@@ -244,7 +248,7 @@ add_action('save_post_event', function ($post_id, $post, $update) {
 
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
     if (wp_is_post_revision($post_id)) return;
-    if (!current_user_can('edit_post', $post_id)) return;
+    if (! current_user_can('edit_post', $post_id)) return;
 
     if (has_post_thumbnail($post_id)) return;
 
@@ -267,10 +271,10 @@ function pointone_events_today_ymd(): int
 
 function pointone_events_format_admin_date($date): string
 {
-    if (!$date) return '';
+    if (! $date) return '';
 
     $d = DateTime::createFromFormat('Ymd', (string) $date);
-    if (!$d) return (string) $date;
+    if (! $d) return (string) $date;
 
     return $d->format('m-d-Y');
 }
@@ -285,12 +289,12 @@ function pointone_event_date_display(): string
     $start = get_field('event_start_date');
     $end   = get_field('event_end_date');
 
-    if (!$start) return '';
+    if (! $start) return '';
 
     $start_obj = DateTime::createFromFormat('Ymd', (string) $start);
     $end_obj   = $end ? DateTime::createFromFormat('Ymd', (string) $end) : null;
 
-    if (!$start_obj) return '';
+    if (! $start_obj) return '';
 
     if ($end_obj && (string) $start !== (string) $end) {
 
@@ -310,12 +314,14 @@ add_shortcode('event_date_display', 'pointone_event_date_display');
 CARD LINK SHORTCODE
 --------------------------------------------------------------*/
 
+// Upcoming events link to registration; past events link to the recording.
+
 function pointone_event_card_link(): string
 {
     $end = (int) get_field('event_end_date');
     $today = pointone_events_today_ymd();
 
-    if (!$end) return '';
+    if (! $end) return '';
 
     if ($end >= $today) {
         $url = (string) get_field('registration_link_url');
@@ -326,7 +332,7 @@ function pointone_event_card_link(): string
     $url = trim($url);
     if ($url === '') return '';
 
-    if (!preg_match('#^https?://#i', $url)) {
+    if (! preg_match('#^https?://#i', $url)) {
         $url = 'https://' . $url;
     }
 
@@ -344,7 +350,7 @@ function pointone_event_cta_text(): string
     $end = (int) get_field('event_end_date');
     $today = pointone_events_today_ymd();
 
-    if (!$end) return '';
+    if (! $end) return '';
 
     if ($end >= $today) {
         $url = trim((string) get_field('registration_link_url'));
@@ -474,10 +480,10 @@ DEFAULT ADMIN SORTING (Start Date DESC)
 
 add_action('pre_get_posts', function ($query) {
 
-    if (!is_admin() || !$query->is_main_query()) return;
+    if (! is_admin() || ! $query->is_main_query()) return;
     if ($query->get('post_type') !== 'event') return;
 
-    if (!$query->get('orderby')) {
+    if (! $query->get('orderby')) {
         $query->set('meta_key', 'event_start_date');
         $query->set('orderby', 'meta_value_num');
         $query->set('order', 'DESC');
@@ -486,10 +492,14 @@ add_action('pre_get_posts', function ($query) {
 
 
 /*--------------------------------------------------------------
-ADMIN BADGE STYLES (MATCH ALERTS)
+ADMIN BADGE STYLES (MATCH SITE ALERTS)
 --------------------------------------------------------------*/
 
 add_action('admin_enqueue_scripts', function () {
+
+    // Only the Events list screen shows the Status badges.
+    $screen = get_current_screen();
+    if (! $screen || $screen->id !== 'edit-event') return;
 ?>
     <style>
         .sab-badge {
