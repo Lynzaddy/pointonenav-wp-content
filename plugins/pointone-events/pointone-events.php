@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Plugin Name: Point One Nav - Point One Events
+ * Plugin Name: Point One Nav - Events
  * Description: Custom Events system for Point One including CPT, ACF fields, admin indicators, Elementor helpers, validation, section counts, Elementor Query IDs, plugin-managed CSS, default featured image handling, and author support.
- * Version: 1.7.5
+ * Version: 1.7.6
  */
 
 if (!defined('ABSPATH')) exit;

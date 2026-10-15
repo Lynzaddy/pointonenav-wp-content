@@ -65,13 +65,6 @@ add_filter('body_class', function ($classes) {
 });
 
 
-function enqueue_slick_carousel()
-{
-    wp_enqueue_style('slick-css', 'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css');
-    wp_enqueue_script('slick-js', 'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js', array('jquery'), null, true);
-}
-add_action('wp_enqueue_scripts', 'enqueue_slick_carousel');
-
 function render_elementor_template($atts)
 {
     if (!isset($atts['id'])) return '';

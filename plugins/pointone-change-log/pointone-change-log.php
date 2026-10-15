@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Plugin Name: Point One Nav - Point One Change Log
+ * Plugin Name: Point One Nav - Change Log
  * Description: Custom Change Log system for Point One including CPT, ACF fields, admin sorting, admin columns, Elementor Query ID support, REST API support, and display shortcodes.
- * Version: 1.3.0
+ * Version: 1.3.1
  */
 
 if (!defined('ABSPATH')) exit;
