@@ -2,16 +2,22 @@
 
 /**
  * Plugin Name: Point One Nav - Global Variables
- * Description: Global site variables managed via an ACF Options Page. Values are exposed in Elementor Pro via a custom Dynamic Tag, via the [global_var key="..."] shortcode, and injected into the front end as a JS object.
- * Version: 1.3.0
+ * Description: Site-wide values (currently plan pricing) edited in one place on an ACF Options Page. Values are available in Elementor through a "Point One" Dynamic Tag, through the [global_var key="..."] shortcode, and on the front end as window.pointoneGlobalVars.
+ * Version:     1.3.1
+ * Author:      Point One Navigation
  */
 
-if (!defined('ABSPATH')) exit;
+if (! defined('ABSPATH')) exit;
 
 
 /*--------------------------------------------------------------
 FIELD DEFINITIONS
 --------------------------------------------------------------*/
+
+// Single source of truth. A field added here automatically appears on the
+// options page, in the Elementor Dynamic Tag list, in the shortcode and in the
+// JS object. Fields are grouped into admin tabs by 'tab'. ACF lays out 50%-width
+// fields left to right, so list them in the order they should pair up.
 
 function pointone_gv_field_definitions(): array
 {
@@ -67,7 +73,7 @@ OPTIONS PAGE
 
 add_action('acf/init', function () {
 
-    if (!function_exists('acf_add_options_page')) return;
+    if (! function_exists('acf_add_options_page')) return;
 
     acf_add_options_page([
         'page_title'  => 'Global Variables',
@@ -86,7 +92,7 @@ ACF FIELD GROUP
 
 add_action('acf/init', function () {
 
-    if (!function_exists('acf_add_local_field_group')) return;
+    if (! function_exists('acf_add_local_field_group')) return;
 
     $definitions = pointone_gv_field_definitions();
     $fields      = [];
@@ -96,7 +102,7 @@ add_action('acf/init', function () {
 
         $tab = $def['tab'] ?? 'General';
 
-        if (!in_array($tab, $seen_tabs, true)) {
+        if (! in_array($tab, $seen_tabs, true)) {
 
             $fields[] = [
                 'key'   => 'field_gv_tab_' . sanitize_key($tab),
@@ -120,7 +126,7 @@ add_action('acf/init', function () {
             ],
         ];
 
-        if (!empty($def['prepend'])) {
+        if (! empty($def['prepend'])) {
             $field['prepend'] = $def['prepend'];
         }
 
@@ -155,7 +161,7 @@ FRONT-END JS OBJECT
 
 add_action('wp_enqueue_scripts', function () {
 
-    if (!function_exists('get_field')) return;
+    if (! function_exists('get_field')) return;
 
     $vars = [];
 
@@ -185,15 +191,18 @@ add_action('wp_enqueue_scripts', function () {
 PRICING PAGE TOGGLE SCRIPT
 --------------------------------------------------------------*/
 
+// Monthly/annual toggle on /pricing/. Reads prices from window.pointoneGlobalVars.
+// Its styles live in the child theme (css/molecules/pricing-toggle.css).
+
 add_action('wp_enqueue_scripts', function () {
 
-    if (!is_page('pricing')) return;
+    if (! is_page('pricing')) return;
 
     wp_enqueue_script(
         'pointone-pricing-toggle',
         plugins_url('assets/pricing-toggle.js', __FILE__),
         ['pointone-global-vars'],
-        '1.3.0',
+        '1.3.1',
         true
     );
 });
@@ -205,7 +214,7 @@ ELEMENTOR PRO DYNAMIC TAG
 
 add_action('elementor/dynamic_tags/register', function ($dynamic_tags) {
 
-    if (!class_exists('\Elementor\Modules\DynamicTags\Module')) return;
+    if (! class_exists('\Elementor\Modules\DynamicTags\Module')) return;
 
     $dynamic_tags->register_group('pointone', [
         'title' => 'Point One',
@@ -267,7 +276,7 @@ add_action('elementor/dynamic_tags/register', function ($dynamic_tags) {
         {
             $key = $this->get_settings('field_key');
 
-            if (!$key || !function_exists('get_field')) return;
+            if (! $key || ! function_exists('get_field')) return;
 
             $value = get_field($key, 'option');
 
@@ -291,7 +300,7 @@ add_shortcode('global_var', function ($atts) {
         'key' => '',
     ], $atts);
 
-    if (!$atts['key'] || !function_exists('get_field')) return '';
+    if (! $atts['key'] || ! function_exists('get_field')) return '';
 
     $value = get_field($atts['key'], 'option');
 
