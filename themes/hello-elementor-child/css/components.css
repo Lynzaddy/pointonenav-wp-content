@@ -1,10 +1,10 @@
-/* 
-==================================================
-    COMPONENTS.CSS
-    Description: Imports all component-specific styles for the theme.
-==================================================  
-*/
+/* ==========================================================================
+   components.css
+   Imports the design system components: atoms, molecules and organisms.
+   Import file only: add styles to the component files, not here.
+   ========================================================================== */
 
+/* Atoms */
 @import "atoms/buttons.css";
 @import "atoms/icon.css";
 @import "atoms/image.css";
@@ -12,6 +12,7 @@
 @import "atoms/tooltip.css";
 @import "atoms/floating-icon.css";
 
+/* Molecules */
 @import "molecules/banner-logo.css";
 @import "molecules/card-avatar.css";
 @import "molecules/cards.css";
@@ -22,6 +23,7 @@
 @import "molecules/single-image-sections.css";
 @import "molecules/text-widget.css";
 
+/* Organisms */
 @import "organisms/sections/section-banner-cta.css";
 @import "organisms/sections/section-image-split-feature.css";
 @import "organisms/sections/homepage-hero.css";

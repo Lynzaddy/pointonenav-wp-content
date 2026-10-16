@@ -1,9 +1,8 @@
-/* 
-==================================================
-    UTILITIES.CSS
-    Description: Contains utility classes for common styles and layout adjustments.
-==================================================  
-*/
+/* ==========================================================================
+   utilities.css
+   Imports utility and third-party styles, followed by a few site-wide
+   Elementor adjustments that must load late in the cascade.
+   ========================================================================== */
 
 @import "utilities/helpers.css";
 @import "utilities/hubspot.css";
@@ -13,37 +12,36 @@
 @import "utilities/ketch.css";
 @import "utilities/weglot.css";
 
-/* =========================
-   Global Utilities
-========================= */
+/* ==== Site-wide Elementor Adjustments ==== */
 
-/* Laptop breakpoint (Elementor: ≤1366px) */
+/* Laptop and below (Elementor breakpoint 1366px): remove container side padding */
 @media (max-width: 1366px) {
-    /* 1) Kill side padding on ALL parent containers (full-width) */
+    /* 1) Full-width parent containers */
     .elementor .e-con-full.e-parent {
         padding-left: 0 !important;
         padding-right: 0 !important;
     }
 
-    /* 2) Also kill the usual inner padding on boxed containers */
+    /* 2) Inner wrapper of boxed containers */
     .elementor .e-con-boxed > .e-con-inner {
         padding-left: 0 !important;
         padding-right: 0 !important;
     }
 
-    /* 3) Belt-and-suspenders: target your exact outer parent container */
+    /* 3) Same rule for one specific outer container (Elementor ID 952631e) */
     .elementor .elementor-element-952631e.e-con.e-parent {
         padding-left: 0 !important;
         padding-right: 0 !important;
     }
 
-    /* 4) If your kit uses a CSS variable for container padding, zero it */
+    /* 4) Zero the Elementor kit's container padding variables (kit 7357) */
     .elementor-kit-7357 {
-        --container-padding-inline: 0px !important; /* common var */
-        --container-default-padding-inline: 0px !important; /* alt var some kits use */
+        --container-padding-inline: 0px !important;
+        --container-default-padding-inline: 0px !important;
     }
 }
 
+/* Divider line color, light and inverse */
 .elementor-divider .elementor-divider-separator {
     border-block-start-color: rgba(0, 0, 0, 0.12) !important;
     margin: 0;
@@ -52,5 +50,4 @@
 
 .elementor .inverse .elementor-divider .elementor-divider-separator {
     border-block-start-color: var(--color-line-inverse) !important;
-    /* border-block-start-color: #f90 !important; */
 }

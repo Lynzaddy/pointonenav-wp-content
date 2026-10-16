@@ -1,21 +1,17 @@
-/* 
-==================================================
-    HEADER-MOBILE.CSS
-    Description: Styles for the mobile navigation layout in Point One Nav,
-    including menu items, dropdowns, and responsive adjustments.
+/* ==========================================================================
+   header-mobile.css
+   Mobile navigation: the off-canvas accordion menu, its icons, layout and
+   the hamburger icon.
 
-    TABLE OF CONTENTS:
-    01. Accordion Title / Summary
-    02. Chevron Icons (Stroked)
-    03. Close Icons (Stroked)
-    04. Icon List Inside Accordion
-    05. Mobile Nav Layout
-    06. Hamburger Icon Colors
+   01. Accordion Title
+   02. Chevron Icons
+   03. Close Icon
+   04. Icon List Inside Accordion
+   05. Mobile Nav Layout
+   06. Hamburger Icon Colors
+   ========================================================================== */
 
-==================================================  
-*/
-
-/* === 01. Accordion Title / Summary === */
+/* ==== 01. Accordion Title ==== */
 .mobile-nav-accordian .e-n-accordion-item summary {
     font-size: 16px;
     line-height: var(--lh-medium);
@@ -71,7 +67,7 @@
     padding-left: 0 !important;
 }
 
-/* === 02. Chevron Icons (Stroked → FIXED) === */
+/* ==== 02. Chevron Icons ==== */
 .e-n-accordion-item-title-icon {
     display: flex;
     align-items: center;
@@ -88,14 +84,14 @@
     overflow: visible;
 }
 
-/* ✅ FIX — Make chevrons solid + use var(--content-primary) */
+/* Draw the chevrons as solid shapes in the primary text color */
 .e-n-accordion-item-title-icon .e-opened svg path,
 .e-n-accordion-item-title-icon .e-closed svg path {
     fill: var(--content-primary) !important;
     stroke: none !important;
 }
 
-/* === 03. Close Icons (Stroked) === */
+/* ==== 03. Close Icon ==== */
 .icon-close svg {
     width: 32px;
     height: 32px;
@@ -107,7 +103,7 @@
     fill: none !important;
 }
 
-/* === 04. Icon List Inside Accordion === */
+/* ==== 04. Icon List Inside Accordion ==== */
 .mobile-nav-list .elementor-icon-list-item a {
     font-size: 16px;
     line-height: var(--lh-medium);
@@ -127,7 +123,7 @@
     transition: none !important;
 }
 
-/* === 05. Mobile Nav Layout === */
+/* ==== 05. Mobile Nav Layout ==== */
 .mobile-nav-container {
     display: flex;
     flex-direction: column;
@@ -161,7 +157,7 @@
     margin-right: 0 !important;
 }
 
-/* === 06. Hamburger Icon Colors === */
+/* ==== 06. Hamburger Icon Colors ==== */
 body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .hamburger-menu svg {
     color: var(--color-white-a100) !important;
     fill: var(--color-white-a100) !important;

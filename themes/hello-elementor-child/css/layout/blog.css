@@ -1,15 +1,15 @@
-/* 
-==================================================
-    BLOG.CSS
-    Description: Styles for blog layouts, post listings, and single post views.
+/* ==========================================================================
+   blog.css
+   Blog listing cards, the blog search box, the industry dropdown and the
+   Table of Contents widget on posts.
 
-    TABLE OF CONTENTS:
-    01. Blog Listing Card
-    02. Search Box on Blog pages
-==================================================  
-*/
+   01. Blog Listing Card
+   02. Search Box
+   03. Industry Dropdown and Topic Menu
+   04. Table of Contents Widget
+   ========================================================================== */
 
-/* ==== 01. Blog Listing Card ======== */
+/* ==== 01. Blog Listing Card ==== */
 
 /* Typography and layout styling */
 .elementor .blog-section .elementor-post-date,
@@ -19,26 +19,7 @@
     font-style: normal;
 }
 
-/* Post date styling */
-/* .elementor .blog-section .elementor-post-date {
-    font-family: var(--typography-font-secondary);
-    font-size: var(--font-size-14);
-    font-weight: var(--weight-regular);
-    line-height: var(--lh-none);
-    letter-spacing: var(--letter-spacing-14);
-    text-transform: uppercase;
-} */
-
-/* Post title styling */
-/* .elementor .blog-section .elementor-post__title {
-    font-family: var(--typography-font-primary);
-    font-size: var(--font-size-20);
-    font-weight: var(--weight-bold);
-    line-height: var(--lh-tight);
-    letter-spacing: var(--ls-neg-40);
-    margin: 0 0 0 0; 
-    padding-bottom: 50px;
-} */
+/* Post date and title type come from typography.css (o14 and h20) */
 
 /* Title link styling */
 .elementor .blog-section .elementor-post__title a {
@@ -66,7 +47,7 @@
 /* Post content layout and positioning */
 .elementor .blog-section .elementor-post__text {
     position: relative;
-    padding-top: 1.5em; /* Adjust if needed */
+    padding-top: 1.5em;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
@@ -85,7 +66,7 @@
     margin-bottom: 20px !important;
 }
 
-/* ==== 02. Search Box on Blog pages ======== */
+/* ==== 02. Search Box ==== */
 
 /* Wrapper for input and icon */
 .custom-search-form .search-wrapper {
@@ -116,13 +97,13 @@
     transition: border-color 0.3s ease;
 }
 
-/* Optional: Input focus style */
+/* Input focus */
 .custom-search-form input[type="search"]:focus {
     border-color: var(--color-brand-60);
     outline: none;
 }
 
-/* === Industry Dropdown (merged duplicates) === */
+/* ==== 03. Industry Dropdown and Topic Menu ==== */
 
 /* Container */
 .industry-dropdown {
@@ -153,7 +134,7 @@
     font-size: 12px;
 }
 
-/* Fix: keep background black and text white on hover */
+/* Keep the button dark with white text on hover */
 .industry-dropdown .dropdown-toggle:hover,
 .industry-dropdown .dropdown-toggle:focus,
 .industry-dropdown:hover .dropdown-toggle {
@@ -202,7 +183,7 @@
     color: var(--content-primary) !important;
 }
 
-/* Table of Contents Block on Blog */
+/* ==== 04. Table of Contents Widget ==== */
 .elementor-toc__header {
     padding-bottom: 0 !important;
 }
@@ -235,7 +216,7 @@
     height: 8px;
     fill: var(--color-brand-60);
     flex-shrink: 0;
-    margin-top: 3px; /* adjust this value to fine tune vertical alignment */
+    margin-top: 3px; /* aligns the bullet with the first line of text */
 }
 
 /* Style the link inside the item */
