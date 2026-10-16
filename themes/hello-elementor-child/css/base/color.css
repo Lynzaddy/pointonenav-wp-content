@@ -1,17 +1,14 @@
-/* 
-==================================================
-    COLORS.CSS
-    Description: Sets up Figma design system colors and CSS variables for consistent theming.
-
-    TABLE OF CONTENTS:
-    01. Design System Colors
-    02. Token Designations
-
-==================================================  
-*/
+/* ==========================================================================
+   color.css
+   Design system colors and semantic color tokens, taken directly from the
+   Figma file. Prefer the semantic tokens (section 02) in component styles.
+   
+   01. Design System Colors
+   02. Token Designations
+   ========================================================================== */
 
 :root {
-    /* ==== 01. Design System Colors (Most Common Included) ======== */
+    /* ==== 01. Design System Colors ==== */
 
     /* Brand Colors */
     --color-brand-30: #d3f754;
@@ -63,7 +60,7 @@
     --color-sand-90: #51463d;
     --color-sand-95: #2a2420;
 
-    /* ==== 02. Token Designations ======== */
+    /* ==== 02. Token Designations ==== */
 
     /* Content Tokens */
     --content-primary: var(--color-gray-90);

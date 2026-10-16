@@ -1,15 +1,12 @@
-/* 
-==================================================
-    BLOG-POST.CSS
-    Description: Styles for blog post layout and spacing.
+/* ==========================================================================
+   blog-post.css
+   Heading spacing inside blog posts, plus a site-wide video widget fix.
+   
+   01. Post Heading Spacing
+   02. Video Widget
+   ========================================================================== */
 
-    TABLE OF CONTENTS:
-    01. Blog Post Layout
-    02. Blog Post Spacing
-
-==================================================  
-*/
-
+/* ==== 01. Post Heading Spacing ==== */
 .post .elementor-widget-text-editor h1,
 .post .elementor-widget-text-editor h2 {
     padding-top: 1em !important;
@@ -28,7 +25,9 @@
     padding-bottom: 0.5em !important;
 }
 
-/* Fix Elementor Video widget height being overridden by YouTube IFrame API */
+/* ==== 02. Video Widget ==== */
+/* Applies to every Video widget, not only posts. Keeps a 16:9 frame when the
+   YouTube IFrame API overrides the widget height. */
 .elementor-widget-video .elementor-wrapper {
     position: relative;
     padding-bottom: 56.25%; /* 16:9 aspect ratio */

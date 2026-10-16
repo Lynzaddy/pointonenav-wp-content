@@ -13,8 +13,6 @@ function my_child_theme_styles()
 
     // Modular CSS (from /css/ folder inside your child theme)
     $theme_uri = get_stylesheet_directory_uri();
-
-    wp_enqueue_style('reset-css', $theme_uri . '/css/reset.css', array('child-style'), filemtime(get_stylesheet_directory() . '/css/reset.css'));
     wp_enqueue_style('base-css', $theme_uri . '/css/base.css', array('child-style'), filemtime(get_stylesheet_directory() . '/css/base.css'));
     wp_enqueue_style('layout-css', $theme_uri . '/css/layout.css', array('child-style'), filemtime(get_stylesheet_directory() . '/css/layout.css'));
     wp_enqueue_style('components-css', $theme_uri . '/css/components.css', array('child-style'), filemtime(get_stylesheet_directory() . '/css/components.css'));

@@ -1,9 +1,7 @@
-/* 
-===========================================================================================================
-   LINKS.CSS
-   Description: Assigns link styles for elements, ensuring consistent appearance across the site.
-==============================================================================================================
-*/
+/* ==========================================================================
+   link.css
+   Default link styles inside Elementor content.
+   ========================================================================== */
 
 .elementor a,
 .elementor a:visited {
@@ -16,7 +14,7 @@
     text-decoration: none;
 }
 
-/* Added for the Product Container Hovers. Refactor */
+/* Product container cards (legacy) are links but should not underline */
 .elementor a.product-container,
 .elementor a.product-container:visited,
 .elementor a.product-container:hover,
