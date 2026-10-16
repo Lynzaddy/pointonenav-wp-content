@@ -22,8 +22,7 @@
 @import "molecules/text-widget.css";
 
 /* Organisms */
-@import "organisms/sections/section-image-split-feature.css";
-@import "organisms/sections/homepage-hero.css";
-@import "organisms/sections/rtk-comparison-table.css";
-@import "organisms/sections/faq-section.css";
-/* @import "organisms/sections/pon-slider.css"; */
+@import "organisms/section-image-split-feature.css";
+@import "organisms/homepage-hero.css";
+@import "organisms/rtk-comparison-table.css";
+@import "organisms/faq-section.css";
