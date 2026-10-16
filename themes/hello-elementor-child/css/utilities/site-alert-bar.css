@@ -1,13 +1,14 @@
-/* 
-==================================================
-    SITE-ALERT-BAR.CSS
-    Description: Styles specific to the site alert bar, ensuring consistent appearance, responsive behavior, and proper spacing across devices.
+/* ==========================================================================
+   site-alert-bar.css
+   Alert bar output by the Site Alert Bar plugin ([site_alert_bar]).
 
-    Table of Contents:
-    - Banner Positioning and Sizing
-==================================================  
-*/
+   01. Bar
+   02. Typography
+   03. Close Button
+   04. Desktop and Mobile Text
+   ========================================================================== */
 
+/* ==== 01. Bar ==== */
 .site-alert-bar {
     width: 100%;
     background-color: #37cc74;
@@ -16,16 +17,14 @@
 .site-alert-bar__inner {
     position: relative;
     display: flex;
-    align-items: center; /* Perfect vertical centering */
+    align-items: center;
     justify-content: center;
-    padding: 10px 48px; /* 2px added top & bottom */
-    min-height: 40px; /* Slightly increased to match padding */
+    padding: 10px 48px;
+    min-height: 40px;
     text-align: center;
 }
 
-/* =========================================
-   Unified Typography
-========================================= */
+/* ==== 02. Typography ==== */
 
 .site-alert-bar__message {
     display: inline;
@@ -33,7 +32,7 @@
     font-size: 14px;
     font-weight: 500;
     color: #141413;
-    line-height: 1.2; /* Optical balance */
+    line-height: 1.2;
 }
 
 /* Ensure children inherit */
@@ -57,9 +56,7 @@
     margin-left: 0.35em;
 }
 
-/* =========================================
-   Close Button
-========================================= */
+/* ==== 03. Close Button ==== */
 
 .site-alert-bar__close {
     position: absolute;
@@ -82,9 +79,7 @@
     color: linear-gradient(0deg, var(--states-hover-inverse, rgba(255, 255, 255, 0.1)) 0%, var(--states-hover-inverse, rgba(255, 255, 255, 0.1)) 100%), var(--background-primary-inverse, #141413);
 }
 
-/* =========================================
-   Responsive Text Switching
-========================================= */
+/* ==== 04. Desktop and Mobile Text ==== */
 
 .site-alert-bar__text--mobile {
     display: none;
@@ -105,7 +100,8 @@
         display: inline !important;
     }
 }
-/* Prevent alert flicker */
+/* Hidden until the plugin script checks for a dismissal, so a dismissed
+   alert never flashes on screen */
 .site-alert-bar {
     display: none;
 }

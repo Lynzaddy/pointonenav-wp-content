@@ -1,12 +1,7 @@
-/* 
-==================================================
-    KETCH.CSS
-    Description: Styles specific to Ketch consent banner, overriding default styles to ensure proper display and responsiveness.
-
-    Table of Contents:
-    - Banner Positioning and Sizing
-==================================================  
-*/
+/* ==========================================================================
+   ketch.css
+   Ketch cookie consent banner: fixed bottom-left card with a stable width.
+   ========================================================================== */
 
 #ketch-banner {
     position: fixed !important;
@@ -23,7 +18,7 @@
 
     box-sizing: border-box !important;
 
-    /* Kill responsive resizing */
+    /* No responsive resizing */
     transform: none !important;
 }
 
@@ -40,7 +35,7 @@
     max-width: 100% !important;
 }
 
-/* Allow natural wrapping (prevents clipping) */
+/* Natural text wrapping, so nothing is clipped */
 #ketch-banner p,
 #ketch-banner span {
     white-space: normal !important;

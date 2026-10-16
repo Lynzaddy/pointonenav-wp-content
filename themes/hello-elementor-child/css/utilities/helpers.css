@@ -1,18 +1,14 @@
-/* 
-==================================================
-    HELPERS.CSS
-    Description: Contains helper classes for versy specific use cases. Examples include iframe map adjustments and tooltip pop overs.
+/* ==========================================================================
+   helpers.css
+   Helpers for specific cases: the embedded map iframe and tooltip popovers.
 
-    TABLE OF CONTENTS:
-    01. iFrame Map Adjustments
-    02. Tooltip Pop Overs
+   01. iFrame Map
+   02. Tooltip Popovers
+   ========================================================================== */
 
-==================================================  
-*/
-
-/* ==== 01. iFrame Map Adjustments ======== */
+/* ==== 01. iFrame Map ==== */
 .iframe-container {
-    max-height: 600px; /* Full viewport height on all devices */
+    max-height: 600px;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -29,7 +25,7 @@
     display: block;
 }
 
-/* ==== 02. TOOLTIP POP OVERS ======== */
+/* ==== 02. Tooltip Popovers ==== */
 
 /* Tooltip Links */
 .tooltip-link {
@@ -55,9 +51,9 @@
     font-size: 14px;
     z-index: 1000;
     transition: opacity 0.2s ease;
-    max-width: 360px; /* still caps the max */
-    min-width: 240px; /* 👈 force wider base width */
-    width: max-content; /* 👈 allow content to dictate if wider than min */
+    max-width: 360px;
+    min-width: 240px;
+    width: max-content; /* grows with content between 240px and 360px */
     text-align: center;
     box-sizing: border-box;
 }

@@ -1,11 +1,9 @@
-/* 
-==================================================
-    FAQ-SECTION.CSS
-    Description: Styles for the FAQ section.
-==================================================  
-*/
+/* ==========================================================================
+   faq-section.css
+   FAQ accordion output by the [state_faq_accordion] shortcode on the
+   legacy State pages (functions.php).
+   ========================================================================== */
 
-/* FAQ Section */
 .faq-accordion {
     border-top: 1px solid #d9d9d6;
     border-bottom: 1px solid #d9d9d6;
