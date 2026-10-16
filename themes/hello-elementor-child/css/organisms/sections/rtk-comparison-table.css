@@ -1,13 +1,11 @@
-/* 
-==================================================
-    RTK-COMPARISON-TABLE.CSS
-    Description: Styles specific to the RTK Comparison Table component.
-==================================================  
-*/
+/* ==========================================================================
+   rtk-comparison-table.css
+   Competitor comparison table output by the [competitor_table] shortcode
+   on the legacy State pages (functions.php). The first two columns stay
+   fixed while the rest scroll sideways.
+   ========================================================================== */
 
-/* ========== RTK Comparison Table (v2) ========== */
-
-/* 1) OUTER SCROLL CONTAINER */
+/* 1) Outer scroll container */
 .competitor-table-outer {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -18,19 +16,19 @@
     margin-top: 20px;
 }
 
-/* 2) INNER WIDTH WRAPPER */
+/* 2) Inner width wrapper */
 .competitor-table-wrapper {
     min-width: 1000px;
 }
 
-/* 3) BASE TABLE */
+/* 3) Base table */
 .competitor-table {
     border-collapse: collapse;
     width: 100%;
     table-layout: auto;
 }
 
-/* 4) ALL CELLS */
+/* 4) All cells */
 .competitor-table th,
 .competitor-table td {
     padding: 10px 15px;
@@ -42,14 +40,14 @@
     vertical-align: top;
 }
 
-/* 5) BRAND COLUMN (1st) */
+/* 5) Brand column (1st, fixed) */
 .competitor-table th.sticky-col:first-child,
 .competitor-table td.sticky-col:first-child {
     position: -webkit-sticky;
     position: sticky;
     left: 0;
     min-width: 180px;
-    max-width: 180px; /* ↓ 20 px narrower */
+    max-width: 180px;
     background: #f2f2f0 !important;
     z-index: 5;
     border-right: 1px solid rgba(0, 0, 0, 0.1);
@@ -66,14 +64,14 @@
     z-index: 6;
 }
 
-/* 6) POLARIS COLUMN (2nd) */
+/* 6) Polaris column (2nd, fixed) */
 .competitor-table th.sticky-col:nth-child(2),
 .competitor-table td.sticky-col:nth-child(2) {
     position: -webkit-sticky;
     position: sticky;
-    left: 180px; /* matches new col-1 width */
+    left: 180px; /* width of column 1 */
     min-width: 160px;
-    max-width: 160px; /* ↓ 20 px narrower */
+    max-width: 160px;
     background: var(--color-white-a100) !important;
     z-index: 10;
     box-shadow: 6px 0 10px rgba(0, 0, 0, 0.15);
@@ -95,15 +93,15 @@
     pointer-events: none;
 }
 
-/* 7) REMAINING COLUMNS */
+/* 7) Remaining columns */
 .competitor-table th:not(.sticky-col),
 .competitor-table td:not(.sticky-col) {
     min-width: 150px;
-    max-width: 190px; /* tightened a bit */
+    max-width: 190px;
     word-break: break-word;
 }
 
-/* 8) SLIMMER SCROLLBAR */
+/* 8) Slimmer scrollbar */
 .competitor-table-outer::-webkit-scrollbar {
     height: 6px;
 }
@@ -112,7 +110,7 @@
     border-radius: 3px;
 }
 
-/* 9) MOBILE OVERRIDES  (under 768 px) */
+/* 9) Mobile (under 768px) */
 @media (max-width: 767px) {
     /* first column */
     .competitor-table th.sticky-col:first-child,
@@ -123,7 +121,7 @@
     /* second column */
     .competitor-table th.sticky-col:nth-child(2),
     .competitor-table td.sticky-col:nth-child(2) {
-        left: 120px; /* align after col-1 */
+        left: 120px; /* width of column 1 on mobile */
         min-width: 120px;
         max-width: 120px;
     }

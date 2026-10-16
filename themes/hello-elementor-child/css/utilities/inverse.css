@@ -1,13 +1,11 @@
-/* 
-==================================================
-    INVERSE.CSS
-    Description: Contains styles for elements with the "inverse" class, adjusting colors for text and backgrounds.
-==================================================  
-*/
+/* ==========================================================================
+   inverse.css
+   .inverse switches headings, text and links to light colors for dark
+   backgrounds. Components handle their own inverse styles in their files.
+   ========================================================================== */
 
-/* Any elemement with the added class "inverse" */
+/* Any element with the class "inverse" */
 .inverse {
-    /* background-color: var(--color-gray-90); */
 }
 
 .inverse .elementor h1,
@@ -32,7 +30,8 @@
     color: var(--content-secondary-inverse);
 }
 
-/* Any element with the added class "gray" */
+/* Any element with the class "gray" (legacy). Note: --color-reverse-background
+   is not defined, so this currently has no effect. */
 .gray {
     background-color: var(--color-reverse-background);
 }

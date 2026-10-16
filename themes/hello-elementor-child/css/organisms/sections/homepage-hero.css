@@ -1,16 +1,15 @@
-/* 
-==================================================
-    HOMEPAGE-HERO.CSS
-    Description: Styles for the homepage hero section.
-==================================================  
-*/
+/* ==========================================================================
+   homepage-hero.css
+   Homepage hero: background video on desktop, a separate small-screen
+   video container at 1024px and below, and the dark gradient overlay.
+   ========================================================================== */
 
 .homepage-hero {
     position: relative;
     overflow: hidden;
 }
 
-/* === Homepage Hero === */
+/* Tablet and mobile */
 @media (max-width: 1024px) {
     /* Hide background video in homepage-hero */
     .homepage-hero .elementor-background-video-container {
@@ -18,23 +17,21 @@
     }
 
     .homepage-hero {
-        /* background-color: #222 !important; */
         background-image: none !important;
     }
 
-    /* Show small-screen-container */
+    /* Show the small-screen video container */
     .small-screen-container .elementor-background-video-container {
-        display: flex !important; /* or block if not flex layout */
+        display: flex !important;
         visibility: visible !important;
         opacity: 1 !important;
         height: auto !important;
     }
 }
 
+/* Desktop and laptop */
 @media (min-width: 1025px) {
-    /* Hide small-screen-container on desktop/laptop */
     .small-screen-container {
-        /* display: none !important; */
     }
 
     .hero-overlay {
