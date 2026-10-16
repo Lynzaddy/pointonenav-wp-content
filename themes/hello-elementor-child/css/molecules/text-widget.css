@@ -1,16 +1,15 @@
-/* 
-==================================================
-    TEXT-WIDGET.CSS
-    Description: Styles for the design system’s Text-based Widgets
+/* ==========================================================================
+   text-widget.css
+   Text Widget, Stat Widget and Icon Widget components, and the Text Hero
+   width. Their type styles come from typography.css.
 
-    TABLE OF CONTENTS:
-    01. Text Widget
-    02. Stat Widget
-    03. Icon Widget (layout only; icon visuals come from icon.css)
-==================================================  
-*/
+   01. Text Widget
+   02. Stat Widget
+   03. Icon Widget (layout only; icons come from icon.css)
+   04. Text Hero
+   ========================================================================== */
 
-/* === 01. Text Widget === */
+/* ==== 01. Text Widget ==== */
 .elementor .text-widget {
     display: flex;
     flex-direction: column;
@@ -29,7 +28,7 @@
     gap: var(--gap-8) !important;
 }
 
-/* Added for Loop Grid Spacing */
+/* Same layout when the widget is used inside a Loop Grid */
 .elementor .text-widget > .e-con-inner {
     display: flex;
     flex-direction: column;
@@ -48,13 +47,13 @@
 }
 
 .elementor .text-widget.tw-large .btn-container {
-    /* Was 20px, but changed to zero, widget controls gap */
+    /* The widget gap handles spacing, so no top margin */
     margin-top: 0px;
     padding-top: 20px;
 }
 
 .elementor .text-widget.tw-small .btn-container {
-    /* Was 8px, but changed to zero, widget controls gap */
+    /* The widget gap handles spacing, so no top margin */
     margin-top: 0px;
     padding-top: 8px;
 }
@@ -72,105 +71,7 @@
     align-items: flex-start !important;
 }
 
-/* Normalize inner heading nodes */
-/* (*) WORK TO REMOVE */
-/* .elementor .text-widget .overline .elementor-widget-container > .elementor-heading-title,
-.elementor .text-widget .overline .elementor-widget-container > h1,
-.elementor .text-widget .overline .elementor-widget-container > h2,
-.elementor .text-widget .overline .elementor-widget-container > h3,
-.elementor .text-widget .overline .elementor-widget-container > h4,
-.elementor .text-widget .overline .elementor-widget-container > h5,
-.elementor .text-widget .overline .elementor-widget-container > h6,
-.elementor .text-widget .headline .elementor-widget-container > .elementor-heading-title,
-.elementor .text-widget .headline .elementor-widget-container > h1,
-.elementor .text-widget .headline .elementor-widget-container > h2,
-.elementor .text-widget .headline .elementor-widget-container > h3,
-.elementor .text-widget .headline .elementor-widget-container > h4,
-.elementor .text-widget .headline .elementor-widget-container > h5,
-.elementor .text-widget .headline .elementor-widget-container > h6,
-.elementor .text-widget .body .elementor-widget-container > .elementor-heading-title {
-    color: inherit;
-    font: inherit;
-    letter-spacing: inherit;
-    line-height: inherit;
-    text-transform: inherit;
-    margin: 0;
-} */
-
-/* .elementor .text-widget .overline {
-    color: var(--content-primary);
-    font-family: var(--typography-font-secondary);
-    font-size: var(--font-size-14);
-    font-style: normal;
-    font-weight: var(--weight-regular);
-    line-height: var(--lh-none);
-    letter-spacing: var(--ls-pos-14);
-    text-transform: uppercase;
-} */
-
-/* (*) WORK TO REMOVE */
-/* .elementor .text-widget .headline h2 {
-    color: var(--content-primary);
-    font-family: var(--typography-font-brand) !important;
-    font-size: var(--font-size-32) !important;
-    font-style: normal;
-    font-weight: var(--weight-bold) !important;
-    line-height: var(--lh-tight) !important;
-    letter-spacing: var(--ls-neg-64);
-    margin: 0 !important;
-    padding: 0 !important;
-} */
-
-/* (*) WORK TO REMOVE */
-/* .elementor .text-widget .body {
-    color: var(--content-secondary);
-    font-family: var(--typography-font-primary);
-    font-size: var(--font-size-16);
-    font-style: normal;
-    font-weight: var(--weight-regular);
-    line-height: var(--lh-relaxed);
-    letter-spacing: var(--ls-neg-16);
-} */
-
-/* (*) WORK TO REMOVE */
-/* .elementor .text-widget .btn-link .elementor-heading-title a {
-    font-family: var(--typography-font-primary);
-    font-size: var(--font-size-14);
-    line-height: var(--lh-relaxed);
-    letter-spacing: var(--ls-neg-14);
-} */
-
-/* (*) WORK TO REMOVE */
-/* .elementor .text-widget.tw-large .btn-link .elementor-heading-title a {
-    font-size: var(--font-size-16);
-} */
-
-/* (*) WORK TO REMOVE */
-/* .elementor .text-widget.tw-large .headline h2 {
-    font-size: var(--font-size-48) !important;
-    letter-spacing: var(--ls-neg-96) !important;
-} */
-
-/* (*) WORK TO REMOVE */
-/* .elementor .text-widget.tw-large .body {
-    font-size: var(--font-size-20);
-} */
-
-/* .elementor .text-widget.tw-small .headline h2 {
-    font-size: 16px !important;
-    font-family: var(--typography-font-primary) !important;
-    font-weight: var(--weight-bold) !important;
-    line-height: var(--lh-relaxed) !important;
-    letter-spacing: var(--ls-neg-32) !important;
-} */
-
-/* .elementor .text-widget.tw-small .body {
-    font-size: 16px;
-    line-height: var(--lh-relaxed);
-    letter-spacing: var(--ls-neg-16);
-} */
-
-/* === Inverse (text-widget) === */
+/* Inverse */
 /* Works when .inverse is on the widget itself OR any ancestor container */
 .elementor .text-widget.inverse .headline,
 .elementor .inverse .text-widget .headline {
@@ -193,7 +94,7 @@
     color: var(--content-secondary-inverse);
 }
 
-/* === 02. Stat Widget === */
+/* ==== 02. Stat Widget ==== */
 .elementor .stat-widget {
     margin: 0;
     padding: 0 0 0 16px;
@@ -203,7 +104,7 @@
     gap: 8px;
 }
 
-/* Normalize */
+/* Reset Elementor heading styles so the stat widget controls type */
 .elementor .stat-widget .headline .elementor-widget-container > .elementor-heading-title,
 .elementor .stat-widget .headline .elementor-widget-container > h1,
 .elementor .stat-widget .headline .elementor-widget-container > h2,
@@ -220,53 +121,16 @@
     margin: 0;
 }
 
-/* Base typography */
-/* .elementor .stat-widget .headline {
-    color: var(--content-primary);
-    font-family: var(--typography-font-brand);
-    font-size: var(--font-size-40);
-    font-style: normal;
-    font-weight: var(--weight-bold);
-    line-height: var(--lh-tight);
-    letter-spacing: var(--ls-neg-80);
-} */
-
-/* .elementor .stat-widget .body {
-    color: var(--content-secondary);
-    font-family: var(--typography-font-primary);
-    font-size: var(--font-size-16);
-    font-style: normal;
-    font-weight: var(--weight-regular);
-    line-height: var(--lh-relaxed);
-    letter-spacing: var(--ls-neg-16);
-} */
-
 /* Variants */
 .elementor .stat-widget.sw-large {
     gap: 12px;
     padding-left: 20px;
 }
 
-/* .elementor .stat-widget.sw-large .headline {
-    font-size: var(--font-size-48);
-    letter-spacing: var(--ls-neg-96);
-} */
-
 .elementor .stat-widget.sw-small {
     gap: 4px;
     padding-left: 12px;
 }
-
-/* .elementor .stat-widget.sw-small .headline {
-    font-size: var(--font-size-20);
-    letter-spacing: var(--ls-neg-40);
-} */
-
-/* .elementor .stat-widget.sw-small .body {
-    font-size: var(--font-size-14);
-    line-height: var(--lh-relaxed);
-    letter-spacing: var(--ls-neg-14);
-} */
 
 /* Inverse */
 .elementor .stat-widget.inverse {
@@ -279,11 +143,11 @@
     color: var(--content-secondary-inverse) !important;
 }
 
-/* === 03. Icon Widget (layout only; icons handled by icon.css) === */
+/* ==== 03. Icon Widget ==== */
+/* Layout only; icons come from icon.css */
 .elementor .icon-widget {
     margin: 0;
     padding: 20px 0;
-    /* border-top: 1px solid var(--line-alpha); */
     max-width: 460px;
     display: grid;
     grid-template-columns: auto 1fr; /* left = icon’s rendered width (incl. padding), right fills */
@@ -341,7 +205,6 @@
 
 /* Inverse (widget text/border only) */
 .elementor .icon-widget.inverse {
-    /* border-top-color: var(--line-alpha-inverse); */
 }
 
 .elementor .icon-widget.inverse .headline .elementor-heading-title {
@@ -356,7 +219,7 @@
     stroke: var(--content-primary-inverse);
 }
 
-/* === 04. Text Hero === */
+/* ==== 04. Text Hero ==== */
 
 /* When inside .text-hero */
 .elementor .text-hero .text-widget {

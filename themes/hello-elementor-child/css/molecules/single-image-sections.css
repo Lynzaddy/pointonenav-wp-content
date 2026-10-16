@@ -1,13 +1,10 @@
-/* 
-==================================================
-    SINGLE-IMAGE-SECTIONS.CSS
-    Description: Single Image Sections Stylesheet
-==================================================  
-*/
+/* ==========================================================================
+   single-image-sections.css
+   Feature card (.feature-card): image and text side by side, with inverse
+   and responsive versions.
+   ========================================================================== */
 
-/* =========================
-   Feature Card Base
-   ========================= */
+/* ==== Feature Card Base ==== */
 .feature-card {
     margin: 0;
     padding: 0;
@@ -24,16 +21,12 @@
     border-radius: 0 var(--image-border-radius) var(--image-border-radius) 0;
 }
 
-/* =========================
-   Inverse Variant
-   ========================= */
+/* ==== Inverse Variant ==== */
 .feature-card.inverse .text-side {
     background: var(--background-primary-inverse, #fff) !important;
 }
 
-/* =========================
-   Tablet (≤ 1024px)
-   ========================= */
+/* ==== Tablet (≤ 1024px) ==== */
 @media (max-width: 1024px) {
     .feature-card .text-side {
         padding: 40px;
@@ -45,9 +38,7 @@
     }
 }
 
-/* =========================
-   Mobile (≤ 768px)
-   ========================= */
+/* ==== Mobile (≤ 768px) ==== */
 @media (max-width: 768px) {
     .feature-card {
         flex-direction: column;

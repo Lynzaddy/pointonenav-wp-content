@@ -1,13 +1,10 @@
-/* 
-==================================================
-    TEXT-FEATURE.CSS
-    Description: Component styling for Text Feature Block
-==================================================  
-*/
+/* ==========================================================================
+   text-feature.css
+   Text Feature block: a text column plus feature columns. Built mobile
+   first, with tablet and desktop layouts.
+   ========================================================================== */
 
-/* =========================
-   Base (mobile ≤ 767px)
-   ========================= */
+/* ==== Base (mobile ≤ 767px) ==== */
 .text-feature {
     display: flex;
     flex-direction: column;
@@ -28,7 +25,7 @@
     min-width: 0; /* prevent content from forcing overflow */
 }
 
-/* Fix the discovered cap (Elementor default max-width: 660px) */
+/* Remove Elementor's default 660px max-width */
 .elementor .text-feature .text-col .text-widget {
     max-width: 100% !important;
     width: 100%;
@@ -39,9 +36,7 @@
     margin-bottom: 60px;
 }
 
-/* =========================
-   Tablet (768px–1024px)
-   ========================= */
+/* ==== Tablet (768px–1024px) ==== */
 @media (min-width: 768px) and (max-width: 1024px) {
     .text-feature {
         display: grid;
@@ -71,9 +66,7 @@
     }
 }
 
-/* =========================
-   Desktop (≥ 1025px)
-   ========================= */
+/* ==== Desktop (≥ 1025px) ==== */
 @media (min-width: 1025px) {
     .text-feature {
         display: grid;
@@ -109,7 +102,7 @@
         grid-column: 4;
     }
 
-    /* IMPORTANT: remove any previous margin hack */
+    /* No margin needed here; the spacer column provides the gap */
     .text-feature > .feature-col2 {
         margin-left: 0;
     }
