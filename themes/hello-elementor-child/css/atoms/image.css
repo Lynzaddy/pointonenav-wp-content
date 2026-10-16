@@ -1,9 +1,8 @@
-/* 
-===========================================================================================================
-   IMAGES.CSS
-   Description: Styles for images, ensuring they are responsive and maintain aspect ratio.
-==============================================================================================================
-*/
+/* ==========================================================================
+   image.css
+   Default image styles inside Elementor content: responsive width and the
+   design system corner radius.
+   ========================================================================== */
 
 .elementor img {
     max-width: 100%;

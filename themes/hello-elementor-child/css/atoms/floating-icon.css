@@ -1,11 +1,8 @@
-/* 
-==================================================
-    FLOATING-ICON.CSS
-    Description: Styles for floating action icons/buttons.
-==================================================  
-*/
+/* ==========================================================================
+   floating-icon.css
+   Floating icon placed over the map in its lower right corner.
+   ========================================================================== */
 
-/* This icon goes over the map in the lower right corner */
 .floating-icon {
     position: absolute;
     bottom: 16px;

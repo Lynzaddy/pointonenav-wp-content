@@ -33,15 +33,11 @@ The order below matches how the files are enqueued in `functions.php`. Load orde
     - Purpose: Utility classes and helpers.
     - Responsive visibility classes, `.inverse` styles, margin/padding helpers, breakpoint-specific adjustments.
 
-7. **`/css/elementor.css`**
-    - Purpose: Elementor-specific tweaks.
-    - Class name cleanup, widget alignment fixes, widget spacing, consistency corrections.
-
 ## 📝 Notes
 
 - Design tokens (colors, type, component sizes) are taken directly from the Figma file and defined once as CSS variables on `:root` in the `/base` files. Use them throughout instead of typed values.
 - The `.inverse` class switches components (text, `.btn-*`, icons, lines) to their light-on-dark versions for dark backgrounds.
-- The top-level files (`base.css`, `layout.css`, `components.css`, `utilities.css`, `elementor.css`) are import files. Add styles to the files in the subfolders.
+- The top-level files (`base.css`, `layout.css`, `components.css`, `utilities.css`) are import files. Add styles to the files in the subfolders.
 - Avoid Elementor Global Colors and Fonts for design system styling; use these tokens and classes.
 - `layout/retire-with-components.css` holds legacy page styles. Remove it only after the Homepage, Platform and other legacy pages are rebuilt.
 

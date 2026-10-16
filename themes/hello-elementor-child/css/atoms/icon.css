@@ -1,27 +1,26 @@
-/* 
-==================================================
-    ICONS.CSS
-    Description: Styles for icons used in the theme.
+/* ==========================================================================
+   icon.css
+   Icon styles from the Figma components: base, sizes, states, primary,
+   secondary and tertiary icons with inverse versions, and the enclosed
+   icon (enc-icon).
 
-    TABLE OF CONTENTS:
-    01. Base (Brand) Icon Styles
-    02. Icon Size Modifiers (Global)
-    03. Base (Brand) Icon States
-    04. Base (Brand) Inverse Modifier
-    05. Primary Icon
-    06. Primary Icon Inverse
-    07. Secondary Icon
-    08. Secondary Icon Inverse
-    09. Tertiary Icon
-    10. Tertiary Icon Inverse
-    11. Enclosed Icon (enc-icon) — canonical
-    12. Enclosed Icon Inverse
-    13. Hover OFF Scopes (enc-icon everywhere + icons in .icon-widget)
-    14. Plain .icon inside .icon-widget = 24×24, no padding/margin
-==================================================  
-*/
+   01. Base (Brand) Icon Styles
+   02. Icon Size Modifiers
+   03. Base (Brand) Icon States
+   04. Base (Brand) Inverse Modifier
+   05. Primary Icon
+   06. Primary Icon Inverse
+   07. Secondary Icon
+   08. Secondary Icon Inverse
+   09. Tertiary Icon
+   10. Tertiary Icon Inverse
+   11. Enclosed Icon (enc-icon)
+   12. Enclosed Icon Inverse
+   13. Hover Turned Off
+   14. Plain Icons Inside .icon-widget
+   ========================================================================== */
 
-/* === 01. Base (Brand) Icon Styles === */
+/* ==== 01. Base (Brand) Icon Styles ==== */
 .elementor .elementor-icon {
     height: var(--icon-density-medium);
     width: var(--icon-density-medium);
@@ -41,7 +40,7 @@
     fill: none !important;
 }
 
-/* === 02. Icon Size Modifiers (Global) === */
+/* ==== 02. Icon Size Modifiers ==== */
 .elementor .icon-large .elementor-icon {
     height: var(--icon-density-large);
     width: var(--icon-density-large);
@@ -53,7 +52,7 @@
     padding: var(--icon-padding-small);
 }
 
-/* === 03. Base (Brand) Icon States === */
+/* ==== 03. Base (Brand) Icon States ==== */
 .elementor .elementor-icon:hover {
     background: linear-gradient(0deg, var(--state-hover, rgba(0, 0, 0, 0.08)) 0%, var(--state-hover, rgba(0, 0, 0, 0.08)) 100%), var(--background-brand, #218241);
 }
@@ -76,7 +75,7 @@
     stroke: var(--content-disabled);
 }
 
-/* === 04. Base (Brand) Inverse Modifier === */
+/* ==== 04. Base (Brand) Inverse Modifier ==== */
 .elementor .inverse .elementor-icon:hover {
     background: linear-gradient(0deg, var(--state-hover-inverse, rgba(255, 255, 255, 0.1)) 0%, var(--state-hover-inverse, rgba(255, 255, 255, 0.1)) 100%), var(--background-brand, #218241);
 }
@@ -102,7 +101,7 @@
     stroke: var(--content-disabled-inverse);
 }
 
-/* === 05. Primary Icon === */
+/* ==== 05. Primary Icon ==== */
 .elementor .icon-primary .elementor-icon {
     background: var(--background-primary-inverse);
 }
@@ -128,7 +127,7 @@
     stroke: var(--content-disabled);
 }
 
-/* === 06. Primary Icon Inverse === */
+/* ==== 06. Primary Icon Inverse ==== */
 .elementor .inverse.icon-primary .elementor-icon {
     background: var(--background-primary);
 }
@@ -158,7 +157,7 @@
     stroke: var(--content-disabled);
 }
 
-/* === 07. Secondary Icon === */
+/* ==== 07. Secondary Icon ==== */
 .elementor .icon-secondary .elementor-icon {
     background: transparent;
     border: 1px solid var(--line-emphasis);
@@ -190,7 +189,7 @@
     pointer-events: none;
 }
 
-/* === 08. Secondary Icon Inverse === */
+/* ==== 08. Secondary Icon Inverse ==== */
 .elementor .icon-secondary.inverse .elementor-icon {
     background: transparent;
     border-radius: var(--Buttons-button-radius, 100px);
@@ -214,7 +213,8 @@
 }
 .elementor .icon-secondary.inverse.disabled .elementor-icon {
     border: 1px solid var(--line-disabled-inverse, rgba(255, 255, 255, 0.2));
-    background: linear-gradient(0deg, var(--states-disabled-inverse, rgba(255, 255, 255, 0.08)) 0%, var(--states-disabled-inverse, rgba(255, 255, 255, 0.08)) 100%),
+    background:
+        linear-gradient(0deg, var(--states-disabled-inverse, rgba(255, 255, 255, 0.08)) 0%, var(--states-disabled-inverse, rgba(255, 255, 255, 0.08)) 100%),
         var(--background-secondary-inverse, #2a2a27);
     cursor: not-allowed;
     pointer-events: none;
@@ -223,7 +223,7 @@
     stroke: var(--content-disabled-inverse, #e7e7e4);
 }
 
-/* === 09. Tertiary Icon === */
+/* ==== 09. Tertiary Icon ==== */
 .elementor .icon-tertiary .elementor-icon {
     background: transparent;
     border: none;
@@ -253,7 +253,7 @@
     stroke: var(--content-disabled, #e7e7e4);
 }
 
-/* === 10. Tertiary Icon Inverse === */
+/* ==== 10. Tertiary Icon Inverse ==== */
 .elementor .icon-tertiary.inverse .elementor-icon {
     background: transparent;
     border: none;
@@ -280,7 +280,7 @@
     stroke: var(--content-disabled-inverse);
 }
 
-/* === 11. Enclosed Icon (enc-icon) — canonical === */
+/* ==== 11. Enclosed Icon (enc-icon) ==== */
 .elementor .enc-icon .elementor-icon,
 .elementor .enc-icon .elementor-icon:hover {
     height: var(--icon-density-medium);
@@ -325,7 +325,7 @@
     stroke: var(--content-primary);
 }
 
-/* === 12. Enclosed Icon — Inverse (supports ancestor .inverse) === */
+/* ==== 12. Enclosed Icon Inverse ==== */
 /* Works when .inverse is on the icon itself OR any ancestor container */
 .elementor .inverse.enc-icon .elementor-icon,
 .elementor .inverse .enc-icon .elementor-icon,
@@ -339,8 +339,8 @@
     stroke: var(--content-primary);
 }
 
-/* === 13. HOVER OFF SCOPES ============================================= */
-/* 13a) Turn OFF hover for ALL enc-icon (site-wide) */
+/* ==== 13. Hover Turned Off ==== */
+/* 13a) No hover effect on any enc-icon */
 .elementor .enc-icon .elementor-icon:hover,
 .elementor .enc-icon .elementor-icon:focus,
 .elementor .enc-icon .elementor-icon:active {
@@ -362,7 +362,7 @@
     transform: none !important;
 }
 
-/* 13b) Turn OFF hover for ANY icon inside .icon-widget */
+/* 13b) No hover effect on icons inside .icon-widget */
 .elementor .icon-widget .elementor-icon:hover,
 .elementor .icon-widget .elementor-icon:focus,
 .elementor .icon-widget .elementor-icon:active,
@@ -389,8 +389,8 @@
     transform: none !important;
 }
 
-/* === 14. Plain .icon inside .icon-widget = 24×24, no padding/margin === */
-/* Targets widgets that carry a class "icon" (your markup shows this) */
+/* ==== 14. Plain Icons Inside .icon-widget ==== */
+/* Icon widgets with the class "icon": 24x24, no padding or margin */
 .elementor .icon-widget .icon .elementor-icon {
     width: 24px !important;
     height: 24px !important;
