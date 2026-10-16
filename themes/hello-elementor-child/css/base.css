@@ -1,21 +1,20 @@
-/* 
-==================================================
-    BASE.CSS
-    Description: Imports all foundational styles used for base HTML elements. NO CSS HERE!!!
-==================================================  
-*/
+/* ==========================================================================
+   base.css
+   Imports the design tokens and base element styles.
+   Import file only: add styles to the files in /base, not here.
+   ========================================================================== */
 
-/* ==== Colors (CSS Variables) ======== */
+/* Color tokens */
 @import "base/color.css";
 
-/* ==== Typography ======== */
+/* Fonts, type tokens and type classes */
 @import "base/typography.css";
 
-/* ==== Component Elements ======== */
+/* Component tokens (sizes and radius) */
 @import "base/component.css";
 
-/* ==== Link Styles ======== */
+/* Links */
 @import "base/link.css";
 
-/* ==== Blog Spacing ======== */
+/* Blog post spacing */
 @import "base/blog-post.css";

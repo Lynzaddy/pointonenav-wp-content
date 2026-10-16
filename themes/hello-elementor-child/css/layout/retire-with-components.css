@@ -1,11 +1,11 @@
-/* 
-==================================================
-    RETIRE-WITH-COMPONENTS.CSS
-    Description: We will retire all of these once the new component-based pages are live.
-==================================================  
-*/
+/* ==========================================================================
+   retire-with-components.css
+   Legacy page styles (Homepage, Platform, and other pages not yet rebuilt
+   on the design system). Do not add new styles here. Delete this file and
+   its import in layout.css only after no page uses these classes.
+   ========================================================================== */
 
-/* Old Homepage Elements */
+/* ==== Homepage ==== */
 .elementor .homepage-hero {
     background-color: var(--background-tertiary-inverse);
 }
@@ -134,9 +134,8 @@
     text-decoration-line: none;
 }
 
-/* === Homepage Platform Section */
+/* ==== Homepage Platform Section ==== */
 .elementor .platform-section {
-    /* padding: 40px 20px; */
     background-color: var(--color-background-inverse);
 }
 
@@ -444,7 +443,6 @@
 
 /* Padding inside the background container */
 .cta-2col-background-container > .e-con-inner {
-    /* padding: 40px 30px; */
     max-width: 1160px;
     margin-inline: auto;
     box-sizing: border-box;
@@ -453,7 +451,6 @@
 /* Responsive tweak for smaller screens */
 @media (max-width: 768px) {
     .cta-2col-background-container > .e-con-inner {
-        /* padding: 24px 20px; */
     }
 }
 
@@ -502,7 +499,7 @@
         width: 100% !important;
         display: flex !important;
         justify-content: center;
-        align-items: center; /* ✅ centers the text vertically */
+        align-items: center; /* centers the text vertically */
         text-align: center;
         box-sizing: border-box;
     }
@@ -553,9 +550,7 @@
     justify-content: space-between;
 }
 
-/* ==========================================================================
-   Peek Carousel Container
-   ========================================================================== */
+/* ==== Peek Carousel Container ==== */
 .peek-carousel-container {
     width: 100%;
     max-width: 100vw;
@@ -571,9 +566,7 @@
     overflow: visible;
 }
 
-/* ==========================================================================
-   Swiper Slides
-   ========================================================================== */
+/* ==== Swiper Slides ==== */
 .swiper-slide {
     width: 90vw;
     max-width: 680px;
@@ -590,9 +583,7 @@
     cursor: default !important;
 }
 
-/* ==========================================================================
-   Carousel Card
-   ========================================================================== */
+/* ==== Carousel Card ==== */
 .carousel-card {
     width: 100%;
     height: 100%;
@@ -613,7 +604,7 @@
     object-fit: cover;
     aspect-ratio: 680 / 382;
     border-radius: var(--image-border-radius);
-    margin-bottom: 24px; /* was 32px */
+    margin-bottom: 24px;
 }
 
 .swiper-slide-active {
@@ -621,9 +612,7 @@
     z-index: 2;
 }
 
-/* ==========================================================================
-   Internal Content Styling
-   ========================================================================== */
+/* ==== Internal Content Styling ==== */
 .full-slide-link {
     display: block;
     text-decoration: none !important;
@@ -646,7 +635,7 @@
 }
 
 .full-slide-link:hover h3 {
-    border-bottom-color: var(--color-gray-90); /* Orange underline only under the text */
+    border-bottom-color: var(--color-gray-90); /* underline sits under the text only */
 }
 
 .carousel-card p,
@@ -670,9 +659,7 @@
     text-decoration: underline !important;
 }
 
-/* ==========================================================================
-   Navigation & Pagination (Final spec-compliant version)
-   ========================================================================== */
+/* ==== Navigation & Pagination ==== */
 .peek-carousel-controls {
     display: flex;
     justify-content: center;
@@ -741,23 +728,11 @@
     background: var(--color-gray-90);
 }
 
-/* ==========================================================================
-   Mobile Adjustments
-   ========================================================================== */
+/* ==== Mobile Adjustments ==== */
 @media (max-width: 768px) {
     .swiper-pagination {
         gap: 4px;
     }
-
-    /* .swiper-pagination-bullet {
-        width: 10px;
-        height: 2px;
-    }
-
-    .swiper-pagination-bullet-active {
-        width: 18px;
-        height: 4px;
-    } */
 
     .peek-carousel-controls {
         gap: 32px; /* preserve spacing even on mobile */
@@ -765,9 +740,7 @@
     }
 }
 
-/* ==========================================================================
-   Responsive Adjustments
-   ========================================================================== */
+/* ==== Responsive Adjustments ==== */
 @media (max-width: 1024px) {
     .carousel-card {
         min-height: 500px;

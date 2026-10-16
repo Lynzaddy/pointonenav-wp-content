@@ -1,21 +1,21 @@
-/* 
-==================================================
-    HEADER-DESKTOP.CSS
-    Description: Custom CSS for Desktop Header and Navigation
+/* ==========================================================================
+   header-desktop.css
+   Desktop header and navigation, including the transparent homepage
+   header, sticky states, dropdown menus and early mobile nav per language.
 
-    TABLE OF CONTENTS:
-    01. Hide both Logos to start
-    02. Transparent Menu / Sticky Header Background
-    03. Transparent Menu / Menu Hover Styles
-    04. Normal Header Styles / Scrolled State or Internal Page  
-    05. Scrolled/Internal / Menu Hover Styles
-    06. Desktop Menu Items
-    07. Subnav Code
-    08. Mobile / Instant Sticky Background Transition
-==================================================  
-*/
+   01. Logos
+   02. Transparent Header Background
+   03. Transparent Header Hover Styles
+   04. Standard Header (scrolled or internal pages)
+   05. Standard Header Hover Styles
+   06. Desktop Menu Items
+   07. Dropdown Menus
+   08. Mobile Sticky Transition
+   09. Language-Specific Early Mobile Nav (Weglot)
+   ========================================================================== */
 
-/* === 01. Hide both Logos to start === */
+/* ==== 01. Logos ==== */
+/* Both logos start hidden; the header state decides which one shows. */
 .logo-white {
     display: none;
 }
@@ -23,7 +23,7 @@
     display: block;
 }
 
-/* === 02. Transparent Menu / Sticky Header Background === */
+/* ==== 02. Transparent Header Background ==== */
 body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) {
     background-color: transparent !important;
 }
@@ -44,7 +44,7 @@ body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects
     fill: var(--color-white-a100);
 }
 
-/* === 03. Transparent Menu / Menu Hover Styles === */
+/* ==== 03. Transparent Header Hover Styles ==== */
 body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects) .elementor-item:hover {
     background-color: var(--color-white-a20);
     border-radius: 100px;
@@ -85,7 +85,7 @@ body.has-transparent-header .custom-sticky-header:not(.elementor-sticky--effects
     color: var(--color-white-a70) !important;
 }
 
-/* === 04. Normal Header Styles / Scrolled State or Internal Page === */
+/* ==== 04. Standard Header (scrolled or internal pages) ==== */
 .custom-sticky-header.elementor-sticky--effects,
 body:not(.has-transparent-header) .custom-sticky-header {
     background-color: var(--color-white-a90) !important;
@@ -104,7 +104,7 @@ body:not(.has-transparent-header) .custom-sticky-header .sub-arrow svg path {
     fill: var(--content-primary);
 }
 
-/* === 05. Scrolled/Internal / Menu Hover Styles === */
+/* ==== 05. Standard Header Hover Styles ==== */
 .custom-sticky-header.elementor-sticky--effects .elementor-item:hover,
 body:not(.has-transparent-header) .custom-sticky-header .elementor-item:hover {
     background-color: var(--background-tertiary);
@@ -134,7 +134,7 @@ body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .el
     background: transparent;
 }
 
-/* === 06. Desktop Menu Items === */
+/* ==== 06. Desktop Menu Items ==== */
 .header-nav a.elementor-item {
     color: var(--content-primary);
     font-family: var(--typography-font-primary);
@@ -169,7 +169,7 @@ body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .el
     border-radius: 100px;
 }
 
-/* === 07. Subnav Code === */
+/* ==== 07. Dropdown Menus ==== */
 
 /* Parent anchors submenu and exposes hover bridge */
 .header-nav li.menu-item-has-children {
@@ -276,7 +276,7 @@ body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .el
     transition: none !important;
 }
 
-/* === 08. Mobile / Instant Sticky Background Transition === */
+/* ==== 08. Mobile Sticky Transition ==== */
 @media (max-width: 768px) {
     .custom-sticky-header.elementor-sticky--effects,
     body:not(.has-transparent-header) .custom-sticky-header {
@@ -284,7 +284,7 @@ body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .el
     }
 }
 
-/* === 08. Mobile / Instant Sticky Background Transition === */
+/* Duplicate of the rule above (kept for now; safe to remove later) */
 @media (max-width: 768px) {
     .custom-sticky-header.elementor-sticky--effects,
     body:not(.has-transparent-header) .custom-sticky-header {
@@ -292,7 +292,7 @@ body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .el
     }
 }
 
-/* === 09. Language-Specific Early Mobile Nav (Weglot) ===
+/* ==== 09. Language-Specific Early Mobile Nav (Weglot) ====
    Elementor's own breakpoint switches to mobile nav at 1024px.
    Translated nav labels can run longer than the English originals
    the layout was built around, so some languages need extra room
@@ -307,7 +307,7 @@ body:not(.has-transparent-header) .custom-sticky-header .btn-primary.inverse .el
    and .hamburger-menu is what gets force-shown in each language
    range below. */
 
-/* Elementor's own toggle is unused site-wide — hide unconditionally */
+/* Elementor's own menu toggle is not used anywhere, so it is always hidden */
 .elementor-location-header .elementor-menu-toggle {
     display: none !important;
 }

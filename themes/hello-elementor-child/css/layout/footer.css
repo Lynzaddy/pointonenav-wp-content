@@ -1,9 +1,7 @@
-/* 
-==================================================
-    FOOTER.CSS
-    Description: Styles for the footer layout in Point One Nav, including links, copyright, and social media icons.
-==================================================  
-*/
+/* ==========================================================================
+   footer.css
+   Footer layout: links, legal menu, copyright and social icons.
+   ========================================================================== */
 
 .elementor-location-footer {
     font-family: var(--typography-font-primary);

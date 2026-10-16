@@ -1,16 +1,20 @@
-/* 
-==================================================
-    SECTIONS.CSS
-    Description: All section styles for Elementor. This includes section padding, background colors, and other layout rules.
+/* ==========================================================================
+   sections.css
+   Section containers for design system pages (Section Structure in the
+   handoff doc), background variants, card sections and a few one-off
+   section styles.
 
-    TABLE OF CONTENTS:
-    01. Section Variables
-    02. Standard Section Layout
-    03. Card Section Layout
-==================================================  
-*/
+   01. Section Variables
+   02. Standard Section Layout
+   03. Background Variants
+   04. Legacy Section Containers
+   05. Card Section Layout
+   06. Feature Container
+   07. Video Aspect
+   08. FUSE Conference Section
+   ========================================================================== */
 
-/* ==== 01. SECTION VARIABLES ======== */
+/* ==== 01. Section Variables ==== */
 :root {
     /* Inner Content Max Width */
     --inner-content-max-width: 1160px;
@@ -32,9 +36,9 @@
     --gap-wide: 120px;
 }
 
-/* ==== 02. STANDARD SECTION LAYOUT ======== */
+/* ==== 02. Standard Section Layout ==== */
 
-/* ===== OUTER CONTAINER ===== */
+/* Outer container */
 .section-container-outer {
     width: 100%;
     margin: 0;
@@ -47,7 +51,7 @@
     box-sizing: border-box;
 }
 
-/* ===== INNER CONTAINER ===== */
+/* Inner container */
 .section-container-inner {
     width: 100%;
     max-width: var(--inner-content-max-width);
@@ -60,7 +64,7 @@
     align-items: inherit;
 }
 
-/* ===== INNER CONTAINER (WIDE, with BG video) ===== */
+/* Outer container with background video */
 .section-container-outer.video {
     padding: 0 20px !important;
 }
@@ -85,21 +89,20 @@
 @media (max-width: 767.98px) {
     .section-container-inner.video {
         border-radius: 0 !important;
-        /* 🔑 stop the clamp from making it too tall */
+        /* Stop the clamp from making it too tall */
         min-height: 0;
         height: auto;
-        /* Optional (recommended): lock video container to 16:9 on mobile */
+        /* Lock the video container to 16:9 on mobile */
         aspect-ratio: 1 / 1;
     }
 }
 
-/* ===== INNER CONTAINER (WIDE, with BG video) ===== */
+/* Wide inner container (background video) */
 .section-container-inner.wide {
     position: relative;
     overflow: hidden;
     max-width: var(--inner-content-wide-max-width);
     border-radius: var(--image-border-radius);
-    /* min-height: clamp(360px, 56.25vw, 788px); */
     margin: 0;
 }
 
@@ -148,76 +151,72 @@
     margin: 16px auto !important;
 }
 
-/* ===== SMALL DESKTOP (≤1366px) ===== */
+/* Small desktop (1366px and below) */
 @media (max-width: 1366px) {
     .section-container-inner {
         margin: var(--vertical-padding-desktop) auto;
         padding: 0 var(--side-padding-narrow);
-        /* background-color: #f90;  Light green for testing */
     }
 }
 
-/* ===== TABLET (≤1024px) ===== */
+/* Tablet (1024px and below) */
 @media (max-width: 1024px) {
     .section-container-inner {
         margin: var(--vertical-padding-tablet) auto;
         padding: 0 var(--side-padding-standard);
-        /* background-color: #d6ffd6;  Light green for testing */
     }
     .section-container-inner.shallow-bottom {
         margin: var(--vertical-padding-tablet) auto 60px auto !important;
     }
 }
 
-/* ===== MOBILE (≤767px) ===== */
+/* Mobile (767px and below) */
 @media (max-width: 767px) {
     .section-container-inner {
         margin: var(--vertical-padding-mobile) auto;
         padding: 0 var(--side-padding-narrow);
-        /* background-color: #d6e8ff;  Light blue for testing */
     }
     .section-container-inner.shallow-bottom {
         margin: var(--vertical-padding-mobile) auto 60px auto !important;
     }
 }
 
-/* ==================================================
-   BACKGROUND VARIANTS
-   Description: Utility classes that can be applied to either 
-   .section-container-outer or .section-container-inner
-================================================== */
+/* ==== 03. Background Variants ==== */
+/* Can be added to .section-container-outer or .section-container-inner */
 
-/* ===== PRIMARY INVERSE ===== */
+/* Primary inverse */
 .section-container-outer.inverse,
 .section-container-inner.inverse {
     background-color: var(--background-primary-inverse);
 }
 
-/* ===== SECONDARY ===== */
+/* Secondary */
 .section-container-outer.secondary,
 .section-container-inner.secondary {
     background-color: var(--background-secondary);
 }
 
-/* ===== SECONDARY + INVERSE ===== */
+/* Secondary + inverse */
 .section-container-outer.secondary.inverse,
 .section-container-inner.secondary.inverse {
     background-color: var(--background-secondary-inverse);
 }
 
-/* ===== TERTIARY ===== */
+/* Tertiary */
 .section-container-outer.tertiary,
 .section-container-inner.tertiary {
     background-color: var(--background-tertiary);
 }
 
-/* ===== TERTIARY + INVERSE ===== */
+/* Tertiary + inverse */
 .section-container-outer.tertiary.inverse,
 .section-container-inner.tertiary.inverse {
     background-color: var(--background-tertiary-inverse);
 }
 
-/* === DELETE ME ONCE CORRECTED === */
+/* ==== 04. Legacy Section Containers ==== */
+/* Older .section-outer / .section-inner classes. Still used on the Partners
+   page. Remove once no page uses them. */
 
 /* Section Outer - Full Width Base */
 .section-outer {
@@ -297,9 +296,9 @@
     gap: var(--gap-wide);
 }
 
-/* ==== 03. CARD SECTION LAYOUT ======== */
+/* ==== 05. Card Section Layout ==== */
 
-/* Tokens (optional) */
+/* Card spacing tokens */
 :root {
     --card-gap: 40px;
     --card-mb-lg: 40px;
@@ -324,7 +323,6 @@
         margin-bottom: var(--card-mb-lg);
     }
     .card-section > .e-con-inner {
-        /* gap stays 40px per your spec */
         gap: var(--card-mb-sm) !important;
     }
 }
@@ -335,20 +333,14 @@
         margin-bottom: var(--card-mb-lg);
     }
     .card-section > .e-con-inner {
-        /* gap stays 40px per your spec */
         gap: var(--card-mb-lg) !important;
     }
 }
 
-/* =========================================================
-   Feature Container – Point One Navigation
-   Component: feature-container-pon
-   Elementor-safe, CSS-only layout control
-========================================================= */
+/* ==== 06. Feature Container ==== */
+/* .feature-container-pon: image and text side by side, stacked on tablet and mobile */
 
-/* =========================================================
-   Reset spacing (ALL breakpoints)
-========================================================= */
+/* Reset spacing (all breakpoints) */
 
 .feature-container-pon,
 .feature-container-pon .fc-image,
@@ -357,9 +349,7 @@
     padding: 0;
 }
 
-/* =========================================================
-   Base Layout (ALL breakpoints)
-========================================================= */
+/* Base layout (all breakpoints) */
 
 .feature-container-pon {
     display: flex;
@@ -385,9 +375,7 @@
     height: auto;
 }
 
-/* =========================================================
-   Desktop (≥ 1200px)
-========================================================= */
+/* Desktop (1200px and up) */
 
 @media (min-width: 1200px) {
     .feature-container-pon {
@@ -406,9 +394,7 @@
     }
 }
 
-/* =========================================================
-   Laptop (992px–1199px)
-========================================================= */
+/* Laptop (992px to 1199px) */
 
 @media (min-width: 992px) and (max-width: 1199px) {
     .feature-container-pon {
@@ -427,9 +413,7 @@
     }
 }
 
-/* =========================================================
-   Tablet & Mobile (≤ 991px)
-========================================================= */
+/* Tablet and mobile (991px and below) */
 
 @media (max-width: 991px) {
     .feature-container-pon {
@@ -443,8 +427,8 @@
     }
 }
 
-/* New Section Styles */
-/* Desktop/Laptop: let flexbox stretch handle sizing, no explicit height */
+/* ==== 07. Video Aspect ==== */
+/* Desktop and laptop: flexbox handles sizing, no explicit height */
 .pon-video-aspect {
     height: auto;
     aspect-ratio: unset;
@@ -473,7 +457,7 @@
     height: 100%;
 }
 
-/* Code for the FUSE Conference Section */
+/* ==== 08. FUSE Conference Section ==== */
 .fuse-link-item,
 .fuse-link-item:link,
 .fuse-link-item:visited,
