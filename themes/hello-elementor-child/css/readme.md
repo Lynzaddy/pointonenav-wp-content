@@ -39,16 +39,13 @@ The order below matches how the files are enqueued in `functions.php`. Load orde
 
 ## 📝 Notes
 
-- CSS variables are defined once in `base.css` under `:root`, and used throughout other files.
-- The `.inverse` class modifies components (like `.heading-xl`, `.btn`) for dark backgrounds.
-- Section-level styles should follow scoped naming: e.g., `.page-hero__title`, `.two-up-wide__subheading`.
-- Avoid using Elementor Global Styles; they've been explicitly reset in `reset.css`.
-
-## 📁 Optional Files
-
-- `/js/header-sticky.js` contains scroll-based sticky header logic.
+- Design tokens (colors, type, component sizes) are taken directly from the Figma file and defined once as CSS variables on `:root` in the `/base` files. Use them throughout instead of typed values.
+- The `.inverse` class switches components (text, `.btn-*`, icons, lines) to their light-on-dark versions for dark backgrounds.
+- The top-level files (`base.css`, `layout.css`, `components.css`, `utilities.css`, `elementor.css`) are import files. Add styles to the files in the subfolders.
+- Avoid Elementor Global Colors and Fonts for design system styling; use these tokens and classes.
+- `layout/retire-with-components.css` holds legacy page styles. Remove it only after the Homepage, Platform and other legacy pages are rebuilt.
 
 ---
 
 Maintained by: Matt Olson  
-Last updated: June 2025
+Last updated: October 2026

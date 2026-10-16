@@ -1,12 +1,8 @@
-/* 
-==================================================
-    COMPONENT.CSS
-    Description: Imports all if the component definitions within Figma
-
-    TABLE OF CONTENTS:
-
-==================================================  
-*/
+/* ==========================================================================
+   component.css
+   Component tokens from the Figma file: sizes, radius and spacing for
+   icons, containers, buttons, form elements and navigation.
+   ========================================================================== */
 
 :root {
     /* Icon */
