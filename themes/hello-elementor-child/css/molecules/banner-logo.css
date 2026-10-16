@@ -1,21 +1,18 @@
-/* 
-==================================================
-    BANNER-LOGO.CSS
-    Description: Styles that control the banner of logos (Trusted By)
+/* ==========================================================================
+   banner-logo.css
+   Logo banner ("Trusted by") with heading, responsive logo grid and
+   monochrome logos that turn white in inverse sections.
 
-    TABLE OF CONTENTS:
-    01. OUTER BANNER LOGO
-    02. HEADER SECTION (Text and Image)
-    03. INVERSE MODE — ancestor has .inverse
-    04. LOGO GRID — layout & exact gaps
-    05. LOGO SIZE — per breakpoint
-    06. SVG COLOR CONTROL
-    07. Small polish
+   01. Outer Banner
+   02. Header (text and image)
+   03. Inverse Mode
+   04. Logo Grid
+   05. Logo Size per Breakpoint
+   06. SVG Color Control
+   07. Final Adjustments
+   ========================================================================== */
 
-==================================================  
-*/
-
-/* === 01. OUTER BANNER LOGO === */
+/* ==== 01. Outer Banner ==== */
 .banner-logo {
     margin: 0;
     padding: 0;
@@ -25,7 +22,7 @@
     gap: 20px;
 }
 
-/* === 02. HEADER SECTION (Text and Image) === */
+/* ==== 02. Header (text and image) ==== */
 .banner-logo .header {
     margin: 0;
     padding: 0;
@@ -65,7 +62,8 @@
     stroke: currentColor !important;
 }
 
-/* === 03. INVERSE MODE — ancestor has .inverse === */
+/* ==== 03. Inverse Mode ==== */
+/* Applies when any ancestor has .inverse */
 
 .inverse .banner-logo .header,
 .banner-logo.inverse .header {
@@ -82,7 +80,7 @@
     filter: brightness(0) invert(1);
 }
 
-/* === 04. LOGO GRID — layout & exact gaps === */
+/* ==== 04. Logo Grid ==== */
 
 .logo-section {
     width: 100%;
@@ -110,13 +108,14 @@
 .logo-section .logo-grid > .elementor-widget {
     width: auto !important; /* stop 100% width */
     max-width: none !important;
-    margin: 0 !important; /* kill default widget margins */
+    margin: 0 !important; /* remove default widget margins */
     padding: 0 !important;
     justify-self: center;
     align-self: center;
 }
 
-/* === 05. LOGO SIZE — per breakpoint (Works for inline <svg> and <img src="...svg">) === */
+/* ==== 05. Logo Size per Breakpoint ==== */
+/* Works for inline <svg> and <img src="...svg"> */
 
 /* Mobile ≤767px: max 120px */
 .logo-section .logo-grid .logo svg,
@@ -155,7 +154,7 @@
     }
 }
 
-/* === 06. SVG COLOR CONTROL === */
+/* ==== 06. SVG Color Control ==== */
 
 /* Force inline SVGs to follow currentColor (monochrome) */
 .logo-section .logo-grid .logo svg,
@@ -177,7 +176,7 @@
     filter: brightness(0) invert(1);
 }
 
-/* === 07. Small polish === */
+/* ==== 07. Final Adjustments ==== */
 .logo-section .logo-grid img {
     vertical-align: middle;
 }

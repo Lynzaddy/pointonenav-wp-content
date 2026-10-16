@@ -1,13 +1,15 @@
-/* 
-==================================================
-    CARD-AVATAR.CSS
-    Description: Styles for avatar cards used in Point One Nav.
+/* ==========================================================================
+   card-avatar.css
+   Avatar cards (icon, title, chevron) used on RTK Network and Positioning
+   Engine, the whole-card link overlay, and legacy product container cards.
 
-    TABLE OF CONTENTS:
+   01. Product Container (legacy)
+   02. Card Avatar
+   03. Whole-Card Link Overlay
+   04. Element Visibility
+   ========================================================================== */
 
-==================================================  
-*/
-
+/* ==== 01. Product Container (legacy) ==== */
 .elementor .product-container {
     border-radius: var(--image-border-radius);
     border: 1px solid var(--color-black-a12);
@@ -29,7 +31,6 @@
     box-sizing: content-box;
     border-radius: var(--image-border-radius);
     border: 0;
-    /* border: 1px solid var(--color-black-a12, rgba(0, 0, 0, 0.12)); */
     background-color: var(--background-quaternary);
 }
 
@@ -38,7 +39,7 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start; /* Top align */
-    gap: 16px; /* Optional spacing between title and chevron */
+    gap: 16px; /* space between title and chevron */
 }
 
 .products-section .product-container .title-chev-wrapper .title {
@@ -49,15 +50,15 @@
     flex-shrink: 0;
 }
 
-/* === CARD - AVATAR === */
+/* ==== 02. Card Avatar ==== */
 .card-avatar {
     border-radius: var(--image-border-radius);
     border: 1px solid var(--line-alpha);
     display: flex;
-    max-width: 728px; /* >1024px = 540px */
+    max-width: 728px;
     padding: 16px;
     align-items: flex-start;
-    gap: 32px; /* your normal card spacing */
+    gap: 32px;
     position: relative; /* positioning context for overlay */
     overflow: hidden; /* keeps overlay inside rounded corners */
     cursor: pointer;
@@ -93,8 +94,9 @@
     stroke: var(--color-white-a100);
 }
 
+/* ==== 03. Whole-Card Link Overlay ==== */
 /* ==================================================
-   STRETCHED-LINK OVERLAY (whole card clickable)
+   Makes the whole card clickable.
    HTML widget must be the FIRST child of .card-avatar, containing:
      <a class="stretched-link" href="/polaris" aria-label="Open Polaris card"></a>
    ================================================== */
@@ -137,7 +139,7 @@
     z-index: 40;
 }
 
-/* Optional keyboard focus ring for accessibility */
+/* Keyboard focus ring */
 .card-avatar .stretched-link:focus-visible {
     outline: none;
 }
@@ -145,12 +147,12 @@
     box-shadow: 0 0 0 3px var(--focus-ring, rgba(0, 123, 255, 0.35));
 }
 
-/* PE page: set the chip/background behind the icon */
+/* Positioning Engine page: background behind the icon */
 .pe-get-started .enc-icon .elementor-icon {
     background-color: #d3f754 !important;
 }
 
-/* ELEMENT VISIBILITY */
+/* ==== 04. Element Visibility ==== */
 
 /* Default (desktop and larger): chevron shown, button container hidden */
 .card-avatar .chevron {
@@ -176,6 +178,6 @@
 /* Mobile tweaks (≤768px): spacing only */
 @media (max-width: 768px) {
     .card-avatar {
-        gap: 40px; /* your mobile gap */
+        gap: 40px;
     }
 }

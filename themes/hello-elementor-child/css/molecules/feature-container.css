@@ -1,22 +1,19 @@
-/* 
-==================================================
-    FEATURE-CONTAINER.CSS
-    Description: Styles for the design system’s Feature Container component
+/* ==========================================================================
+   feature-container.css
+   Feature Container component: icon on the left, text filling the rest.
 
-    TABLE OF CONTENTS:
-    01. 
-==================================================  
-*/
+   01. Outer Container
+   02. Text Feature Widget
+   ========================================================================== */
 
-/* === 01. Outer Container === */
+/* ==== 01. Outer Container ==== */
 .feature-container {
     margin: 0;
     padding: 20px 0;
-    /* border-top: 1px solid var(--line-alpha); */
     gap: 20px;
     display: flex; /* row layout */
-    flex-direction: row; /* make sure it's horizontal */
-    align-items: top; /* vertical centering */
+    flex-direction: row;
+    align-items: top; /* not a valid value, so browsers ignore it */
     flex-wrap: nowrap; /* prevent wrapping */
 }
 
@@ -35,7 +32,7 @@
     width: auto !important; /* let flexbox handle width */
 }
 
-/* === 02. Text Feature Widget === */
+/* ==== 02. Text Feature Widget ==== */
 .text-feature {
     margin: 0;
     padding: 0;
@@ -43,5 +40,4 @@
 
 /* Inverse variant (triggered by ancestor with .inverse) */
 .inverse .feature-container {
-    /* border-top-color: var(--line-alpha-inverse); */
 }

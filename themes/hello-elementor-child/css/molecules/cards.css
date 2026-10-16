@@ -1,16 +1,13 @@
-/* 
-==================================================
-    CARDS.CSS
-    Description: Styles for card components used in Point One Nav.
+/* ==========================================================================
+   cards.css
+   Image cards (standard, tall and three-card rows) and pricing cards.
 
-    TABLE OF CONTENTS:
-    01. Image Cards
-    02. Image Cards – Three-Card Layout (450px tall)
-    03. Pricing Cards
-==================================================  
-*/
+   01. Image Cards
+   02. Image Cards: Three-Card Layout
+   03. Pricing Cards
+   ========================================================================== */
 
-/* ==== 01. IMAGE CARDS ======== */
+/* ==== 01. Image Cards ==== */
 .card-image {
     border: 0;
     padding: 0;
@@ -102,13 +99,13 @@
         overflow: hidden;
         min-height: auto; /* let aspect-ratio control height */
 
-        max-height: none; /* 🔑 allow aspect-ratio to control height on mobile */
+        max-height: none; /* let aspect-ratio control height on mobile */
     }
 
     .card-image .image-box img {
         width: 100%;
         height: 100%;
-        max-height: none; /* 🔑 remove the cap here */
+        max-height: none; /* remove the desktop cap */
         object-fit: cover; /* fills the box */
         object-position: center;
     }
@@ -158,12 +155,12 @@ a.card-image:hover .btn-link .elementor-heading-title {
     text-decoration: none !important;
 }
 
-/* _and remove underline when hovering the button area */
+/* ...and when hovering the button area */
 a.card-image .btn-link:hover .elementor-heading-title {
     text-decoration: none !important;
 }
 
-/* ==== 02. IMAGE CARDS – THREE-CARD LAYOUT ======== */
+/* ==== 02. Image Cards: Three-Card Layout ==== */
 /*
    Applies ONLY when a row holds exactly three .card-image cards.
    Four-or-more rows are untouched and keep the rules in section 01.
@@ -201,7 +198,7 @@ a.card-image .btn-link:hover .elementor-heading-title {
     display: block;
 }
 
-/* ==== 03. PRICING CARDS ======== */
+/* ==== 03. Pricing Cards ==== */
 .elementor .pricingContainer h3 {
     margin-bottom: 0 !important;
     font-weight: var(--weight-bold);
@@ -238,10 +235,6 @@ a.card-image .btn-link:hover .elementor-heading-title {
 }
 
 .elementor .littleBadge span {
-    /* display: inline-block !important;
-    border: 1px solid var(--content-primary);
-    padding: 5px 5px 8px 5px;
-    border-radius: 4px;*/
     margin-bottom: 20px !important;
 }
 
@@ -278,7 +271,7 @@ a.card-image .btn-link:hover .elementor-heading-title {
     .banner-contact {
         flex-direction: column;
         align-items: flex-start; /* left aligned */
-        gap: 30px; /* optional spacing between text and button */
+        gap: 30px; /* space between text and button */
     }
 
     .banner-contact .text,

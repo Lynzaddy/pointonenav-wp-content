@@ -1,11 +1,18 @@
-/* 
-==================================================
-    CUSTOM-SLIDER.CSS
-    Description: Styles for the custom slider component. 
-==================================================  
-*/
+/* ==========================================================================
+   custom-slider.css
+   Older Slick slider (.custom-slick-slider / .pon-slide) with its arrows
+   and dots. Separate from the Card Carousel plugin. Not found on the main
+   pages checked in October 2026; confirm before removing.
 
-/* === SLIDE HEIGHT + STRUCTURE FIXES === */
+   01. Slide Structure
+   02. Content
+   03. Remove Underlines
+   04. Container
+   05. Arrows
+   06. Dots
+   ========================================================================== */
+
+/* ==== 01. Slide Structure ==== */
 
 /* Slick slide: flex container */
 .custom-slick-slider .slick-slide {
@@ -17,7 +24,9 @@
     height: 100%;
     opacity: 1 !important;
     pointer-events: auto !important;
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    transition:
+        transform 0.3s ease,
+        opacity 0.3s ease;
 }
 
 /* Track stretches slide height */
@@ -61,10 +70,10 @@
 .pon-slide .keep-reading {
     margin-top: auto;
     padding-top: 16px;
-    border: 1px solid red; /* for testing only */
+    border: 1px solid red; /* left over from testing; see roadmap */
 }
 
-/* === CONTENT STYLING === */
+/* ==== 02. Content ==== */
 
 .pon-slide .video {
     padding-top: 8px;
@@ -100,9 +109,9 @@
     margin-bottom: 8px;
 }
 
-/* === REMOVE UNDERLINES === */
+/* ==== 03. Remove Underlines ==== */
 
-/* Kill all underlines inside .pon-slide and full-slide-link */
+/* No underlines inside .pon-slide or .full-slide-link */
 .pon-slide a,
 .pon-slide a:hover,
 .pon-slide .title h3,
@@ -115,12 +124,12 @@
     border-bottom: none !important;
 }
 
-/* Just in case some nested tags override */
+/* Nested tags too */
 .pon-slide * {
     text-decoration: none !important;
 }
 
-/* === CONTAINER === */
+/* ==== 04. Container ==== */
 .custom-slick-slider {
     position: relative;
     padding-bottom: 80px;
@@ -148,7 +157,7 @@
     max-width: 100% !important;
 }
 
-/* === Arrows === */
+/* ==== 05. Arrows ==== */
 
 /* Shared arrow button styling */
 .custom-slick-slider .slick-prev,
@@ -213,7 +222,7 @@
     background-color: #141413 !important;
 }
 
-/* === Dots === */
+/* ==== 06. Dots ==== */
 
 /* Dots container layout */
 .custom-slick-slider .slick-dots {
@@ -266,7 +275,7 @@
     height: 8px;
 }
 
-/* Dot focus accounted for */
+/* Dot focus */
 .custom-slick-slider .slick-dots li button:focus {
     outline: none;
     background-color: #141413 !important;

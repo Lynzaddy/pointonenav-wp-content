@@ -1,13 +1,8 @@
-/* 
-==================================================
-    PRICING-TOGGLE.CSS
-    Description: Styles for the toggle switch used in the pricing section to switch between monthly and yearly pricing.
-
-    TABLE OF CONTENTS:
-
-
-==================================================  
-*/
+/* ==========================================================================
+   pricing-toggle.css
+   Monthly/annual toggle on /pricing/. The toggle script and prices come
+   from the Global Variables plugin.
+   ========================================================================== */
 
 .pricing-toggle-wrapper {
     display: flex;
@@ -49,7 +44,8 @@
     font-weight: 500; /* Active state */
 }
 
-/* Override Hello Elementor reset.css which sets background-color: #c36 on button:hover/focus */
+/* Override the parent Hello Elementor theme, which sets a pink (#c36)
+   background on button hover and focus */
 .pricing-toggle .toggle-btn:hover,
 .pricing-toggle .toggle-btn:focus {
     background: transparent;
