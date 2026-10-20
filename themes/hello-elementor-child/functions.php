@@ -165,54 +165,122 @@ function render_mapbox_state_div()
 }
 add_shortcode('state_map_div', 'render_mapbox_state_div');
 
-function render_competitor_table_for_state()
+/**
+ * Read current per-device plan prices from the Point One Global Variables ACF
+ * options page. Do not silently display obsolete prices if a value is missing.
+ */
+function pointone_state_table_price($field_name)
 {
-    // ACF relationship field on the current State post
-    $competitors = get_field('competitors');
-
-    if (! $competitors || ! is_array($competitors)) {
-        return '<p>No competitor data available for this state.</p>';
+    if (! function_exists('get_field')) {
+        return null;
     }
 
-    /* Polaris hard-coded column */
+    $price = get_field($field_name, 'option');
+    return is_numeric($price) && (float) $price > 0 ? (float) $price : null;
+}
+
+/** Format a plan's monthly and annual costs for the State comparison table. */
+function pointone_state_table_price_text($monthly, $annual)
+{
+    if ($monthly === null || $annual === null) {
+        return 'See pricing';
+    }
+
+    return sprintf(
+        '$%s/mo or $%s/yr ($%s/mo billed annually)',
+        number_format($monthly, 0),
+        number_format($annual, 0),
+        number_format($annual / 12, 2)
+    );
+}
+
+/** Normalize the legacy ACF provider values without changing their stored data. */
+function pointone_state_table_competitor_value($value)
+{
+    if ($value === null || $value === false || $value === '') {
+        return '—';
+    }
+
+    $value = trim((string) $value);
+    if ($value === '') {
+        return '—';
+    }
+
+    if (strcasecmp($value, 'Y') === 0 || strcasecmp($value, 'Yes') === 0) {
+        return 'Yes';
+    }
+    if (strcasecmp($value, 'N') === 0 || strcasecmp($value, 'No') === 0) {
+        return 'No';
+    }
+
+    // Known typos in the old State competitor table data.
+    if (strcasecmp($value, 'Not. reported') === 0) {
+        return 'Not reported';
+    }
+    if (strcasecmp($value, 'Free to us') === 0) {
+        return 'Free to use';
+    }
+
+    return $value;
+}
+
+function render_competitor_table_for_state()
+{
+    // Competitors are still managed independently for each State in ACF.
+    $competitors = get_field('competitors');
+    if (! is_array($competitors)) {
+        $competitors = [];
+    }
+
+    $state_slug = strtolower((string) get_post_field('post_name', get_the_ID()));
+    $virtual_available = ! in_array($state_slug, ['hawaii', 'alaska'], true);
+
+    $true_monthly    = pointone_state_table_price('price_true_monthly');
+    $true_annual     = pointone_state_table_price('price_true_annual');
+    $virtual_monthly = pointone_state_table_price('price_virtual_monthly');
+    $virtual_annual  = pointone_state_table_price('price_virtual_annual');
+
     $rows = [
-        'Cost per month'                => ['acf' => 'cost_per_month',                       'polaris' => '$150'],
-        'Accuracy'                      => ['acf' => 'accuracy',                             'polaris' => '1 cm'],
-        'Total physical base stations'  => ['acf' => 'total_physical_base_stations',         'polaris' => '> 1440'],
-        'Uptime'                        => ['acf' => 'uptime',                               'polaris' => '99.99 %'],
-        'Coverage'                      => ['acf' => 'coverage',                             'polaris' => 'International'],
-        'Global coverage'               => ['acf' => 'global_coverage',                      'polaris' => 'Yes'],
-        'GraphQL API'                   => ['acf' => 'graphql_api',                          'polaris' => 'Yes'],
-        'Automated Ref. Station Assoc.' => ['acf' => 'automated_reference_station_association', 'polaris' => 'Yes'],
-        'GNSS Frequency Bands'          => ['acf' => 'gnss_frequency_bands_supported',       'polaris' => 'L1, L2, L5'],
-        'True RTK'                      => ['acf' => 'true_rtk',                             'polaris' => 'Yes'],
+        'Cost per device, per month'      => [
+            'acf' => 'cost_per_month',
+            'true' => pointone_state_table_price_text($true_monthly, $true_annual),
+            'virtual' => $virtual_available
+                ? pointone_state_table_price_text($virtual_monthly, $virtual_annual)
+                : 'Not available in this state',
+        ],
+        'Accuracy'                        => ['acf' => 'accuracy', 'true' => '1–3 cm', 'virtual' => '~10 cm'],
+        'Total physical base stations'    => ['acf' => 'total_physical_base_stations', 'true' => '4,000+', 'virtual' => '4,000+'],
+        'Uptime'                          => ['acf' => 'uptime', 'true' => '99.9%', 'virtual' => '99.9%'],
+        'Coverage'                        => ['acf' => 'coverage', 'true' => 'International', 'virtual' => 'Contiguous US, UK, EU'],
+        'Global coverage'                 => ['acf' => 'global_coverage', 'true' => 'No (regional availability)', 'virtual' => 'No (regional availability)'],
+        'GraphQL API'                     => ['acf' => 'graphql_api', 'true' => 'Yes', 'virtual' => 'Yes'],
+        'Automatic base station assignment' => ['acf' => 'automated_reference_station_association', 'true' => 'Yes', 'virtual' => 'Yes'],
+        'GNSS Frequency Bands'            => ['acf' => 'gnss_frequency_bands_supported', 'true' => 'L1, L2, L5', 'virtual' => 'L1, L2, L5'],
+        'True RTK'                        => ['acf' => 'true_rtk', 'true' => 'Single baseline and Network RTK', 'virtual' => 'No (SSR-modeled, RTCM output)'],
     ];
 
     ob_start(); ?>
-    <div class="competitor-table-outer"><!-- NEW scroll container -->
-        <div class="competitor-table-wrapper"><!-- width only -->
+    <div class="competitor-table-outer">
+        <div class="competitor-table-wrapper">
             <table class="competitor-table">
                 <thead>
                     <tr>
-                        <th class="sticky-col">Brand</th>
-                        <th class="sticky-col">Polaris</th>
+                        <th scope="col" class="sticky-col">Brand</th>
+                        <th scope="col" class="sticky-col">Point One RTK Network – True RTK</th>
+                        <th scope="col" class="pointone-plan-virtual">Point One RTK Network – Virtual RTK</th>
                         <?php foreach ($competitors as $comp) : ?>
-                            <th><?php echo esc_html(get_the_title($comp)); ?></th>
+                            <th scope="col"><?php echo esc_html(get_the_title($comp)); ?></th>
                         <?php endforeach; ?>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($rows as $label => $meta) : ?>
                         <tr>
-                            <td class="sticky-col"><?php echo esc_html($label); ?></td>
-                            <td class="sticky-col"><?php echo esc_html($meta['polaris']); ?></td>
+                            <th scope="row" class="sticky-col"><?php echo esc_html($label); ?></th>
+                            <td class="sticky-col"><?php echo esc_html($meta['true']); ?></td>
+                            <td class="pointone-plan-virtual"><?php echo esc_html($meta['virtual']); ?></td>
                             <?php foreach ($competitors as $comp) : ?>
-                                <td>
-                                    <?php
-                                    $value = get_field($meta['acf'], $comp->ID);
-                                    echo esc_html($value ?: '—');
-                                    ?>
-                                </td>
+                                <td><?php echo esc_html(pointone_state_table_competitor_value(get_field($meta['acf'], $comp->ID))); ?></td>
                             <?php endforeach; ?>
                         </tr>
                     <?php endforeach; ?>
@@ -220,6 +288,9 @@ function render_competitor_table_for_state()
             </table>
         </div>
     </div>
+    <?php if (! $virtual_available) : ?>
+        <p class="competitor-table-availability">Virtual RTK is not available in <?php echo esc_html(get_the_title()); ?>. True RTK is the available Point One product.</p>
+    <?php endif; ?>
     <?php
     return ob_get_clean();
 }

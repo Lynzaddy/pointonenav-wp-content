@@ -1,8 +1,8 @@
 /* ==========================================================================
    rtk-comparison-table.css
    Competitor comparison table output by the [competitor_table] shortcode
-   on the legacy State pages (functions.php). The first two columns stay
-   fixed while the rest scroll sideways.
+   on the legacy State pages (functions.php). Row labels and True RTK stay
+   fixed; Virtual RTK and competitor columns scroll sideways.
    ========================================================================== */
 
 /* 1) Outer scroll container */
@@ -64,7 +64,7 @@
     z-index: 6;
 }
 
-/* 6) Polaris column (2nd, fixed) */
+/* 6) Point One True RTK column (2nd, fixed) */
 .competitor-table th.sticky-col:nth-child(2),
 .competitor-table td.sticky-col:nth-child(2) {
     position: -webkit-sticky;
@@ -93,9 +93,26 @@
     pointer-events: none;
 }
 
-/* 7) Remaining columns */
-.competitor-table th:not(.sticky-col),
-.competitor-table td:not(.sticky-col) {
+/* Point One Virtual RTK is in the scrollable area (3rd column). */
+.competitor-table th.pointone-plan-virtual,
+.competitor-table td.pointone-plan-virtual {
+    min-width: 180px;
+    max-width: 220px;
+    word-break: normal;
+}
+.competitor-table th.pointone-plan-virtual {
+    background: var(--color-brand-60) !important;
+    color: var(--color-white-a100) !important;
+}
+
+.competitor-table-availability {
+    margin-top: 12px;
+    font-size: 0.875rem;
+}
+
+/* 7) Remaining competitor columns */
+.competitor-table th:not(.sticky-col):not(.pointone-plan-virtual),
+.competitor-table td:not(.sticky-col):not(.pointone-plan-virtual) {
     min-width: 150px;
     max-width: 190px;
     word-break: break-word;
@@ -125,9 +142,15 @@
         min-width: 120px;
         max-width: 120px;
     }
-    /* all other columns */
-    .competitor-table th:not(.sticky-col),
-    .competitor-table td:not(.sticky-col) {
+    /* Virtual RTK remains scrollable; protect room for competitor columns. */
+    .competitor-table th.pointone-plan-virtual,
+    .competitor-table td.pointone-plan-virtual {
+        min-width: 145px;
+        max-width: 180px;
+    }
+    /* all competitor columns */
+    .competitor-table th:not(.sticky-col):not(.pointone-plan-virtual),
+    .competitor-table td:not(.sticky-col):not(.pointone-plan-virtual) {
         min-width: 120px;
         max-width: 160px;
     }
