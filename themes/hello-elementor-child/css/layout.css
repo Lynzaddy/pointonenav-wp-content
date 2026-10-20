@@ -1,15 +1,10 @@
 /* ==========================================================================
    layout.css
-   Imports page-wide layout: header, footer, section containers and blog.
-   Import file only: add styles to the files in /layout, not here.
+   Page-wide layout: header, footer, section containers and blog.
+   The partials are enqueued one by one in functions.php (with filemtime
+   versions), not with @import. Add new partials to the list there.
    ========================================================================== */
 
-@import "layout/footer.css";
-@import "layout/header-desktop.css";
-@import "layout/header-mobile.css";
-@import "layout/sections.css";
-@import "layout/blog.css";
-
-/* Legacy page styles. Still required by the Homepage, Platform and other
-   legacy pages. Remove only after those pages are rebuilt. */
-@import "layout/retire-with-components.css";
+/* layout/retire-with-components.css holds legacy page styles. Still required by
+   the Homepage, Platform and other legacy pages. Remove only after those pages
+   are rebuilt. */

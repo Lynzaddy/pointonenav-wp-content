@@ -13,11 +13,69 @@ function my_child_theme_styles()
 
     // Modular CSS (from /css/ folder inside your child theme)
     $theme_uri = get_stylesheet_directory_uri();
-    wp_enqueue_style('base-css', $theme_uri . '/css/base.css', array('child-style'), filemtime(get_stylesheet_directory() . '/css/base.css'));
-    wp_enqueue_style('layout-css', $theme_uri . '/css/layout.css', array('child-style'), filemtime(get_stylesheet_directory() . '/css/layout.css'));
-    wp_enqueue_style('components-css', $theme_uri . '/css/components.css', array('child-style'), filemtime(get_stylesheet_directory() . '/css/components.css'));
-    wp_enqueue_style('utilities-css', $theme_uri . '/css/utilities.css', array('child-style'), filemtime(get_stylesheet_directory() . '/css/utilities.css'));
-    wp_enqueue_style('elementor-css', $theme_uri . '/css/elementor.css', array('child-style'), filemtime(get_stylesheet_directory() . '/css/elementor.css'));
+    $css_dir = get_stylesheet_directory() . '/css/';
+    $css_uri = $theme_uri . '/css/';
+
+    // Enqueue each partial with its own filemtime version (instead of CSS @import, which
+    // can't be versioned and gets cached for a year). Deps are chained to keep the order.
+    $enqueue_group = function ($group, $files, $deps) use ($css_dir, $css_uri) {
+        $prev = $deps;
+        foreach ($files as $file) {
+            $handle = 'pointone-' . sanitize_title(str_replace(array('/', '.css'), array('-', ''), $file));
+            wp_enqueue_style($handle, $css_uri . $file, $prev, filemtime($css_dir . $file));
+            $prev = array($handle);
+        }
+        wp_enqueue_style($group . '-css', $css_uri . $group . '.css', $prev, filemtime($css_dir . $group . '.css'));
+        return array($group . '-css');
+    };
+
+    $last = $enqueue_group('base', array(
+        'base/color.css',
+        'base/typography.css',
+        'base/component.css',
+        'base/link.css',
+        'base/blog-post.css',
+    ), array('child-style'));
+
+    $last = $enqueue_group('layout', array(
+        'layout/footer.css',
+        'layout/header-desktop.css',
+        'layout/header-mobile.css',
+        'layout/sections.css',
+        'layout/blog.css',
+        'layout/retire-with-components.css',
+    ), $last);
+
+    $last = $enqueue_group('components', array(
+        'atoms/buttons.css',
+        'atoms/icon.css',
+        'atoms/image.css',
+        'atoms/floating-icon.css',
+        'molecules/banner-logo.css',
+        'molecules/card-avatar.css',
+        'molecules/cards.css',
+        'molecules/custom-slider.css',
+        'molecules/feature-container.css',
+        'molecules/pricing-toggle.css',
+        'molecules/text-feature.css',
+        'molecules/single-image-sections.css',
+        'molecules/text-widget.css',
+        'organisms/section-image-split-feature.css',
+        'organisms/homepage-hero.css',
+        'organisms/rtk-comparison-table.css',
+        'organisms/faq-section.css',
+    ), $last);
+
+    $last = $enqueue_group('utilities', array(
+        'utilities/helpers.css',
+        'utilities/hubspot.css',
+        'utilities/inverse.css',
+        'utilities/text-align.css',
+        'utilities/site-alert-bar.css',
+        'utilities/ketch.css',
+    ), $last);
+
+    wp_enqueue_style('elementor-css', $css_uri . 'elementor.css', $last, filemtime($css_dir . 'elementor.css'));
 }
 add_action('wp_enqueue_scripts', 'my_child_theme_styles', 20);
 

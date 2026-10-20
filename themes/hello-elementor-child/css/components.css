@@ -1,28 +1,6 @@
 /* ==========================================================================
    components.css
-   Imports the design system components: atoms, molecules and organisms.
-   Import file only: add styles to the component files, not here.
+   Design system components: atoms, molecules and organisms.
+   The partials are enqueued one by one in functions.php (with filemtime
+   versions), not with @import. Add new partials to the list there.
    ========================================================================== */
-
-/* Atoms */
-@import "atoms/buttons.css";
-@import "atoms/icon.css";
-@import "atoms/image.css";
-@import "atoms/floating-icon.css";
-
-/* Molecules */
-@import "molecules/banner-logo.css";
-@import "molecules/card-avatar.css";
-@import "molecules/cards.css";
-@import "molecules/custom-slider.css";
-@import "molecules/feature-container.css";
-@import "molecules/pricing-toggle.css";
-@import "molecules/text-feature.css";
-@import "molecules/single-image-sections.css";
-@import "molecules/text-widget.css";
-
-/* Organisms */
-@import "organisms/section-image-split-feature.css";
-@import "organisms/homepage-hero.css";
-@import "organisms/rtk-comparison-table.css";
-@import "organisms/faq-section.css";

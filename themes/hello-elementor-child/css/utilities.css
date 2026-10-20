@@ -1,15 +1,8 @@
 /* ==========================================================================
    utilities.css
-   Imports utility and third-party styles, followed by a few site-wide
-   Elementor adjustments that must load late in the cascade.
+   Site-wide Elementor adjustments that must load late in the cascade.
+   The /utilities partials are enqueued in functions.php, not with @import.
    ========================================================================== */
-
-@import "utilities/helpers.css";
-@import "utilities/hubspot.css";
-@import "utilities/inverse.css";
-@import "utilities/text-align.css";
-@import "utilities/site-alert-bar.css";
-@import "utilities/ketch.css";
 
 /* ==== Site-wide Elementor Adjustments ==== */
 
