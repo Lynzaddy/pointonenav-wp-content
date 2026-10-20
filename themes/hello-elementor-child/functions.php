@@ -87,27 +87,6 @@ add_action('wp_enqueue_scripts', 'my_child_theme_styles', 20);
 // add_action('wp_enqueue_scripts', 'my_child_theme_scripts', 20);
 
 
-// Remove ?ver query strings from all enqueued CSS and JS (including Elementor)
-function remove_css_js_versioning($src)
-{
-    // Leave child theme files alone
-    if (strpos($src, get_stylesheet_directory_uri()) !== false) {
-        return $src;
-    }
-    // Leave Elementor's dynamically generated CSS alone — its ?ver= is how
-    // the browser and Cloudflare know to fetch a fresh copy after every edit
-    if (strpos($src, '/uploads/elementor/') !== false) {
-        return $src;
-    }
-    if (strpos($src, '?ver=') !== false) {
-        $src = remove_query_arg('ver', $src);
-    }
-    return $src;
-}
-add_filter('style_loader_src', 'remove_css_js_versioning', 9999);
-add_filter('script_loader_src', 'remove_css_js_versioning', 9999);
-
-
 // Disable Elementor CSS file cache (forces regeneration on every load)
 add_filter('elementor/css-file/enable_cache_busting', '__return_true');
 add_filter('elementor/css-file/post/enable_cache_busting', '__return_true');
