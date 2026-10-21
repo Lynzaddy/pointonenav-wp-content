@@ -179,6 +179,13 @@ function pointone_state_table_price($field_name)
     return is_numeric($price) && (float) $price > 0 ? (float) $price : null;
 }
 
+/** Preserve cents when present, without adding .00 to whole-dollar prices. */
+function pointone_state_table_format_amount($amount)
+{
+    $decimals = (floor($amount) == $amount) ? 0 : 2;
+    return number_format($amount, $decimals, '.', ',');
+}
+
 /** Format a plan's monthly and annual costs for the State comparison table. */
 function pointone_state_table_price_text($monthly, $annual)
 {
@@ -188,8 +195,8 @@ function pointone_state_table_price_text($monthly, $annual)
 
     return sprintf(
         '$%s/mo or $%s/yr ($%s/mo billed annually)',
-        number_format($monthly, 0),
-        number_format($annual, 0),
+        pointone_state_table_format_amount($monthly),
+        pointone_state_table_format_amount($annual),
         number_format($annual / 12, 2)
     );
 }
