@@ -285,7 +285,14 @@ function render_competitor_table_for_state()
                         <tr>
                             <th scope="row" class="sticky-col"><?php echo esc_html($label); ?></th>
                             <td class="sticky-col"><?php echo esc_html($meta['true']); ?></td>
-                            <td class="pointone-plan-virtual"><?php echo esc_html($meta['virtual']); ?></td>
+                            <td class="pointone-plan-virtual"><?php
+                                // For states without Virtual RTK, hide all product specifications.
+                                echo esc_html(
+                                    $virtual_available || $meta['acf'] === 'cost_per_month'
+                                        ? $meta['virtual']
+                                        : 'N/A'
+                                );
+                            ?></td>
                             <?php foreach ($competitors as $comp) : ?>
                                 <td><?php echo esc_html(pointone_state_table_competitor_value(get_field($meta['acf'], $comp->ID))); ?></td>
                             <?php endforeach; ?>
