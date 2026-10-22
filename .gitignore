@@ -34,3 +34,7 @@ wp-rocket-config/
 
 # Ignore WP cache drop-in created by cache plugins
 advanced-cache.php
+
+# Point One State ACF CSV Importer
+!/plugins/pon-acf-csv-importer/
+!/plugins/pon-acf-csv-importer/**

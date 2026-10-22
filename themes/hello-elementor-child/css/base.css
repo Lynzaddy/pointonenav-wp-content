@@ -1,20 +1,6 @@
 /* ==========================================================================
    base.css
-   Imports the design tokens and base element styles.
-   Import file only: add styles to the files in /base, not here.
+   Design tokens and base element styles (see /base).
+   The partials are enqueued one by one in functions.php (with filemtime
+   versions), not with @import. Add new partials to the list there.
    ========================================================================== */
-
-/* Color tokens */
-@import "base/color.css";
-
-/* Fonts, type tokens and type classes */
-@import "base/typography.css";
-
-/* Component tokens (sizes and radius) */
-@import "base/component.css";
-
-/* Links */
-@import "base/link.css";
-
-/* Blog post spacing */
-@import "base/blog-post.css";
