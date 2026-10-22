@@ -74,8 +74,6 @@ function my_child_theme_styles()
         'utilities/site-alert-bar.css',
         'utilities/ketch.css',
     ), $last);
-
-    wp_enqueue_style('elementor-css', $css_uri . 'elementor.css', $last, filemtime($css_dir . 'elementor.css'));
 }
 add_action('wp_enqueue_scripts', 'my_child_theme_styles', 20);
 
