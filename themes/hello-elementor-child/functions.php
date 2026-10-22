@@ -344,6 +344,72 @@ function render_state_faq_accordion()
 }
 add_shortcode('state_faq_accordion', 'render_state_faq_accordion');
 
+
+/**
+ * Publish FAQPage JSON-LD using the same ACF rows as [state_faq_accordion].
+ * Limited to State detail pages; no hard-coded questions or state-specific data.
+ */
+function pointone_state_faq_schema()
+{
+    if (! is_singular('states') || ! function_exists('get_field')) {
+        return;
+    }
+
+    $post_id = get_queried_object_id();
+    if (! $post_id) {
+        return;
+    }
+
+    $faqs = get_field('location_specific_faq', $post_id);
+    if (! is_array($faqs) || empty($faqs)) {
+        return;
+    }
+
+    $questions = [];
+    foreach ($faqs as $faq) {
+        if (! is_array($faq)) {
+            continue;
+        }
+
+        $question = trim(wp_strip_all_tags((string) ($faq['faq_question'] ?? '')));
+        // Strip formatting but retain word boundaries between paragraphs/list items.
+        $answer_html = wp_kses_post((string) ($faq['faq_answer'] ?? ''));
+        $answer_html = preg_replace('/<\/(?:p|li|div)>|<br\s*\/?>/i', ' ', $answer_html);
+        $answer = trim(preg_replace('/\s+/u', ' ', wp_strip_all_tags($answer_html)));
+
+        // Never emit schema for a row that the visible accordion skips.
+        if ($question === '' || $answer === '') {
+            continue;
+        }
+
+        $questions[] = [
+            '@type' => 'Question',
+            'name' => $question,
+            'acceptedAnswer' => [
+                '@type' => 'Answer',
+                'text' => $answer,
+            ],
+        ];
+    }
+
+    if (empty($questions)) {
+        return;
+    }
+
+    $schema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'FAQPage',
+        'mainEntity' => $questions,
+    ];
+
+    // HEX_TAG prevents FAQ content from terminating this script element.
+    $json = wp_json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+    if ($json !== false) {
+        echo '<script type="application/ld+json" class="pointone-state-faq-schema">' . $json . '</script>' . "\n";
+    }
+}
+add_action('wp_head', 'pointone_state_faq_schema', 20);
+
 add_action('wp_head', function () {
     ?>
     <!-- Ketch Consent Manager – EARLY LOAD -->
