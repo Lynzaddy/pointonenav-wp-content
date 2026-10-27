@@ -13,11 +13,67 @@ function my_child_theme_styles()
 
     // Modular CSS (from /css/ folder inside your child theme)
     $theme_uri = get_stylesheet_directory_uri();
-    wp_enqueue_style('base-css', $theme_uri . '/css/base.css', array('child-style'), filemtime(get_stylesheet_directory() . '/css/base.css'));
-    wp_enqueue_style('layout-css', $theme_uri . '/css/layout.css', array('child-style'), filemtime(get_stylesheet_directory() . '/css/layout.css'));
-    wp_enqueue_style('components-css', $theme_uri . '/css/components.css', array('child-style'), filemtime(get_stylesheet_directory() . '/css/components.css'));
-    wp_enqueue_style('utilities-css', $theme_uri . '/css/utilities.css', array('child-style'), filemtime(get_stylesheet_directory() . '/css/utilities.css'));
-    wp_enqueue_style('elementor-css', $theme_uri . '/css/elementor.css', array('child-style'), filemtime(get_stylesheet_directory() . '/css/elementor.css'));
+    $css_dir = get_stylesheet_directory() . '/css/';
+    $css_uri = $theme_uri . '/css/';
+
+    // Enqueue each partial with its own filemtime version (instead of CSS @import, which
+    // can't be versioned and gets cached for a year). Deps are chained to keep the order.
+    $enqueue_group = function ($group, $files, $deps) use ($css_dir, $css_uri) {
+        $prev = $deps;
+        foreach ($files as $file) {
+            $handle = 'pointone-' . sanitize_title(str_replace(array('/', '.css'), array('-', ''), $file));
+            wp_enqueue_style($handle, $css_uri . $file, $prev, filemtime($css_dir . $file));
+            $prev = array($handle);
+        }
+        wp_enqueue_style($group . '-css', $css_uri . $group . '.css', $prev, filemtime($css_dir . $group . '.css'));
+        return array($group . '-css');
+    };
+
+    $last = $enqueue_group('base', array(
+        'base/color.css',
+        'base/typography.css',
+        'base/component.css',
+        'base/link.css',
+        'base/blog-post.css',
+    ), array('child-style'));
+
+    $last = $enqueue_group('layout', array(
+        'layout/footer.css',
+        'layout/header-desktop.css',
+        'layout/header-mobile.css',
+        'layout/sections.css',
+        'layout/blog.css',
+        'layout/retire-with-components.css',
+    ), $last);
+
+    $last = $enqueue_group('components', array(
+        'atoms/buttons.css',
+        'atoms/icon.css',
+        'atoms/image.css',
+        'atoms/floating-icon.css',
+        'molecules/banner-logo.css',
+        'molecules/card-avatar.css',
+        'molecules/cards.css',
+        'molecules/custom-slider.css',
+        'molecules/feature-container.css',
+        'molecules/pricing-toggle.css',
+        'molecules/text-feature.css',
+        'molecules/single-image-sections.css',
+        'molecules/text-widget.css',
+        'organisms/section-image-split-feature.css',
+        'organisms/homepage-hero.css',
+        'organisms/rtk-comparison-table.css',
+        'organisms/faq-section.css',
+    ), $last);
+
+    $last = $enqueue_group('utilities', array(
+        'utilities/helpers.css',
+        'utilities/hubspot.css',
+        'utilities/inverse.css',
+        'utilities/text-align.css',
+        'utilities/site-alert-bar.css',
+        'utilities/ketch.css',
+    ), $last);
 }
 add_action('wp_enqueue_scripts', 'my_child_theme_styles', 20);
 
@@ -27,27 +83,6 @@ add_action('wp_enqueue_scripts', 'my_child_theme_styles', 20);
 //     wp_enqueue_script('sticky-header', $theme_uri . '/js/header-sticky.js', array(), filemtime(get_stylesheet_directory() . '/js/header-sticky.js'), true);
 // }
 // add_action('wp_enqueue_scripts', 'my_child_theme_scripts', 20);
-
-
-// Remove ?ver query strings from all enqueued CSS and JS (including Elementor)
-function remove_css_js_versioning($src)
-{
-    // Leave child theme files alone
-    if (strpos($src, get_stylesheet_directory_uri()) !== false) {
-        return $src;
-    }
-    // Leave Elementor's dynamically generated CSS alone — its ?ver= is how
-    // the browser and Cloudflare know to fetch a fresh copy after every edit
-    if (strpos($src, '/uploads/elementor/') !== false) {
-        return $src;
-    }
-    if (strpos($src, '?ver=') !== false) {
-        $src = remove_query_arg('ver', $src);
-    }
-    return $src;
-}
-add_filter('style_loader_src', 'remove_css_js_versioning', 9999);
-add_filter('script_loader_src', 'remove_css_js_versioning', 9999);
 
 
 // Disable Elementor CSS file cache (forces regeneration on every load)
@@ -128,54 +163,136 @@ function render_mapbox_state_div()
 }
 add_shortcode('state_map_div', 'render_mapbox_state_div');
 
-function render_competitor_table_for_state()
+/**
+ * Read current per-device plan prices from the Point One Global Variables ACF
+ * options page. Do not silently display obsolete prices if a value is missing.
+ */
+function pointone_state_table_price($field_name)
 {
-    // ACF relationship field on the current State post
-    $competitors = get_field('competitors');
-
-    if (! $competitors || ! is_array($competitors)) {
-        return '<p>No competitor data available for this state.</p>';
+    if (! function_exists('get_field')) {
+        return null;
     }
 
-    /* Polaris hard-coded column */
+    $price = get_field($field_name, 'option');
+    return is_numeric($price) && (float) $price > 0 ? (float) $price : null;
+}
+
+/** Preserve cents when present, without adding .00 to whole-dollar prices. */
+function pointone_state_table_format_amount($amount)
+{
+    $decimals = (floor($amount) == $amount) ? 0 : 2;
+    return number_format($amount, $decimals, '.', ',');
+}
+
+/** Format a plan's monthly and annual costs for the State comparison table. */
+function pointone_state_table_price_text($monthly, $annual)
+{
+    if ($monthly === null || $annual === null) {
+        return 'See pricing';
+    }
+
+    return sprintf(
+        '$%s/mo or $%s/yr ($%s/mo billed annually)',
+        pointone_state_table_format_amount($monthly),
+        pointone_state_table_format_amount($annual),
+        number_format($annual / 12, 2)
+    );
+}
+
+/** Normalize the legacy ACF provider values without changing their stored data. */
+function pointone_state_table_competitor_value($value)
+{
+    if ($value === null || $value === false || $value === '') {
+        return '—';
+    }
+
+    $value = trim((string) $value);
+    if ($value === '') {
+        return '—';
+    }
+
+    if (strcasecmp($value, 'Y') === 0 || strcasecmp($value, 'Yes') === 0) {
+        return 'Yes';
+    }
+    if (strcasecmp($value, 'N') === 0 || strcasecmp($value, 'No') === 0) {
+        return 'No';
+    }
+
+    // Known typos in the old State competitor table data.
+    if (strcasecmp($value, 'Not. reported') === 0) {
+        return 'Not reported';
+    }
+    if (strcasecmp($value, 'Free to us') === 0) {
+        return 'Free to use';
+    }
+
+    return $value;
+}
+
+function render_competitor_table_for_state()
+{
+    // Competitors are still managed independently for each State in ACF.
+    $competitors = get_field('competitors');
+    if (! is_array($competitors)) {
+        $competitors = [];
+    }
+
+    $state_slug = strtolower((string) get_post_field('post_name', get_the_ID()));
+    $virtual_available = ! in_array($state_slug, ['hawaii', 'alaska'], true);
+
+    $true_monthly    = pointone_state_table_price('price_true_monthly');
+    $true_annual     = pointone_state_table_price('price_true_annual');
+    $virtual_monthly = pointone_state_table_price('price_virtual_monthly');
+    $virtual_annual  = pointone_state_table_price('price_virtual_annual');
+
     $rows = [
-        'Cost per month'                => ['acf' => 'cost_per_month',                       'polaris' => '$150'],
-        'Accuracy'                      => ['acf' => 'accuracy',                             'polaris' => '1 cm'],
-        'Total physical base stations'  => ['acf' => 'total_physical_base_stations',         'polaris' => '> 1440'],
-        'Uptime'                        => ['acf' => 'uptime',                               'polaris' => '99.99 %'],
-        'Coverage'                      => ['acf' => 'coverage',                             'polaris' => 'International'],
-        'Global coverage'               => ['acf' => 'global_coverage',                      'polaris' => 'Yes'],
-        'GraphQL API'                   => ['acf' => 'graphql_api',                          'polaris' => 'Yes'],
-        'Automated Ref. Station Assoc.' => ['acf' => 'automated_reference_station_association', 'polaris' => 'Yes'],
-        'GNSS Frequency Bands'          => ['acf' => 'gnss_frequency_bands_supported',       'polaris' => 'L1, L2, L5'],
-        'True RTK'                      => ['acf' => 'true_rtk',                             'polaris' => 'Yes'],
+        'Cost per device, per month'      => [
+            'acf' => 'cost_per_month',
+            'true' => pointone_state_table_price_text($true_monthly, $true_annual),
+            'virtual' => $virtual_available
+                ? pointone_state_table_price_text($virtual_monthly, $virtual_annual)
+                : 'Not available in this state',
+        ],
+        'Accuracy'                        => ['acf' => 'accuracy', 'true' => '1–3 cm', 'virtual' => '~10 cm'],
+        'Total physical base stations'    => ['acf' => 'total_physical_base_stations', 'true' => '4,000+', 'virtual' => '4,000+'],
+        'Uptime'                          => ['acf' => 'uptime', 'true' => '99.9%', 'virtual' => '99.9%'],
+        'Coverage'                        => ['acf' => 'coverage', 'true' => 'International', 'virtual' => 'Contiguous US, UK, EU'],
+        'Global coverage'                 => ['acf' => 'global_coverage', 'true' => 'No (regional availability)', 'virtual' => 'No (regional availability)'],
+        'GraphQL API'                     => ['acf' => 'graphql_api', 'true' => 'Yes', 'virtual' => 'Yes'],
+        'Automatic base station assignment' => ['acf' => 'automated_reference_station_association', 'true' => 'Yes', 'virtual' => 'Yes'],
+        'GNSS Frequency Bands'            => ['acf' => 'gnss_frequency_bands_supported', 'true' => 'L1, L2, L5', 'virtual' => 'L1, L2, L5'],
+        'True RTK'                        => ['acf' => 'true_rtk', 'true' => 'Single baseline and Network RTK', 'virtual' => 'No (SSR-modeled, RTCM output)'],
     ];
 
     ob_start(); ?>
-    <div class="competitor-table-outer"><!-- NEW scroll container -->
-        <div class="competitor-table-wrapper"><!-- width only -->
+    <div class="competitor-table-outer">
+        <div class="competitor-table-wrapper">
             <table class="competitor-table">
                 <thead>
                     <tr>
-                        <th class="sticky-col">Brand</th>
-                        <th class="sticky-col">Polaris</th>
+                        <th scope="col" class="sticky-col">Brand</th>
+                        <th scope="col" class="sticky-col">Point One RTK Network – True RTK</th>
+                        <th scope="col" class="pointone-plan-virtual">Point One RTK Network – Virtual RTK</th>
                         <?php foreach ($competitors as $comp) : ?>
-                            <th><?php echo esc_html(get_the_title($comp)); ?></th>
+                            <th scope="col"><?php echo esc_html(get_the_title($comp)); ?></th>
                         <?php endforeach; ?>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($rows as $label => $meta) : ?>
                         <tr>
-                            <td class="sticky-col"><?php echo esc_html($label); ?></td>
-                            <td class="sticky-col"><?php echo esc_html($meta['polaris']); ?></td>
+                            <th scope="row" class="sticky-col"><?php echo esc_html($label); ?></th>
+                            <td class="sticky-col"><?php echo esc_html($meta['true']); ?></td>
+                            <td class="pointone-plan-virtual"><?php
+                                // For states without Virtual RTK, hide all product specifications.
+                                echo esc_html(
+                                    $virtual_available || $meta['acf'] === 'cost_per_month'
+                                        ? $meta['virtual']
+                                        : 'N/A'
+                                );
+                            ?></td>
                             <?php foreach ($competitors as $comp) : ?>
-                                <td>
-                                    <?php
-                                    $value = get_field($meta['acf'], $comp->ID);
-                                    echo esc_html($value ?: '—');
-                                    ?>
-                                </td>
+                                <td><?php echo esc_html(pointone_state_table_competitor_value(get_field($meta['acf'], $comp->ID))); ?></td>
                             <?php endforeach; ?>
                         </tr>
                     <?php endforeach; ?>
@@ -183,6 +300,9 @@ function render_competitor_table_for_state()
             </table>
         </div>
     </div>
+    <?php if (! $virtual_available) : ?>
+        <p class="competitor-table-availability">Virtual RTK is not available in <?php echo esc_html(get_the_title()); ?>. True RTK is the available Point One product.</p>
+    <?php endif; ?>
     <?php
     return ob_get_clean();
 }
@@ -223,6 +343,72 @@ function render_state_faq_accordion()
     return ob_get_clean();
 }
 add_shortcode('state_faq_accordion', 'render_state_faq_accordion');
+
+
+/**
+ * Publish FAQPage JSON-LD using the same ACF rows as [state_faq_accordion].
+ * Limited to State detail pages; no hard-coded questions or state-specific data.
+ */
+function pointone_state_faq_schema()
+{
+    if (! is_singular('states') || ! function_exists('get_field')) {
+        return;
+    }
+
+    $post_id = get_queried_object_id();
+    if (! $post_id) {
+        return;
+    }
+
+    $faqs = get_field('location_specific_faq', $post_id);
+    if (! is_array($faqs) || empty($faqs)) {
+        return;
+    }
+
+    $questions = [];
+    foreach ($faqs as $faq) {
+        if (! is_array($faq)) {
+            continue;
+        }
+
+        $question = trim(wp_strip_all_tags((string) ($faq['faq_question'] ?? '')));
+        // Strip formatting but retain word boundaries between paragraphs/list items.
+        $answer_html = wp_kses_post((string) ($faq['faq_answer'] ?? ''));
+        $answer_html = preg_replace('/<\/(?:p|li|div)>|<br\s*\/?>/i', ' ', $answer_html);
+        $answer = trim(preg_replace('/\s+/u', ' ', wp_strip_all_tags($answer_html)));
+
+        // Never emit schema for a row that the visible accordion skips.
+        if ($question === '' || $answer === '') {
+            continue;
+        }
+
+        $questions[] = [
+            '@type' => 'Question',
+            'name' => $question,
+            'acceptedAnswer' => [
+                '@type' => 'Answer',
+                'text' => $answer,
+            ],
+        ];
+    }
+
+    if (empty($questions)) {
+        return;
+    }
+
+    $schema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'FAQPage',
+        'mainEntity' => $questions,
+    ];
+
+    // HEX_TAG prevents FAQ content from terminating this script element.
+    $json = wp_json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+    if ($json !== false) {
+        echo '<script type="application/ld+json" class="pointone-state-faq-schema">' . $json . '</script>' . "\n";
+    }
+}
+add_action('wp_head', 'pointone_state_faq_schema', 20);
 
 add_action('wp_head', function () {
     ?>

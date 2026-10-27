@@ -81,4 +81,10 @@ jobs:
             plugins/pointone-site-alert-bar/ \
             "$USER@$HOST:public_html/wp-content/plugins/pointone-site-alert-bar/"
 
+          # Deploy the State ACF CSV Importer to Staging only.
+          if [ "$GITHUB_REF_NAME" = "staging" ]; then
+            echo "Syncing pon-acf-csv-importer (Staging only)..."
+            rsync -az --delete -e "$RSYNC_SSH" plugins/pon-acf-csv-importer/ "$USER@$HOST:public_html/wp-content/plugins/pon-acf-csv-importer/"
+          fi
+
           echo "Deployment complete."
