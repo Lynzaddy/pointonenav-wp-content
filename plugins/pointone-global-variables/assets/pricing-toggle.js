@@ -1,7 +1,7 @@
 /**
  * Pricing Page Toggle
  * Part of: Point One Nav - Global Variables plugin
- * Version: 1.4.0
+ * Version: 1.4.1
  *
  * Reads all values from window.pointoneGlobalVars, which is injected
  * by the plugin on every page load. The server already prints the annual
@@ -32,10 +32,15 @@
     // Helper: compute annual savings vs. 12 months at monthly rate
     // Returns "Save $X yr/license" or "" if values are missing
     // Only used when the server did not send the text (gv.savings_*).
-    function pgSavings(monthly, annual) {
-        if (!monthly || !annual) return "";
+    function pgSavedAmount(monthly, annual) {
+        if (!monthly || !annual) return 0;
         const saved = monthly * 12 - annual;
-        return saved > 0 ? "Save " + pgDollar(saved) + " yr/license" : "";
+        return saved > 0 ? saved : 0;
+    }
+
+    function pgSavings(monthly, annual) {
+        const saved = pgSavedAmount(monthly, annual);
+        return saved ? "Save " + pgDollar(saved) + " yr/license" : "";
     }
 
     // Monthly display prices
@@ -47,8 +52,8 @@
     const pgTrueAnnual = pgDollar(gv.price_true_annual); // e.g. "$1,500"
 
     // Savings badges — computed by the server from monthly vs. annual, not stored in admin
-    const pgVirtualSavings = gv.savings_virtual || pgSavings(gv.price_virtual_monthly, gv.price_virtual_annual); // e.g. "Save $100 yr/license"
-    const pgTrueSavings = gv.savings_true || pgSavings(gv.price_true_monthly, gv.price_true_annual); // e.g. "Save $300 yr/license"
+    const pgVirtualSavingsFallback = gv.savings_virtual || pgSavings(gv.price_virtual_monthly, gv.price_virtual_annual); // e.g. "Save $100 yr/license"
+    const pgTrueSavingsFallback = gv.savings_true || pgSavings(gv.price_true_monthly, gv.price_true_annual); // e.g. "Save $300 yr/license"
 
     // ── DOM references ─────────────────────────────────────────────────────
 
@@ -80,6 +85,27 @@
     // Per-period labels (one per pricing card — querySelectorAll captures both)
     const pgMonthlyPrices = document.querySelectorAll(".monthlyPrice");
 
+    // ── Annual texts rendered by the server ────────────────────────────────
+
+    // On translated pages the server already prints the annual badge and period label in the
+    // visitor's language. Keep those instead of rewriting them in English, but only when they
+    // can be trusted: a badge must show the current savings amount, and a label must not
+    // still be the template's default "month / license".
+    function pgServerBadge(el, amount) {
+        if (!el || !amount) return "";
+        const text = el.textContent.trim();
+        const numbers = (text.match(/\d[\d.,]*/g) || []).map((n) => n.replace(/[.,]/g, ""));
+        return numbers.includes(String(Math.round(amount))) ? text : "";
+    }
+
+    const pgVirtualSavings = pgServerBadge(pgPriceVirtualValue, pgSavedAmount(gv.price_virtual_monthly, gv.price_virtual_annual)) || pgVirtualSavingsFallback;
+    const pgTrueSavings = pgServerBadge(pgPriceTrueValue, pgSavedAmount(gv.price_true_monthly, gv.price_true_annual)) || pgTrueSavingsFallback;
+
+    const pgAnnualLabels = Array.from(pgMonthlyPrices).map((el) => {
+        const text = el.textContent.trim();
+        return text && text !== "month / license" ? text : "year / license";
+    });
+
     // ── Toggle logic ───────────────────────────────────────────────────────
 
     // Only replace text we have a value for, so a missing price never blanks the server's
@@ -104,7 +130,7 @@
             pgSetText(pgTxtTrueValue, pgTrueAnnual);
 
             // Update period label on both cards
-            pgMonthlyPrices.forEach((el) => (el.innerText = "year / license"));
+            pgMonthlyPrices.forEach((el, i) => (el.innerText = pgAnnualLabels[i]));
         } else {
             if (pgSlider) pgSlider.style.left = "calc(50% + 4px)";
 
