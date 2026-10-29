@@ -304,14 +304,9 @@ add_action('wp_enqueue_scripts', function () {
 ELEMENTOR PRO DYNAMIC TAG
 --------------------------------------------------------------*/
 
-add_action('elementor/dynamic_tags/register', function ($dynamic_tags) {
-
-    if (! class_exists('\Elementor\Modules\DynamicTags\Module')) return;
-
-    $dynamic_tags->register_group('pointone', [
-        'title' => 'Point One',
-    ]);
-
+// Choices for the "Variable" control: every stored field and every computed value.
+function pointone_gv_tag_options(): array
+{
     $options = [
         '' => '— Select a variable —',
     ];
@@ -324,15 +319,20 @@ add_action('elementor/dynamic_tags/register', function ($dynamic_tags) {
         $options[$key] = '[' . $def['tab'] . '] ' . $def['label'];
     }
 
-    $tag_class = new class($options) extends \Elementor\Core\DynamicTags\Tag {
+    return $options;
+}
 
-        private array $field_options;
+add_action('elementor/dynamic_tags/register', function ($dynamic_tags) {
 
-        public function __construct(array $options)
-        {
-            $this->field_options = $options;
-            parent::__construct();
-        }
+    if (! class_exists('\Elementor\Modules\DynamicTags\Module')) return;
+
+    $dynamic_tags->register_group('pointone', [
+        'title' => 'Point One',
+    ]);
+
+    // No custom constructor: Elementor creates a tag with new $class(['settings' => ..., 'id' => ...])
+    // every time it renders one, and the parent constructor must receive that data.
+    $tag_class = new class extends \Elementor\Core\DynamicTags\Tag {
 
         public function get_name(): string
         {
@@ -363,7 +363,7 @@ add_action('elementor/dynamic_tags/register', function ($dynamic_tags) {
             $this->add_control('field_key', [
                 'label'   => 'Variable',
                 'type'    => \Elementor\Controls_Manager::SELECT,
-                'options' => $this->field_options,
+                'options' => pointone_gv_tag_options(),
                 'default' => '',
             ]);
 
