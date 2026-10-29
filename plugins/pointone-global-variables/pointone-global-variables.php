@@ -415,7 +415,14 @@ PRICING SUMMARY SHORTCODE
 
 // [pointone_pricing_summary] prints both billing periods as plain text, so the
 // page states every price without needing the monthly/annual toggle.
-add_shortcode('pointone_pricing_summary', function () {
+// visible="no" hides it from sight but keeps it for screen readers and crawlers,
+// using the clip pattern. Never display:none or visibility:hidden, which search
+// engines can ignore.
+add_shortcode('pointone_pricing_summary', function ($atts) {
+
+    $atts = shortcode_atts([
+        'visible' => 'yes',
+    ], $atts);
 
     $parts = [];
 
@@ -431,7 +438,13 @@ add_shortcode('pointone_pricing_summary', function () {
 
     if (! $parts) return '';
 
-    return '<p class="pointone-pricing-summary">' . esc_html(implode(' · ', $parts)) . '</p>';
+    $style = '';
+
+    if ($atts['visible'] === 'no') {
+        $style = ' style="position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);clip-path:inset(50%);white-space:nowrap;border:0"';
+    }
+
+    return '<p class="pointone-pricing-summary"' . $style . '>' . esc_html(implode(' · ', $parts)) . '</p>';
 });
 
 
