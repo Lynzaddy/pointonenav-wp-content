@@ -513,6 +513,8 @@ add_action('wp_head', function () {
     $json = wp_json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
 
     if ($json !== false) {
-        echo '<script type="application/ld+json" class="pointone-pricing-schema">' . $json . '</script>' . "\n";
+        // class before type on purpose: Weglot only translates JSON-LD in tags that start with
+        // type="application/ld+json", and the plan names must stay "Virtual RTK" / "True RTK".
+        echo '<script class="pointone-pricing-schema" type="application/ld+json">' . $json . '</script>' . "\n";
     }
 }, 20);
