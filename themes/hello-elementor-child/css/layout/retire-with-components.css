@@ -728,6 +728,32 @@
     background: var(--color-gray-90);
 }
 
+/* The rules above have the same specificity as Swiper's own stylesheet, so whichever loads
+   last wins and the arrows collapse to Swiper's 27x44 and the bullets turn into round blue
+   dots. Scoping to .peek-carousel-controls and fixing the sizes keeps the result the same
+   whatever the load order. */
+.peek-carousel-controls .swiper-button-prev,
+.peek-carousel-controls .swiper-button-next {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px;
+    flex: 0 0 40px;
+}
+
+.peek-carousel-controls .swiper-pagination-bullet {
+    width: 20px !important;
+    height: 4px !important;
+    border-radius: 100px;
+    background: var(--color-gray-50) !important;
+    opacity: 1;
+}
+
+.peek-carousel-controls .swiper-pagination-bullet-active {
+    width: 36px !important;
+    height: 8px !important;
+    background: var(--color-gray-90) !important;
+}
+
 /* ==== Mobile Adjustments ==== */
 @media (max-width: 768px) {
     .swiper-pagination {
