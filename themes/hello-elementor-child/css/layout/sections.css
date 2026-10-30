@@ -471,3 +471,12 @@
 .fuse-link-item:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
+
+/* ==== 09. Pricing: "Try free for 14 days" spacing ==== */
+/* The Elementor container for this block has its gap set to 0 and Elementor removes widget
+   margins inside containers (.e-con .elementor-widget.elementor-widget), so the title and
+   the line under it touched. Put back 20px (the kit's old widget spacing) under the title only.
+   Widget 5aaeac25 on page 6906 (Pricing); same IDs on production and staging. */
+.elementor-6906 .e-con .elementor-element-5aaeac25.elementor-widget {
+    margin-block-end: 20px;
+}
